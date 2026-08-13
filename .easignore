@@ -1,0 +1,14 @@
+# Ignore everything in the parent Downloads folder
+../
+**/node_modules/
+**/.expo/
+**/android/
+**/ios/
+**/dist/
+**/*.zip
+**/*.exe
+**/*.apk
+**/*.aab
+**/*.tar.gz
+**/*.tar
+**/*.rar
