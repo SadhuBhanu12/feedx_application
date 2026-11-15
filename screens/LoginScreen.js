@@ -5,8 +5,8 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { ButtonLoading } from '@/components/ui/Loaders';
+import { Alert, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Keyboard } from 'react-native';
+import FeedxAppLogo from '@/components/ui/FeedxAppLogo';
 import Animated, { FadeInUp, interpolate, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming, Easing } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
@@ -20,45 +20,17 @@ function AnimatedBackground() {
   );
 }
 
-export default function LoginScreen() {
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const { user, booting, signIn } = useUser();
-  const router = useRouter();
-
-  useFocusEffect(
-    useCallback(() => {
-      if (Platform.OS !== 'android') return;
-      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-        BackHandler.exitApp();
-        return true;
-      });
-      return () => sub.remove();
-    }, [])
-  );
-
-  useEffect(() => {
-    if (!booting && user) {
-      const role = String(user?.role || '').trim().toLowerCase();
-      const mustChange = role === 'student' && user?.is_password_set === false;
-      if (mustChange) {
-        router.replace('/change-password');
-      } else if (role === 'super_admin') {
-        router.replace('/super-admin');
-      } else if (role === 'admin' || role === 'inst_admin') {
-        router.replace('/(tabs)/admin');
-      } else {
-        router.replace('/(tabs)');
-      }
-    }
-  }, [user, booting, router]);
-
+function AcademicLogoOrbit({ onLogoPress, compact = false }) {
+  if (compact) {
+    return (
+      <View style={{ alignItems: 'center', marginBottom: 12, marginTop: Platform.OS === 'ios' ? 10 : 0 }}>
+        <TouchableOpacity onPress={onLogoPress} activeOpacity={0.85}>
+          <FeedxAppLogo size={52} shape="rounded" borderWidth={1.5} padding={3} glow />
+        </TouchableOpacity>
+      </View>
+    );
+  }
   const pulse = useSharedValue(1);
-  const dotPulse = useSharedValue(1);
   const rotation = useSharedValue(0);
   const rotation2 = useSharedValue(0);
   const satelliteRotation = useSharedValue(0);
@@ -69,26 +41,18 @@ export default function LoginScreen() {
       withSequence(withTiming(1.1, { duration: 1200 }), withTiming(1, { duration: 1200 })),
       -1, true
     );
-    dotPulse.value = withRepeat(
-      withTiming(1.4, { duration: 800 }),
-      -1, true
-    );
-    rotation.value = 0;
     rotation.value = withRepeat(
       withTiming(360, { duration: 8000, easing: Easing.linear }),
       -1, false
     );
-    rotation2.value = 0;
     rotation2.value = withRepeat(
       withTiming(-360, { duration: 6000, easing: Easing.linear }),
       -1, false
     );
-    satelliteRotation.value = 0;
     satelliteRotation.value = withRepeat(
       withTiming(360, { duration: 10000, easing: Easing.linear }),
       -1, false
     );
-    ripple.value = 0;
     ripple.value = withRepeat(
       withTiming(1, { duration: 2000, easing: Easing.linear }),
       -1, false
@@ -99,27 +63,6 @@ export default function LoginScreen() {
     transform: [{ scale: pulse.value }],
     opacity: interpolate(pulse.value, [1, 1.1], [0.2, 0.5]),
   }));
-
-  const useRippleStyle = (delay) => useAnimatedStyle(() => {
-    const progress = (ripple.value + delay) % 1;
-    return {
-      transform: [{ scale: interpolate(progress, [0, 1], [1, 2.2]) }],
-      opacity: interpolate(progress, [0, 0.5, 1], [0, 0.3, 0]),
-    };
-  });
-
-  const useSatelliteStyle = (angle) => useAnimatedStyle(() => {
-    const rad = (satelliteRotation.value + angle) * (Math.PI / 180);
-    const radius = 72;
-    return {
-      transform: [
-        { translateX: Math.cos(rad) * radius },
-        { translateY: Math.sin(rad) * radius },
-        { scale: interpolate(pulse.value, [1, 1.1], [0.8, 1]) }
-      ],
-      opacity: interpolate(pulse.value, [1, 1.1], [0.4, 0.9]),
-    };
-  });
 
   const ringStyle = useAnimatedStyle(() => ({
     transform: [
@@ -140,15 +83,168 @@ export default function LoginScreen() {
     opacity: interpolate(pulse.value, [1, 1.1], [0.3, 0.6]),
   }));
 
-  const dotStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: dotPulse.value }],
-    opacity: interpolate(dotPulse.value, [1, 1.4], [1, 0.4]),
-  }));
+  const ripple0 = useAnimatedStyle(() => {
+    const progress = (ripple.value + 0) % 1;
+    return {
+      transform: [{ scale: interpolate(progress, [0, 1], [1, 2.2]) }],
+      opacity: interpolate(progress, [0, 0.5, 1], [0, 0.3, 0]),
+    };
+  });
+  const ripple1 = useAnimatedStyle(() => {
+    const progress = (ripple.value + 0.33) % 1;
+    return {
+      transform: [{ scale: interpolate(progress, [0, 1], [1, 2.2]) }],
+      opacity: interpolate(progress, [0, 0.5, 1], [0, 0.3, 0]),
+    };
+  });
+  const ripple2 = useAnimatedStyle(() => {
+    const progress = (ripple.value + 0.66) % 1;
+    return {
+      transform: [{ scale: interpolate(progress, [0, 1], [1, 2.2]) }],
+      opacity: interpolate(progress, [0, 0.5, 1], [0, 0.3, 0]),
+    };
+  });
+
+  const sat0 = useAnimatedStyle(() => {
+    const rad = (satelliteRotation.value + 0) * (Math.PI / 180);
+    const radius = 72;
+    return {
+      transform: [
+        { translateX: Math.cos(rad) * radius },
+        { translateY: Math.sin(rad) * radius },
+        { scale: interpolate(pulse.value, [1, 1.1], [0.8, 1]) }
+      ],
+      opacity: interpolate(pulse.value, [1, 1.1], [0.4, 0.9]),
+    };
+  });
+  const sat90 = useAnimatedStyle(() => {
+    const rad = (satelliteRotation.value + 90) * (Math.PI / 180);
+    const radius = 72;
+    return {
+      transform: [
+        { translateX: Math.cos(rad) * radius },
+        { translateY: Math.sin(rad) * radius },
+        { scale: interpolate(pulse.value, [1, 1.1], [0.8, 1]) }
+      ],
+      opacity: interpolate(pulse.value, [1, 1.1], [0.4, 0.9]),
+    };
+  });
+  const sat180 = useAnimatedStyle(() => {
+    const rad = (satelliteRotation.value + 180) * (Math.PI / 180);
+    const radius = 72;
+    return {
+      transform: [
+        { translateX: Math.cos(rad) * radius },
+        { translateY: Math.sin(rad) * radius },
+        { scale: interpolate(pulse.value, [1, 1.1], [0.8, 1]) }
+      ],
+      opacity: interpolate(pulse.value, [1, 1.1], [0.4, 0.9]),
+    };
+  });
+  const sat270 = useAnimatedStyle(() => {
+    const rad = (satelliteRotation.value + 270) * (Math.PI / 180);
+    const radius = 72;
+    return {
+      transform: [
+        { translateX: Math.cos(rad) * radius },
+        { translateY: Math.sin(rad) * radius },
+        { scale: interpolate(pulse.value, [1, 1.1], [0.8, 1]) }
+      ],
+      opacity: interpolate(pulse.value, [1, 1.1], [0.4, 0.9]),
+    };
+  });
+
+  return (
+    <View style={styles.logoGroup}>
+      <Animated.View style={[styles.dataRipple, ripple0]} />
+      <Animated.View style={[styles.dataRipple, ripple1]} />
+      <Animated.View style={[styles.dataRipple, ripple2]} />
+
+      <Animated.View style={[styles.logoGlow, glowStyle]} />
+      <Animated.View style={[styles.orbitalRing, ringStyle]} />
+      <Animated.View style={[styles.orbitalRing2, ring2Style]} />
+      <Animated.View style={[styles.orbitalRing3, ring3Style]} />
+
+      <Animated.View style={[styles.satellite, sat0]}>
+        <Feather name="book-open" size={14} color={COLORS.primary} />
+      </Animated.View>
+      <Animated.View style={[styles.satellite, sat90]}>
+        <Feather name="edit-3" size={14} color={COLORS.primary} />
+      </Animated.View>
+      <Animated.View style={[styles.satellite, sat180]}>
+        <Feather name="shield" size={14} color={COLORS.primary} />
+      </Animated.View>
+      <Animated.View style={[styles.satellite, sat270]}>
+        <Feather name="settings" size={14} color={COLORS.primary} />
+      </Animated.View>
+
+      <TouchableOpacity onPress={onLogoPress} activeOpacity={0.85}>
+        <FeedxAppLogo size={80} shape="rounded" borderWidth={2} padding={5} glow />
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+export default function LoginScreen() {
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
+
+  const { user, booting, signIn } = useUser();
+  const router = useRouter();
+  const navigatedRef = React.useRef(false);
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => setIsKeyboardVisible(true)
+    );
+    const hideSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setIsKeyboardVisible(false)
+    );
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS !== 'android') return;
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        BackHandler.exitApp();
+        return true;
+      });
+      return () => sub.remove();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (!booting && user && !navigatedRef.current) {
+      if (user?.is_password_set === false) {
+        // User has not finished password setup; stay on login screen
+        return;
+      }
+      navigatedRef.current = true;
+      const role = String(user?.role || '').trim().toLowerCase();
+      const target = role === 'super_admin' ? '/super-admin' : (role === 'admin' || role === 'inst_admin') ? '/(tabs)/admin' : '/(tabs)';
+      try {
+        router.replace(target);
+      } catch (err) {
+        console.warn('[LoginScreen] replace failed:', err);
+      }
+    }
+  }, [user, booting, router]);
 
   const handleSignIn = async () => {
     const trimmed = identifier.trim();
     if (!trimmed || !password) {
-      setError('Invalid Student ID or Password.');
+      setError('Please enter your Student ID or Email and Password.');
       return;
     }
     setLoading(true);
@@ -158,27 +254,43 @@ export default function LoginScreen() {
       const logged = await signIn(trimmed, password);
 
       if (!logged) {
+        setLoading(false);
         setError('Invalid Student ID or Password. Please check your credentials.');
         return;
       }
 
-      const role = String(logged?.role || '').trim().toLowerCase();
-      const mustChange = role === 'student' && logged?.is_password_set === false;
-      const needsProfileSetup = role === 'student' && !logged?.first_login_completed;
+      if (logged.is_active === false) {
+        setLoading(false);
+        setError('Your account has been suspended by the administrator.');
+        await signOut();
+        return;
+      }
 
-      if (mustChange) {
-        router.replace('/change-password');
-      } else if (role === 'super_admin') {
-        router.replace('/super-admin');
-      } else if (role === 'admin' || role === 'inst_admin') {
-        router.replace('/(tabs)/admin');
-      } else {
-        router.replace('/(tabs)');
+      if (!navigatedRef.current) {
+        navigatedRef.current = true;
+        const role = String(logged?.role || '').trim().toLowerCase();
+        const mustChange = role === 'student' && logged?.is_password_set === false;
+        const target = mustChange ? '/change-password' : role === 'super_admin' ? '/super-admin' : (role === 'admin' || role === 'inst_admin') ? '/(tabs)/admin' : '/(tabs)';
+        try {
+          router.replace(target);
+        } catch (err) {
+          console.warn('[LoginScreen] handleSignIn replace fallback:', err);
+          try {
+            router.replace('/(tabs)');
+          } catch (_) {}
+        }
       }
     } catch (e) {
-      setError(e?.message || 'Invalid Student ID or Password. Please check your credentials.');
-    } finally {
       setLoading(false);
+      const rawMsg = e?.message || '';
+      console.warn('[LoginScreen] handleSignIn error:', rawMsg);
+      if (rawMsg.includes('Database error querying schema')) {
+        setError('Server authentication sync error. Please run the schema fix script.');
+      } else if (rawMsg.includes('Invalid login credentials') || rawMsg.includes('Invalid Student ID')) {
+        setError('Invalid Student ID or Password. Please check your credentials.');
+      } else {
+        setError(rawMsg || 'Invalid Student ID or Password. Please check your credentials.');
+      }
     }
   };
 
@@ -187,83 +299,76 @@ export default function LoginScreen() {
       <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />
       <AnimatedBackground />
 
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
-        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} scrollEnabled={false}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.keyboardView}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.scrollContent,
+            isKeyboardVisible && styles.scrollContentKeyboard,
+          ]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+        >
 
-          <View style={styles.logoGroup}>
-            {/* Data Ripples */}
-            <Animated.View style={[styles.dataRipple, useRippleStyle(0)]} />
-            <Animated.View style={[styles.dataRipple, useRippleStyle(0.33)]} />
-            <Animated.View style={[styles.dataRipple, useRippleStyle(0.66)]} />
+          <AcademicLogoOrbit onLogoPress={() => router.push('/about-feedx')} compact={isKeyboardVisible} />
 
-            <Animated.View style={[styles.logoGlow, glowStyle]} />
-            <Animated.View style={[styles.orbitalRing, ringStyle]} />
-            <Animated.View style={[styles.orbitalRing2, ring2Style]} />
-            <Animated.View style={[styles.orbitalRing3, ring3Style]} />
-
-            {/* Academic Satellites */}
-            <Animated.View style={[styles.satellite, useSatelliteStyle(0)]}>
-              <Feather name="book-open" size={14} color={COLORS.primary} />
-            </Animated.View>
-            <Animated.View style={[styles.satellite, useSatelliteStyle(90)]}>
-              <Feather name="edit-3" size={14} color={COLORS.primary} />
-            </Animated.View>
-            <Animated.View style={[styles.satellite, useSatelliteStyle(180)]}>
-              <Feather name="shield" size={14} color={COLORS.primary} />
-            </Animated.View>
-            <Animated.View style={[styles.satellite, useSatelliteStyle(270)]}>
-              <Feather name="settings" size={14} color={COLORS.primary} />
-            </Animated.View>
-
-            <TouchableOpacity onPress={() => router.push('/about-feedx')} activeOpacity={0.8} style={styles.logoOuter}>
-              <Image source={require('../assets/images/icon.png')} style={styles.logo} contentFit="cover" />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.header}>
-            <Text style={styles.title}>FeedX Polytechnic</Text>
-            <Text style={styles.subtitle}>Institutional Management System</Text>
+          <View style={[styles.header, isKeyboardVisible && { marginBottom: 12 }]}>
+            <Text style={[styles.title, isKeyboardVisible && { fontSize: 22 }]}>FEEDX Polytechnic</Text>
+            <Text style={[styles.subtitle, isKeyboardVisible && { fontSize: 10, marginTop: 2 }]}>Institutional Management System</Text>
           </View>
 
           <View style={styles.formCard}>
             <View style={styles.glass}>
 
-              {error ? (
-                <Animated.View entering={FadeInUp} style={styles.errorBox}>
-                  <Ionicons name="alert-circle" size={16} color={COLORS.danger} />
+              {Boolean(error) && (
+                <View style={styles.errorBox}>
+                  <Ionicons name="alert-circle" size={18} color={COLORS.danger} />
                   <Text style={styles.errorText}>{error}</Text>
-                </Animated.View>
-              ) : null}
+                </View>
+              )}
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
-                <View style={styles.inputWrapper}>
-                  <Feather name="user" size={18} color="rgba(255,255,255,0.4)" />
+                <Text style={styles.label}>Email / Student ID</Text>
+                <View style={[
+                  styles.inputWrapper,
+                  focusedField === 'email' && styles.inputWrapperFocused,
+                ]}>
+                  <Feather name="user" size={18} color={focusedField === 'email' ? '#60A5FA' : 'rgba(255,255,255,0.5)'} />
                   <TextInput
                     style={styles.input}
-                    placeholder="Enter your email"
-                    placeholderTextColor="rgba(255,255,255,0.2)"
+                    placeholder="Enter your email or ID"
+                    placeholderTextColor="rgba(255,255,255,0.4)"
                     value={identifier}
                     onChangeText={setIdentifier}
                     autoCapitalize="none"
+                    autoCorrect={false}
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField(null)}
+                    selectionColor="#60A5FA"
                   />
                 </View>
               </View>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
-                <View style={styles.inputWrapper}>
-                  <Feather name="lock" size={18} color="rgba(255,255,255,0.4)" />
+                <View style={[
+                  styles.inputWrapper,
+                  focusedField === 'password' && styles.inputWrapperFocused,
+                ]}>
+                  <Feather name="lock" size={18} color={focusedField === 'password' ? '#60A5FA' : 'rgba(255,255,255,0.5)'} />
                   <TextInput
                     style={styles.input}
                     placeholder="Password"
-                    placeholderTextColor="rgba(255,255,255,0.2)"
+                    placeholderTextColor="rgba(255,255,255,0.4)"
                     secureTextEntry={!showPassword}
                     value={password}
                     onChangeText={setPassword}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    selectionColor="#60A5FA"
                   />
-                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                    <Feather name={showPassword ? "eye" : "eye-off"} size={18} color="rgba(255,255,255,0.4)" />
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={{ padding: 4 }}>
+                    <Feather name={showPassword ? "eye" : "eye-off"} size={18} color={focusedField === 'password' ? '#60A5FA' : 'rgba(255,255,255,0.5)'} />
                   </TouchableOpacity>
                 </View>
 
@@ -279,7 +384,7 @@ export default function LoginScreen() {
 
               <TouchableOpacity style={styles.loginBtn} onPress={handleSignIn} disabled={loading} activeOpacity={0.8}>
                 <LinearGradient colors={COLORS.gradientPrimary} style={styles.btnGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-                  {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.btnText}>Login</Text>}
+                  {loading ? <ActivityIndicator size="small" color="#FFF" /> : <Text style={styles.btnText}>Login</Text>}
                 </LinearGradient>
               </TouchableOpacity>
 
@@ -293,7 +398,7 @@ export default function LoginScreen() {
 
               <TouchableOpacity
                 style={styles.termsTouchable}
-                onPress={() => router.push('/terms-conditions')}
+                onPress={() => router.push({ pathname: '/terms-conditions', params: { viewOnly: 'true' } })}
                 activeOpacity={0.7}
               >
                 <Text style={styles.termsText}>
@@ -308,12 +413,14 @@ export default function LoginScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <View style={styles.footerBarContainer}>
-        <View style={styles.statusRow}>
-          <View style={styles.statusDot} />
-          <Text style={styles.statusText}>FEEDX POLYTECHNIC SYSTEM LIVE</Text>
+      {!isKeyboardVisible && (
+        <View style={styles.footerBarContainer}>
+          <View style={styles.statusRow}>
+            <View style={styles.statusDot} />
+            <Text style={styles.statusText}>FEEDX POLYTECHNIC SYSTEM LIVE</Text>
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }
@@ -323,7 +430,8 @@ const styles = StyleSheet.create({
   glowBlob: { position: 'absolute', width: 300, height: 300, borderRadius: 150, opacity: 0.4 },
   particle: { position: 'absolute', width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 },
   keyboardView: { flex: 1 },
-  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: Platform.OS === 'ios' ? 90 : 70, paddingBottom: 16, alignItems: 'center', justifyContent: 'flex-start' },
+  scrollContent: { flexGrow: 1, paddingHorizontal: 24, paddingTop: Platform.OS === 'ios' ? 70 : 40, paddingBottom: 40, alignItems: 'center', justifyContent: 'flex-start' },
+  scrollContentKeyboard: { paddingTop: Platform.OS === 'ios' ? 24 : 12, paddingBottom: 240 },
   logoGroup: { width: 100, height: 100, alignItems: 'center', justifyContent: 'center', marginBottom: 35 },
   logoGlow: {
     position: 'absolute',
@@ -371,16 +479,19 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
   },
   logoOuter: {
-    width: 76,
-    height: 76,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    padding: 2,
+    width: 80,
+    height: 80,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    padding: 4,
     shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: { width: 0, height: 4 },
     shadowRadius: 15,
+    shadowOpacity: 0.35,
     elevation: 15,
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   glint: {
     position: 'absolute',
@@ -424,13 +535,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 56,
-    backgroundColor: 'rgba(255,255,255,0.03)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
     borderRadius: 16,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: 'rgba(255,255,255,0.14)',
   },
-  input: { flex: 1, marginLeft: 12, color: '#FFF', fontSize: 15, fontWeight: '500' },
+  inputWrapperFocused: {
+    borderColor: '#3B82F6',
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+  },
+  input: { flex: 1, marginLeft: 12, color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
   loginBtn: { height: 54, borderRadius: 14, overflow: 'hidden', marginTop: 8, ...SHADOWS.glow(COLORS.primary) },
   secondaryBtn: {
     height: 50,
@@ -510,19 +626,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   termsTouchable: {
-    marginTop: 16,
+    marginTop: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
   },
   termsText: {
-    fontSize: 11.5,
-    color: 'rgba(255, 255, 255, 0.65)',
+    fontSize: 12,
+    color: '#94A3B8',
     fontWeight: '600',
     textAlign: 'center',
+    lineHeight: 18,
   },
   termsLink: {
-    color: '#60A5FA',
+    color: '#3B82F6',
     fontWeight: '800',
     textDecorationLine: 'underline',
   },

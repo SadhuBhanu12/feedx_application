@@ -1,6 +1,6 @@
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/lib/supabase';
-import { getResourcesForStudent, toggleBookmark, getBookmarks } from '@/services/supabaseService';
+import { getResourcesForStudent, toggleBookmark, getBookmarks, resolveResourceCategory } from '@/services/supabaseService';
 import { getOpenedResources, markResourceAsOpened, isItemNew } from '@/services/openedItemsService';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState, useCallback } from 'react';
@@ -21,17 +21,18 @@ import { requestQueue } from '@/lib/requestQueue';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter, useFocusEffect } from 'expo-router';
 import FeedbackModal from '@/components/ui/FeedbackModal';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration';
 import { useTheme } from '@/context/ThemeContext';
 
 const { width } = Dimensions.get('window');
-const CATEGORIES = ['All', 'Notes', 'Previous Year Papers', 'Syllabus'];
+const CATEGORIES = ['All', 'Notes', 'Previous Year Question Papers', 'Syllabus', 'Lab Manual'];
 
 const ResourceCard = React.memo(function ResourceCard({ item, index, isBookmarked, isNew, onOpen, onBookmark, onShare, onDownload, downloading }) {
-  const getIconAndColor = (type) => {
-    const t = String(type || '').toLowerCase();
+  const category = resolveResourceCategory(item);
+  const getIconAndColor = (cat) => {
+    const t = String(cat || '').toLowerCase();
     if (t.includes('note')) return { icon: 'notebook-outline', color: '#3B82F6', bg: 'rgba(59, 130, 246, 0.12)' };
     if (t.includes('paper') || t.includes('exam')) return { icon: 'file-clock-outline', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)' };
     if (t.includes('lab') || t.includes('manual')) return { icon: 'flask-outline', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.12)' };
@@ -40,12 +41,10 @@ const ResourceCard = React.memo(function ResourceCard({ item, index, isBookmarke
   };
 
   const { colors, isDark } = useTheme();
-  const { icon, color, bg } = getIconAndColor(item.type);
+  const { icon, color, bg } = getIconAndColor(category);
 
-  const displayType = (type) => {
-    const t = String(type || 'Material').toLowerCase();
-    if (t.includes('paper') || t.includes('exam') || t.includes('question')) return 'PREVIOUS YEAR PAPERS';
-    return String(type || 'Material').toUpperCase();
+  const displayType = () => {
+    return category.toUpperCase();
   };
 
   return (
@@ -55,7 +54,7 @@ const ResourceCard = React.memo(function ResourceCard({ item, index, isBookmarke
         activeOpacity={0.8}
         onPress={() => onOpen(item)}
       >
-        {/* Header section with icon, title */}
+        {/* Header section with icon, title, and corner bookmark */}
         <View style={styles.cardHeader}>
           <View style={[styles.iconBox, { backgroundColor: bg }]}>
             <MaterialCommunityIcons name={icon} size={24} color={color} />
@@ -63,9 +62,9 @@ const ResourceCard = React.memo(function ResourceCard({ item, index, isBookmarke
           <View style={styles.cardHeaderInfo}>
             <Text style={[styles.resourceTitle, { color: colors.textPrimary }]} numberOfLines={2}>{item.title}</Text>
           </View>
-          <TouchableOpacity onPress={(e) => { e?.stopPropagation?.(); onBookmark(item.id); }}>
-            <BookmarkButton isBookmarked={isBookmarked} onPress={() => onBookmark(item.id)} size={38} iconSize={16} />
-          </TouchableOpacity>
+          <View style={styles.cornerBookmarkWrapper}>
+            <BookmarkButton isBookmarked={isBookmarked} onPress={() => onBookmark(item.id)} size={36} iconSize={16} />
+          </View>
         </View>
 
         {/* Badges row */}
@@ -133,9 +132,38 @@ export default function AcademicScreen() {
 
   const resources = resourcesData?.pages.flat() || [];
 
-  const sortedResources = [...resources].sort((a, b) => {
-    return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
-  });
+  const sortedResources = [...resources]
+    .filter((item) => {
+      if (selectedCategory === 'All') return true;
+      const cat = resolveResourceCategory(item);
+      const isPYQFilter =
+        selectedCategory === 'Previous Year Question Papers' ||
+        selectedCategory === 'Previous Year Papers' ||
+        selectedCategory.includes('Question') ||
+        selectedCategory.includes('Paper');
+
+      if (isPYQFilter) {
+        return (
+          cat === 'Previous Year Question Papers' ||
+          cat === 'Previous Year Papers' ||
+          cat.includes('Paper') ||
+          cat.includes('PYQ') ||
+          cat.includes('Question')
+        );
+      }
+      if (selectedCategory === 'Notes') {
+        return (
+          cat === 'Notes' &&
+          !cat.includes('Paper') &&
+          !cat.includes('PYQ') &&
+          !cat.includes('Question')
+        );
+      }
+      return cat === selectedCategory;
+    })
+    .sort((a, b) => {
+      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+    });
 
   useEffect(() => {
     if (bookmarksData && Array.isArray(bookmarksData)) {
@@ -188,17 +216,19 @@ export default function AcademicScreen() {
     });
 
     try {
-      await requestQueue.enqueue('TOGGLE_BOOKMARK', { userId: user.id, entityType: 'resource', entityId: resourceId });
+      await toggleBookmark(user.id, 'resource', resourceId);
       queryClient.invalidateQueries({ queryKey: ['bookmarks', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['raw_bookmarks', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['bookmarks_resolved', user?.id] });
     } catch (e) {
-      console.warn("Bookmark toggle queued/failed", e);
+      console.warn("Bookmark toggle error:", e);
     }
   };
 
   const handleShare = async (resource) => {
     try {
       await Share.share({
-        message: `Check out this resource on FeedX: ${resource.title}\nSubject: ${resource.subject}\nDownload link: ${resource.file_url}`,
+        message: `Check out this resource on FEEDX: ${resource.title}\nSubject: ${resource.subject}\nDownload link: ${resource.file_url}`,
       });
     } catch (error) {
       console.warn("Sharing failed", error);
@@ -255,7 +285,7 @@ export default function AcademicScreen() {
 
       // Award +2 Gold Coins on Resource Read Completion
       try {
-        await triggerActivity('resource_read', 2, 20, resource.id);
+        await triggerActivity('resource_read', 2, 20, resource.id, true);
       } catch (e) {}
     } catch (err) {
       setDownloadingId(null);
@@ -581,9 +611,10 @@ const styles = StyleSheet.create({
   listContent: { paddingHorizontal: 16, paddingBottom: 110 },
   cardWrapper: { marginBottom: 12 },
   card: { backgroundColor: COLORS.card, borderRadius: RADIUS.xl, padding: 16, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.small },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 14 },
+  cardHeader: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 },
   iconBox: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
-  cardHeaderInfo: { flex: 1 },
+  cardHeaderInfo: { flex: 1, paddingRight: 4 },
+  cornerBookmarkWrapper: { marginLeft: 'auto', alignSelf: 'flex-start' },
   resourceTitle: { fontSize: 15, fontWeight: '800', color: COLORS.textPrimary, marginBottom: 2 },
   resourceMeta: { fontSize: 12, color: COLORS.textMuted, fontWeight: '600' },
   bookmarkBtn: { padding: 4 },

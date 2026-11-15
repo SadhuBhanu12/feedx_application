@@ -22,5 +22,5 @@ export const safeNavigate = (router: any, route: string, params?: Record<string,
   
   transitionTimeout = setTimeout(() => {
     isTransitioning = false;
-  }, 400); // Wait for transition animation to complete
+  }, 200); // Wait for transition animation to complete
 };

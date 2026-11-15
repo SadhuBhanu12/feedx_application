@@ -1,9 +1,11 @@
 import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View, Dimensions } from 'react-native';
-import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { Feather } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/context/ThemeContext';
+import SuccessCheckmark from '@/components/ui/SuccessCheckmark';
+import { MOTION_DURATIONS } from '@/constants/motion';
 
 const { width } = Dimensions.get('window');
 
@@ -34,19 +36,32 @@ export default function FeedbackModal({
   onRefresh,
   onRequestClose,
 }: FeedbackModalProps) {
-  const { colors, isDark } = useTheme();
+  const { colors } = useTheme();
   if (!visible) return null;
 
   const isSuccess = type === 'success';
 
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={onRequestClose || onCancel}>
-      <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)} style={styles.overlay}>
-        <Animated.View entering={ZoomIn.duration(250).springify()} exiting={ZoomOut.duration(150)} style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-
-          <View style={[styles.iconCircle, isSuccess ? styles.successBg : styles.errorBg]}>
-            <Feather name={isSuccess ? 'check-circle' : 'alert-circle'} size={44} color={isSuccess ? '#10B981' : '#EF4444'} />
-          </View>
+      <Animated.View
+        entering={FadeIn.duration(MOTION_DURATIONS.fast)}
+        exiting={FadeOut.duration(MOTION_DURATIONS.micro)}
+        style={styles.overlay}
+      >
+        <Animated.View
+          entering={FadeInDown.duration(MOTION_DURATIONS.normal).springify()}
+          exiting={FadeOutDown.duration(MOTION_DURATIONS.fast)}
+          style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+        >
+          {isSuccess ? (
+            <View style={{ marginBottom: 16 }}>
+              <SuccessCheckmark size={68} color="#10B981" />
+            </View>
+          ) : (
+            <View style={[styles.iconCircle, styles.errorBg]}>
+              <Feather name="alert-circle" size={38} color="#EF4444" />
+            </View>
+          )}
 
           <Text style={[styles.title, { color: colors.textPrimary }]}>{title}</Text>
           <Text style={[styles.message, { color: colors.textSecondary }]}>{message}</Text>
@@ -59,7 +74,7 @@ export default function FeedbackModal({
           ) : null}
 
           {isSuccess ? (
-            <TouchableOpacity style={styles.primaryBtn} onPress={onConfirm || onRequestClose}>
+            <TouchableOpacity style={styles.primaryBtn} onPress={onConfirm || onRequestClose} activeOpacity={0.88}>
               <LinearGradient colors={['#10B981', '#059669']} style={styles.btnGradient}>
                 <Text style={styles.primaryBtnText}>{confirmText}</Text>
               </LinearGradient>
@@ -67,16 +82,16 @@ export default function FeedbackModal({
           ) : (
             <View style={styles.errorActionsRow}>
               {onRetry && (
-                <TouchableOpacity style={[styles.actionBtn, styles.retryBtn]} onPress={onRetry}>
+                <TouchableOpacity style={[styles.actionBtn, styles.retryBtn]} onPress={onRetry} activeOpacity={0.8}>
                   <Text style={styles.retryBtnText}>Retry</Text>
                 </TouchableOpacity>
               )}
               {onRefresh && (
-                <TouchableOpacity style={[styles.actionBtn, styles.refreshBtn]} onPress={onRefresh}>
+                <TouchableOpacity style={[styles.actionBtn, styles.refreshBtn]} onPress={onRefresh} activeOpacity={0.8}>
                   <Text style={styles.refreshBtnText}>Refresh</Text>
                 </TouchableOpacity>
               )}
-              <TouchableOpacity style={[styles.actionBtn, styles.cancelBtn]} onPress={onCancel || onRequestClose}>
+              <TouchableOpacity style={[styles.actionBtn, styles.cancelBtn]} onPress={onCancel || onRequestClose} activeOpacity={0.8}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -105,17 +120,13 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     borderWidth: 1,
-  },
-  successBg: {
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    borderColor: 'rgba(16, 185, 129, 0.3)',
   },
   errorBg: {
     backgroundColor: 'rgba(239, 68, 68, 0.12)',

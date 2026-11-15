@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Linking } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Linking, Platform } from 'react-native';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { adminDeleteOpportunity, adminListOpportunities, adminUpsertOpportunity } from '@/services/supabaseService';
@@ -28,6 +28,9 @@ export default function PlacementHub() {
   const [items, setItems] = useState<OpportunityItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const PREDEFINED_OPP_TYPES = ['Full-time', 'Internship', 'Part-time', 'Workshop', 'Hackathon', 'Other'];
+  const [selectedOppType, setSelectedOppType] = useState('Full-time');
+  const [customOppType, setCustomOppType] = useState('');
   const [form, setForm] = useState({ 
     id: '', title: '', company: '', type: 'Full-time', 
     stipend: '', deadline: '', 
@@ -61,13 +64,19 @@ export default function PlacementHub() {
       Alert.alert('Incomplete Draft', 'Position and Company are mandatory for placement sync.');
       return;
     }
+    const finalType = selectedOppType === 'Other' ? customOppType.trim() : selectedOppType;
+    if (selectedOppType === 'Other' && !finalType) {
+      Alert.alert('Validation Error', 'Please specify the custom opportunity category.');
+      return;
+    }
+
     setSyncing(true);
     try {
       await adminUpsertOpportunity({
         id: form.id || undefined,
         title: form.title.trim(),
         company: form.company.trim(),
-        type: form.type.trim(),
+        type: finalType || 'Full-time',
         stipend: form.stipend.trim(),
         deadline: form.deadline || null,
         eligible_branches: [form.eligible_branches],
@@ -77,6 +86,8 @@ export default function PlacementHub() {
       });
       Alert.alert('Corporate Sync Success', 'Career opportunity successfully published to student feed.');
       setForm({ id: '', title: '', company: '', type: 'Full-time', stipend: '', deadline: '', eligible_branches: 'All', apply_link: '', description: '' });
+      setSelectedOppType('Full-time');
+      setCustomOppType('');
       loadData();
     } catch (e: any) {
       Alert.alert('Sync Failed', e.message);
@@ -86,6 +97,9 @@ export default function PlacementHub() {
   };
 
   const setFromRow = (row: OpportunityItem) => {
+    const isPredefined = PREDEFINED_OPP_TYPES.filter(t => t !== 'Other').includes(row.type);
+    setSelectedOppType(isPredefined ? row.type : 'Other');
+    setCustomOppType(isPredefined ? '' : row.type);
     setForm({
       id: row.id,
       title: row.title || '',
@@ -101,7 +115,7 @@ export default function PlacementHub() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -132,27 +146,52 @@ export default function PlacementHub() {
                  <View style={styles.composerLine} />
               </View>
               
-              <View style={styles.inputGrid}>
-                <View style={[styles.field, { flex: 2 }]}>
-                  <Text style={styles.label}>Position Title</Text>
-                  <TextInput 
-                    style={styles.input} 
-                    value={form.title} 
-                    onChangeText={t => setForm(f => ({ ...f, title: t }))} 
-                    placeholder="E.g. SDE-1" 
-                    placeholderTextColor="rgba(255,255,255,0.2)" 
-                  />
+              <View style={styles.field}>
+                <Text style={styles.label}>Position Title</Text>
+                <TextInput 
+                  style={styles.input} 
+                  value={form.title} 
+                  onChangeText={t => setForm(f => ({ ...f, title: t }))} 
+                  placeholder="E.g. SDE-1 / Machine Learning Intern" 
+                  placeholderTextColor="rgba(255,255,255,0.2)" 
+                />
+              </View>
+
+              <View style={styles.field}>
+                <Text style={styles.label}>Opportunity Category / Type</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: selectedOppType === 'Other' ? 12 : 0 }}>
+                  {PREDEFINED_OPP_TYPES.map(type => (
+                    <TouchableOpacity
+                      key={type}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        borderRadius: 10,
+                        backgroundColor: selectedOppType === type ? '#EC4899' : 'rgba(255,255,255,0.05)',
+                        borderWidth: 1,
+                        borderColor: selectedOppType === type ? '#EC4899' : 'rgba(255,255,255,0.1)'
+                      }}
+                      onPress={() => setSelectedOppType(type)}
+                    >
+                      <Text style={{ color: selectedOppType === type ? '#FFF' : 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: '700' }}>
+                        {type}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
-                <View style={[styles.field, { flex: 1 }]}>
-                  <Text style={styles.label}>Type</Text>
-                  <TextInput 
-                    style={styles.input} 
-                    value={form.type} 
-                    onChangeText={t => setForm(f => ({ ...f, type: t }))} 
-                    placeholder="Full-time" 
-                    placeholderTextColor="rgba(255,255,255,0.2)" 
-                  />
-                </View>
+
+                {selectedOppType === 'Other' && (
+                  <View style={{ marginTop: 8 }}>
+                    <Text style={[styles.label, { color: '#EC4899' }]}>Specify Opportunity Category *</Text>
+                    <TextInput 
+                      style={styles.input} 
+                      value={customOppType} 
+                      onChangeText={setCustomOppType} 
+                      placeholder="e.g. Fellowship, Research, Apprenticeship" 
+                      placeholderTextColor="rgba(255,255,255,0.2)" 
+                    />
+                  </View>
+                )}
               </View>
 
               <View style={styles.field}>
@@ -278,8 +317,8 @@ export default function PlacementHub() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn: { width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' },
   headerInfo: { flex: 1 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },

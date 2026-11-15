@@ -53,10 +53,16 @@ function DropdownSelect({ label, placeholder, options, value, onSelect, keyName,
 
 export default function ProfileSetupScreen() {
   const router = useRouter();
-  const { user, setUser } = useUser();
+  const { user, setUser, booting, signOut } = useUser();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [phone, setPhone] = useState('');
   const [bio, setBio] = useState('');
+
+  useEffect(() => {
+    if (!booting && !user) {
+      router.replace('/login');
+    }
+  }, [user, booting, router]);
   
   // Lists from DB
   const [colleges, setColleges] = useState<any[]>([]);
@@ -170,9 +176,23 @@ export default function ProfileSetupScreen() {
       <LinearGradient colors={COLORS.gradientHome || ['#000000', '#0a0a0a']} style={StyleSheet.absoluteFill} />
       
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingTop: 10, marginBottom: 10 }}>
+          <TouchableOpacity
+            onPress={async () => {
+              await signOut();
+              router.replace('/login');
+            }}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6, padding: 8 }}
+            activeOpacity={0.8}
+          >
+            <Feather name="log-out" size={16} color="rgba(255,255,255,0.6)" />
+            <Text style={{ color: 'rgba(255,255,255,0.6)', fontWeight: '700', fontSize: 13 }}>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+
         <Animated.View entering={FadeInDown.duration(600).springify()} style={styles.header}>
           <Text style={styles.title}>Complete Your Profile</Text>
-          <Text style={styles.subtitle}>Let&apos;s add some basic details to personalize your FeedX experience.</Text>
+          <Text style={styles.subtitle}>Let&apos;s add some basic details to personalize your FEEDX experience.</Text>
         </Animated.View>
 
         <View style={styles.card}>

@@ -95,7 +95,7 @@ export default function StayInLoopScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
       
       <Animated.View entering={FadeInDown.duration(400).springify()} style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>

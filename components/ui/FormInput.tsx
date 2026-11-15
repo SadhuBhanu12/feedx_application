@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeContext';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { MOTION_DURATIONS, MOTION_EASINGS } from '@/constants/motion';
 
 export interface FormInputProps extends TextInputProps {
   label?: string;
@@ -42,10 +44,39 @@ export const FormInput: React.FC<FormInputProps> = ({
   helperText,
   value = '',
   onChangeText,
+  onFocus,
+  onBlur,
   ...props
 }) => {
   const currentLength = (value || '').length;
   const { colors, isDark } = useTheme();
+  const focusProgress = useSharedValue(0);
+
+  const handleFocus = (e: any) => {
+    focusProgress.value = withTiming(1, { duration: MOTION_DURATIONS.fast, easing: MOTION_EASINGS.standard });
+    onFocus?.(e);
+  };
+
+  const handleBlur = (e: any) => {
+    focusProgress.value = withTiming(0, { duration: MOTION_DURATIONS.fast, easing: MOTION_EASINGS.standard });
+    onBlur?.(e);
+  };
+
+  const animatedWrapperStyle = useAnimatedStyle(() => {
+    const isFocused = focusProgress.value > 0.5;
+    return {
+      borderColor: error
+        ? '#EF4444'
+        : isFocused
+        ? colors.primary
+        : colors.inputBorder,
+      shadowColor: colors.primary,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: focusProgress.value * 0.25,
+      shadowRadius: 6,
+      elevation: isFocused ? 2 : 0,
+    };
+  });
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -69,11 +100,13 @@ export const FormInput: React.FC<FormInputProps> = ({
         </View>
       )}
 
-      <View style={[styles.inputWrapper, { backgroundColor: colors.inputBg, borderColor: colors.inputBorder }, !!error && styles.inputErrorBorder]}>
+      <Animated.View style={[styles.inputWrapper, { backgroundColor: colors.inputBg }, animatedWrapperStyle]}>
         <TextInput
           style={[styles.input, { color: colors.textPrimary }, inputStyle]}
           value={value}
           onChangeText={onChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           placeholderTextColor={isDark ? "rgba(255, 255, 255, 0.35)" : "rgba(15, 23, 42, 0.4)"}
           {...props}
         />
@@ -86,7 +119,7 @@ export const FormInput: React.FC<FormInputProps> = ({
             {rightIcon}
           </TouchableOpacity>
         ) : null}
-      </View>
+      </Animated.View>
 
       {!!error ? (
         <View style={styles.errorRow}>

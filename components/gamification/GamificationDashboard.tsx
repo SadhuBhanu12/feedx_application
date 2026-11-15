@@ -8,18 +8,18 @@ import { useTheme } from '@/context/ThemeContext';
 import { useUser } from '@/context/UserContext';
 import { SPACING, RADIUS, FONT } from '@/constants/theme';
 import { roadmapService } from '@/services/roadmapService';
+import { DAILY_TARGET_TOKENS } from '@/constants/rewardConfig';
 
 const { width } = Dimensions.get('window');
 
 const MILESTONES = [
   { coins: 5, reward: 'Verified Learner Certificate' },
-  { coins: 10, reward: 'Excellence Certificate' },
-  { coins: 20, reward: '₹500 Gift Card' },
+  { coins: 10, reward: 'Academic Excellence Certificate' },
   { coins: 50, reward: 'Annual Excellence Award' },
 ];
 
 export default function GamificationDashboard() {
-  const { wallet, streak, transactions, loading } = useGamification();
+  const { wallet, streak, transactions, todayPoints: ctxTodayPoints, dailyGoal: ctxDailyGoal, loading } = useGamification();
   const { colors, isDark } = useTheme();
   const { user } = useUser();
   const router = useRouter();
@@ -47,37 +47,20 @@ export default function GamificationDashboard() {
     } catch (e) {
       return false;
     }
-  };  // 2. Extract Gamification State
-  const coins = wallet?.gold_coins !== undefined ? wallet.gold_coins : (user?.gold_coins ?? user?.coins ?? 0);
+  };
+
+  // 2. Extract Gamification State
   const xpPoints = streak?.xp_points !== undefined ? streak.xp_points : (user?.xp_points ?? user?.xp ?? 0);
+  const tokens = wallet?.tokens !== undefined ? wallet.tokens : (user?.tokens ?? xpPoints);
+  const coins = wallet?.gold_coins !== undefined ? wallet.gold_coins : (user?.gold_coins ?? user?.coins ?? 0);
   const currentStreak = streak?.current_streak !== undefined ? streak.current_streak : (user?.streak_count ?? user?.streak ?? 0);
   const userLevel = Math.max(1, Math.floor(xpPoints / 1000) + 1);
 
-  // 3. Calculate Today's Points dynamically (Max 140)
-  const todayPoints = useMemo(() => {
-    if (!transactions) return 0;
-    const todayTransactions = transactions.filter(isToday);
-
-    let quickLearnPoints = 0;
-    let quizPoints = 0;
-    let roadmapPoints = 0;
-
-    todayTransactions.forEach((t) => {
-      const type = (t.activity_type || '').toLowerCase();
-      if (type === 'resource_read') {
-        quickLearnPoints = Math.min(quickLearnPoints + 15, 45);
-      } else if (type === 'quiz_completed') {
-        quizPoints = Math.min(quizPoints + 60, 60);
-      } else if (type === 'roadmap_completed' || type === 'roadmap_task' || type === 'phase_completed') {
-        roadmapPoints = Math.min(roadmapPoints + 35, 35);
-      }
-    });
-
-    return quickLearnPoints + quizPoints + roadmapPoints;
-  }, [transactions, todayStr]);
-
-  const progressPercent = Math.min((todayPoints / 140) * 100, 100);
-  const remainingPoints = Math.max(140 - todayPoints, 0);
+  // 3. Calculate Today's Points dynamically
+  const dailyGoal = ctxDailyGoal || DAILY_TARGET_TOKENS;
+  const todayPoints = ctxTodayPoints !== undefined ? ctxTodayPoints : 0;
+  const progressPercent = Math.min((todayPoints / dailyGoal) * 100, 100);
+  const remainingPoints = Math.max(dailyGoal - todayPoints, 0);
 
   // 4. Calculate Roadmap Progress dynamically from MMKV storage
   const [roadmapData, setRoadmapData] = useState<{
@@ -99,43 +82,30 @@ export default function GamificationDashboard() {
   useEffect(() => {
     const loadActiveRoadmap = () => {
       try {
-        const { storage } = require('@/store/storage');
-        const raw = storage.getString('bookmarked_roadmaps');
-        const list = raw ? JSON.parse(raw) : [];
-        if (list.length > 0) {
-          const activeId = list[0];
-          const { CAREER_ROADMAPS } = require('@/constants/roadmaps');
-          const roadmap = CAREER_ROADMAPS[activeId];
-          if (roadmap) {
-            const completedPhases = roadmapService.getProgress(activeId);
-            const totalPhases = roadmap.phases?.length || 1;
-            const completedCount = completedPhases.length;
-            const progressPercent = Math.min(Math.round((completedCount / totalPhases) * 100), 100);
-            const currentDay = Math.min(Math.round((completedCount / totalPhases) * 30), 30);
-            const daysRemaining = 30 - currentDay;
+        const summary = roadmapService.getActiveRoadmapSummary();
+        const progressPercent = summary.percentage;
+        const currentDay = Math.min(Math.round((summary.percentage / 100) * 30), 30);
+        const daysRemaining = Math.max(0, 30 - currentDay);
 
-            setRoadmapData({
-              title: roadmap.title,
-              currentDay,
-              totalDays: 30,
-              daysRemaining,
-              progressPercent,
-              hasRoadmap: true,
-            });
-            return;
-          }
-        }
+        setRoadmapData({
+          title: summary.title,
+          currentDay,
+          totalDays: 30,
+          daysRemaining,
+          progressPercent,
+          hasRoadmap: summary.hasActiveRoadmap,
+        });
       } catch (err) {
         console.warn('loadActiveRoadmap error:', err);
+        setRoadmapData({
+          title: 'No Active Roadmap',
+          currentDay: 0,
+          totalDays: 30,
+          daysRemaining: 30,
+          progressPercent: 0,
+          hasRoadmap: false,
+        });
       }
-      setRoadmapData({
-        title: 'No Active Roadmap',
-        currentDay: 0,
-        totalDays: 30,
-        daysRemaining: 30,
-        progressPercent: 0,
-        hasRoadmap: false,
-      });
     };
 
     loadActiveRoadmap();
@@ -159,9 +129,9 @@ export default function GamificationDashboard() {
   // 6. Calculate Weekly Progress dynamically from transaction dates
   const weeklyProgress = useMemo(() => {
     if (!transactions || transactions.length === 0) {
-      const daysComplete = Math.min(currentStreak % 7 || 5, 7);
+      const daysComplete = Math.min(currentStreak > 0 ? (currentStreak % 7 || 7) : 0, 7);
       const percent = Math.round((daysComplete / 7) * 100);
-      return { percent: percent || 82, daysComplete: daysComplete || 5 };
+      return { percent, daysComplete };
     }
 
     const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -190,10 +160,14 @@ export default function GamificationDashboard() {
       if (hasTx) daysComplete++;
     });
 
+    if (daysComplete === 0 && currentStreak > 0) {
+      daysComplete = Math.min(currentStreak, 7);
+    }
+
     const percent = Math.round((daysComplete / 7) * 100);
     return {
-      percent: percent || 82,
-      daysComplete: daysComplete || 5,
+      percent,
+      daysComplete,
     };
   }, [transactions, currentStreak]);
 
@@ -211,8 +185,8 @@ export default function GamificationDashboard() {
       {/* Header Info */}
       <View style={styles.headerRow}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <FontAwesome5 name="trophy" size={14} color="#F59E0B" />
-          <Text style={[styles.seasonTitle, { color: colors.textPrimary }]}>🏆 FEEDX SEASON 01 — 2026</Text>
+          <FontAwesome5 name="chart-line" size={14} color="#3B82F6" />
+          <Text style={[styles.seasonTitle, { color: colors.textPrimary }]}>STUDENT PERFORMANCE</Text>
         </View>
         <TouchableOpacity 
           style={[styles.walletBtn, { backgroundColor: isDark ? 'rgba(234, 179, 8, 0.12)' : '#FEF08A' }]}
@@ -220,7 +194,8 @@ export default function GamificationDashboard() {
           onPressIn={() => { scale.value = withSpring(0.97); }}
           onPressOut={() => { scale.value = withSpring(1); }}
         >
-          <Text style={styles.walletBtnText}>Wallet 🪙</Text>
+          <MaterialCommunityIcons name="wallet-outline" size={13} color="#854D0E" />
+          <Text style={styles.walletBtnText}>Wallet</Text>
         </TouchableOpacity>
       </View>
 
@@ -228,36 +203,37 @@ export default function GamificationDashboard() {
       <View style={styles.statsGrid}>
         <View style={[styles.statBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderColor: colors.border }]}>
           <Text style={[styles.statValue, { color: colors.textPrimary }]}>{xpPoints}</Text>
-          <Text style={[styles.statLabel, { color: colors.textMuted }]}>⭐ Points</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <MaterialCommunityIcons name="star-outline" size={12} color={colors.textMuted} />
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Points</Text>
+          </View>
         </View>
 
         <View style={[styles.statBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderColor: colors.border }]}>
           <Text style={[styles.statValue, { color: '#EAB308' }]}>{coins}</Text>
-          <Text style={[styles.statLabel, { color: colors.textMuted }]}>🪙 Coins</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <MaterialCommunityIcons name="circle-multiple-outline" size={12} color="#EAB308" />
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Coins</Text>
+          </View>
         </View>
 
         <View style={[styles.statBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderColor: colors.border }]}>
           <Text style={[styles.statValue, { color: '#EF4444' }]}>{currentStreak}d</Text>
-          <Text style={[styles.statLabel, { color: colors.textMuted }]}>🔥 Streak</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <MaterialCommunityIcons name="fire" size={12} color="#EF4444" />
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Streak</Text>
+          </View>
         </View>
 
         <View style={[styles.statBox, { backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : '#F8FAFC', borderColor: colors.border }]}>
           <Text style={[styles.statValue, { color: '#3B82F6' }]}>{userLevel}</Text>
-          <Text style={[styles.statLabel, { color: colors.textMuted }]}>🏆 Level</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+            <MaterialCommunityIcons name="shield-star-outline" size={12} color="#3B82F6" />
+            <Text style={[styles.statLabel, { color: colors.textMuted }]}>Level</Text>
+          </View>
         </View>
       </View>
 
-      {/* Leftover Points Detail Section */}
-      <View style={[styles.leftoverContainer, { borderBottomColor: colors.border }]}>
-        <View style={styles.leftoverRow}>
-          <Text style={[styles.leftoverText, { color: colors.textSecondary }]}>
-            ⭐ <Text style={{ fontWeight: '800', color: colors.textPrimary }}>{xpPoints % 1000}</Text> Points toward next Coin
-          </Text>
-          <Text style={[styles.leftoverText, { color: colors.textMuted }]}>
-            {1000 - (xpPoints % 1000)} Points until next Coin
-          </Text>
-        </View>
-      </View>
 
       {/* Divider */}
       <View style={[styles.divider, { backgroundColor: colors.border }]} />
@@ -270,16 +246,16 @@ export default function GamificationDashboard() {
       >
         <View style={styles.sectionHeader}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Today's Progress</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Today&apos;s Progress</Text>
             <Ionicons name="chevron-forward" size={12} color={colors.textMuted} />
           </View>
-          <Text style={[styles.sectionValue, { color: colors.textSecondary }]}>{todayPoints} / 140 Points</Text>
+          <Text style={[styles.sectionValue, { color: colors.textSecondary }]}>{todayPoints} / {dailyGoal} Points</Text>
         </View>
         <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#E2E8F0' }]}>
           <View style={[styles.progressBar, { width: `${progressPercent}%`, backgroundColor: '#10B981' }]} />
         </View>
         <Text style={[styles.sectionFooter, { color: colors.textMuted }]}>
-          {todayPoints >= 140 ? '🎉 Daily Goal Complete! +140 Points earned' : `${remainingPoints} Points remaining`}
+          {todayPoints >= dailyGoal ? `Daily Goal Complete! +${todayPoints} Points earned` : `${remainingPoints} Points remaining`}
         </Text>
       </TouchableOpacity>
 
@@ -294,13 +270,36 @@ export default function GamificationDashboard() {
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Active Roadmap: {roadmapData.title}</Text>
             <Ionicons name="chevron-forward" size={12} color={colors.textMuted} />
           </View>
-          <Text style={[styles.sectionValue, { color: colors.textSecondary }]}>Day {roadmapData.currentDay} / {roadmapData.totalDays}</Text>
+          <Text style={[styles.sectionValue, { color: colors.textSecondary }]}>{roadmapData.progressPercent}% Completed</Text>
         </View>
         <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#E2E8F0' }]}>
           <View style={[styles.progressBar, { width: `${roadmapData.progressPercent}%`, backgroundColor: '#3B82F6' }]} />
         </View>
         <Text style={[styles.sectionFooter, { color: colors.textMuted }]}>
-          {roadmapData.hasRoadmap ? `${roadmapData.daysRemaining} Days Remaining` : 'Create your career plan now'}
+          {roadmapData.hasRoadmap ? `${roadmapData.daysRemaining} Days Remaining (${roadmapData.progressPercent}% Done)` : 'Create your career plan now'}
+        </Text>
+      </TouchableOpacity>
+
+      {/* 2b. Gold Coin Progress (1 Coin = 1,000 Tokens) */}
+      <TouchableOpacity 
+        style={styles.section} 
+        activeOpacity={0.8}
+        onPress={() => router.push('/rewards')}
+      >
+        <View style={styles.sectionHeader}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Progress to Next Gold Coin</Text>
+            <Ionicons name="chevron-forward" size={12} color={colors.textMuted} />
+          </View>
+          <Text style={[styles.sectionValue, { color: '#F59E0B' }]}>
+            {(tokens % 1000)} / 1,000 Tokens ({Math.round(((tokens % 1000) / 1000) * 100)}%)
+          </Text>
+        </View>
+        <View style={[styles.progressTrack, { backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#E2E8F0' }]}>
+          <View style={[styles.progressBar, { width: `${Math.min(((tokens % 1000) / 1000) * 100, 100)}%`, backgroundColor: '#F59E0B' }]} />
+        </View>
+        <Text style={[styles.sectionFooter, { color: colors.textMuted }]}>
+          {Math.floor(tokens / 1000)} Earned Coins • {1000 - (tokens % 1000)} Tokens remaining for next coin
         </Text>
       </TouchableOpacity>
 
@@ -440,21 +439,6 @@ const styles = StyleSheet.create({
   },
   sectionFooter: {
     fontSize: 10,
-    fontWeight: '600',
-  },
-  leftoverContainer: {
-    paddingVertical: 10,
-    marginTop: 8,
-    borderBottomWidth: 1,
-  },
-  leftoverRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 4,
-  },
-  leftoverText: {
-    fontSize: 11,
     fontWeight: '600',
   },
 });

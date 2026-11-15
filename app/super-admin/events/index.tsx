@@ -179,7 +179,7 @@ export default function SuperAdminEventsDashboard() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>

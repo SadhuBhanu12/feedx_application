@@ -10,7 +10,7 @@ import { useUser } from '@/context/UserContext';
 import { passwordsMatch, validatePassword } from '@/utils/passwordValidation';
 
 export default function ChangePasswordScreen() {
-  const { user, booting, mustChangePassword, changePassword } = useUser();
+  const { user, booting, mustChangePassword, changePassword, signOut } = useUser();
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -31,9 +31,26 @@ export default function ChangePasswordScreen() {
 
   useEffect(() => {
     if (!mustChangePassword) return;
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      Alert.alert(
+        'Exit Setup?',
+        'Do you want to cancel password setup and return to the login screen?',
+        [
+          { text: 'Stay Here', style: 'cancel' },
+          {
+            text: 'Return to Login',
+            style: 'destructive',
+            onPress: async () => {
+              await signOut();
+              router.replace('/login');
+            },
+          },
+        ]
+      );
+      return true;
+    });
     return () => sub.remove();
-  }, [mustChangePassword]);
+  }, [mustChangePassword, signOut, router]);
 
   const handleSave = async () => {
     if (saving) return;
@@ -77,18 +94,34 @@ export default function ChangePasswordScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#070A13', '#0F172A', '#131C31']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#070A13', '#0F172A', '#131C31']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.topNav}>
-        {!mustChangePassword ? (
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.8}>
-            <Feather name="arrow-left" size={20} color="#FFF" />
-          </TouchableOpacity>
-        ) : (
-          <View style={{ width: 40 }} />
-        )}
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={async () => {
+            if (mustChangePassword) {
+              await signOut();
+              router.replace('/login');
+            } else {
+              router.back();
+            }
+          }}
+          activeOpacity={0.8}
+        >
+          <Feather name={mustChangePassword ? "log-out" : "arrow-left"} size={20} color="#FFF" />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Security Settings</Text>
-        <View style={{ width: 40 }} />
+        <TouchableOpacity
+          style={styles.textBtn}
+          onPress={async () => {
+            await signOut();
+            router.replace('/login');
+          }}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.exitText}>Log Out</Text>
+        </TouchableOpacity>
       </View>
 
       <Animated.View entering={FadeInUp.duration(500).springify()} style={styles.headerSection}>
@@ -251,4 +284,6 @@ const styles = StyleSheet.create({
   cta: { height: 52, borderRadius: 14, overflow: 'hidden', marginTop: 8 },
   btnGradient: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   ctaText: { color: '#FFF', fontWeight: '800', fontSize: 15, letterSpacing: 0.5 },
+  textBtn: { paddingHorizontal: 8, paddingVertical: 6 },
+  exitText: { fontSize: 13, fontWeight: '700', color: 'rgba(255,255,255,0.6)' },
 });

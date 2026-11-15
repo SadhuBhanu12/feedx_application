@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text, View, Image, Dimensions, TouchableOpacity
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SkeletonLoader } from '@/components/ui/Loaders';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { safeBack } from '@/utils/navigation';
 import React, { useEffect, useState } from 'react';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { getCollegeById } from '@/services/supabaseService';
@@ -53,7 +54,7 @@ export default function CollegeDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFill} />}
       
       <Animated.ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         {/* Banner Section */}
@@ -64,7 +65,7 @@ export default function CollegeDetailScreen() {
           />
           <LinearGradient colors={['transparent', isDark ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)']} style={styles.bannerOverlay} />
           
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => safeBack('/(tabs)/college')}>
             <BlurView intensity={20} tint={isDark ? "dark" : "light"} style={styles.iconCircle}>
               <Feather name="chevron-left" size={24} color={colors.textPrimary} />
             </BlurView>
@@ -165,8 +166,8 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   scroll: { paddingBottom: 60 },
   bannerContainer: { height: 320, width: '100%' },
-  banner: { ...StyleSheet.absoluteFillObject },
-  bannerOverlay: { ...StyleSheet.absoluteFillObject },
+  banner: { ...StyleSheet.absoluteFill },
+  bannerOverlay: { ...StyleSheet.absoluteFill },
   backBtn: { position: 'absolute', top: 60, left: 24, zIndex: 10 },
   iconCircle: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   collegeInfo: { position: 'absolute', bottom: 30, left: 24, right: 24 },

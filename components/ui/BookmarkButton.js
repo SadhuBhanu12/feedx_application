@@ -1,39 +1,115 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withSequence,
   withTiming,
   interpolateColor,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { COLORS, SHADOWS } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
+import { MOTION_DURATIONS, MOTION_EASINGS } from '@/constants/motion';
+
+import { useUser } from '@/context/UserContext';
+import { toggleBookmark, isBookmarked as checkIsBookmarked } from '@/services/supabaseService';
 
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity);
 
+/**
+ * @typedef {Object} BookmarkItem
+ * @property {string} id
+ * @property {string} [type]
+ * @property {string} [title]
+ * @property {string} [description]
+ */
+
+/**
+ * @param {{
+ *   isBookmarked?: boolean,
+ *   onPress?: () => void,
+ *   item?: BookmarkItem,
+ *   size?: number,
+ *   iconSize?: number,
+ *   style?: any
+ * }} props
+ */
 export function BookmarkButton({
-  isBookmarked,
+  isBookmarked: controlledBookmarked,
   onPress,
+  item = null,
   size = 40,
   iconSize = 18,
   style = null,
 }) {
   const { colors, isDark } = useTheme();
-  const scale = useSharedValue(1);
-  const activeProgress = useSharedValue(isBookmarked ? 1 : 0);
+  const { user } = useUser();
+  const [internalBookmarked, setInternalBookmarked] = React.useState(false);
+
+  const isBookmarked = controlledBookmarked !== undefined ? controlledBookmarked : internalBookmarked;
 
   useEffect(() => {
-    activeProgress.value = withTiming(isBookmarked ? 1 : 0, { duration: 250 });
+    if (item && item.id && controlledBookmarked === undefined && user?.id) {
+      checkIsBookmarked(user.id, item.type || 'notice', item.id)
+        .then((res) => {
+          if (typeof res === 'boolean') setInternalBookmarked(res);
+        })
+        .catch(() => {});
+    }
+  }, [item?.id, controlledBookmarked, user?.id]);
+  const scale = useSharedValue(1);
+  const iconScale = useSharedValue(1);
+  const activeProgress = useSharedValue(isBookmarked ? 1 : 0);
+  const initialRender = useRef(true);
+
+  useEffect(() => {
+    activeProgress.value = withTiming(isBookmarked ? 1 : 0, {
+      duration: MOTION_DURATIONS.fast,
+      easing: MOTION_EASINGS.standard,
+    });
+
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+
+    // Micro scale pop when bookmark state toggles
+    iconScale.value = withSequence(
+      withTiming(0.88, { duration: 60, easing: MOTION_EASINGS.press }),
+      withTiming(1.15, { duration: 100, easing: MOTION_EASINGS.standard }),
+      withTiming(1, { duration: 80, easing: MOTION_EASINGS.standard })
+    );
   }, [isBookmarked]);
 
   const handlePressIn = () => {
-    scale.value = withSpring(0.92, { damping: 15, stiffness: 300 });
+    scale.value = withTiming(0.92, {
+      duration: MOTION_DURATIONS.micro,
+      easing: MOTION_EASINGS.press,
+    });
   };
 
   const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+    scale.value = withTiming(1, {
+      duration: MOTION_DURATIONS.micro,
+      easing: MOTION_EASINGS.standard,
+    });
+  };
+
+  const handlePress = () => {
+    try {
+      Haptics.selectionAsync().catch(() => {});
+    } catch {}
+    if (onPress) {
+      onPress();
+    } else if (item && item.id && user?.id) {
+      const nextVal = !internalBookmarked;
+      setInternalBookmarked(nextVal);
+      toggleBookmark(user.id, item.type || 'notice', item.id).catch(() => {
+        setInternalBookmarked(!nextVal);
+      });
+    }
   };
 
   const defaultBg = isDark ? 'rgba(255, 255, 255, 0.06)' : colors.inputBg;
@@ -60,10 +136,14 @@ export function BookmarkButton({
     };
   });
 
+  const animatedIconStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: iconScale.value }],
+  }));
+
   return (
     <AnimatedTouchableOpacity
       activeOpacity={0.8}
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       accessibilityRole="button"
@@ -77,11 +157,13 @@ export function BookmarkButton({
         style,
       ]}
     >
-      {isBookmarked ? (
-        <FontAwesome name="bookmark" size={iconSize} color="#FFFFFF" style={{ zIndex: 10 }} />
-      ) : (
-        <Feather name="bookmark" size={iconSize} color={colors.textSecondary} />
-      )}
+      <Animated.View style={animatedIconStyle}>
+        {isBookmarked ? (
+          <FontAwesome name="bookmark" size={iconSize} color="#FFFFFF" />
+        ) : (
+          <Feather name="bookmark" size={iconSize} color={colors.textSecondary} />
+        )}
+      </Animated.View>
     </AnimatedTouchableOpacity>
   );
 }

@@ -3,17 +3,28 @@ import { View, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 import { COLORS } from '@/constants/theme';
+import { MOTION_DURATIONS, MOTION_EASINGS } from '@/constants/motion';
+import AnimatedNumber from '@/components/ui/AnimatedNumber';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const CircularProgress = ({ percentage = 0, size = 150, strokeWidth = 15 }) => {
+export const CircularProgress = ({
+  percentage = 0,
+  size = 150,
+  strokeWidth = 15,
+  showCountUp = true,
+  duration = MOTION_DURATIONS.countUp,
+}) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const progress = useSharedValue(0);
 
   useEffect(() => {
-    progress.value = withTiming(percentage / 100, { duration: 1000 });
-  }, [percentage, progress]);
+    progress.value = withTiming(percentage / 100, {
+      duration,
+      easing: MOTION_EASINGS.decelerate,
+    });
+  }, [percentage, duration]);
 
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * (1 - progress.value),
@@ -51,9 +62,18 @@ const CircularProgress = ({ percentage = 0, size = 150, strokeWidth = 15 }) => {
         />
       </Svg>
       <View style={styles.textContainer}>
-        <Animated.Text style={[styles.percentageText, { color }]}>
-          {`${Math.round(percentage)}%`}
-        </Animated.Text>
+        {showCountUp ? (
+          <AnimatedNumber
+            value={percentage}
+            suffix="%"
+            duration={duration}
+            style={[styles.percentageText, { color }]}
+          />
+        ) : (
+          <Animated.Text style={[styles.percentageText, { color }]}>
+            {`${Math.round(percentage)}%`}
+          </Animated.Text>
+        )}
       </View>
     </View>
   );
@@ -61,7 +81,7 @@ const CircularProgress = ({ percentage = 0, size = 150, strokeWidth = 15 }) => {
 
 const styles = StyleSheet.create({
   textContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'center',
     alignItems: 'center',
   },

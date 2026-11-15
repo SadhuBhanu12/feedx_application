@@ -1,6 +1,7 @@
 import { Redirect } from 'expo-router';
 import HomeScreen from '@/screens/HomeScreen';
 import { useUser } from '@/context/UserContext';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Index() {
   const { user, booting, mustChangePassword } = useUser();
@@ -9,12 +10,12 @@ export default function Index() {
 
   if (booting) return null;
 
-  if (!user) {
+  if (!user || !user.id) {
     return <Redirect href="/login" />;
   }
 
   if (mustChangePassword) {
-    return <Redirect href="/change-password" />;
+    return <Redirect href="/login" />;
   }
 
   // Profile setup redirect removed by user request

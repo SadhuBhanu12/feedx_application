@@ -68,7 +68,7 @@ export default function ProjectDetailModal({
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
       <View style={styles.container}>
-        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
         {/* Top Header */}
         <View style={styles.header}>
@@ -99,7 +99,7 @@ export default function ProjectDetailModal({
               <View style={styles.imageBannerContainer}>
                 <ExpoImage
                   source={{ uri: rawImg }}
-                  style={StyleSheet.absoluteFillObject}
+                  style={StyleSheet.absoluteFill}
                   contentFit="cover"
                 />
                 <LinearGradient colors={['transparent', 'rgba(15, 23, 42, 0.95)']} style={styles.bannerOverlay} />
@@ -159,13 +159,19 @@ export default function ProjectDetailModal({
 
             <View style={styles.divider} />
 
-            <Text style={styles.sectionHeader}>💡 Proposed Solution</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+              <Feather name="zap" size={14} color="#8B5CF6" />
+              <Text style={[styles.sectionHeader, { marginBottom: 0 }]}>Proposed Solution</Text>
+            </View>
             <Text style={styles.bodyText}>{project.proposed_solution || project.description || 'No detailed proposed solution provided.'}</Text>
 
             {project.expected_impact ? (
               <>
                 <View style={styles.divider} />
-                <Text style={styles.sectionHeader}>🎯 Expected Impact</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <Feather name="trending-up" size={14} color="#10B981" />
+                  <Text style={[styles.sectionHeader, { marginBottom: 0 }]}>Expected Impact</Text>
+                </View>
                 <Text style={styles.bodyText}>{project.expected_impact}</Text>
               </>
             ) : null}
@@ -174,7 +180,10 @@ export default function ProjectDetailModal({
           {/* Technology Stack */}
           {techStackList.length > 0 && (
             <View style={styles.sectionCard}>
-              <Text style={styles.sectionHeader}>🛠️ Technology Stack</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <Feather name="code" size={14} color="#3B82F6" />
+                <Text style={[styles.sectionHeader, { marginBottom: 0 }]}>Technology Stack</Text>
+              </View>
               <View style={styles.pillsContainer}>
                 {techStackList.map((tech: string, idx: number) => (
                   <View key={idx} style={styles.techPill}>
@@ -188,7 +197,10 @@ export default function ProjectDetailModal({
           {/* Support Needed */}
           {supportList.length > 0 && (
             <View style={styles.sectionCard}>
-              <Text style={styles.sectionHeader}>🤝 Support Needed from FEEDX</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <Feather name="users" size={14} color="#F59E0B" />
+                <Text style={[styles.sectionHeader, { marginBottom: 0 }]}>Support Needed from FEEDX</Text>
+              </View>
               <View style={styles.pillsContainer}>
                 {supportList.map((sup: string, idx: number) => (
                   <View key={idx} style={styles.supportPill}>

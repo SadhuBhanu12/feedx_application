@@ -1,5 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { DarkTheme, DefaultTheme, ThemeProvider, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -10,7 +9,14 @@ import 'react-native-reanimated';
 import { UserProvider, useUser } from '@/context/UserContext';
 
 // Prevent splash screen from auto-hiding before asset loading and user context initialization
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
+
+// Sanitize verbose logging in production builds to prevent PII and token leakage into system logcat
+if (!__DEV__) {
+  console.log = () => {};
+  console.info = () => {};
+  console.debug = () => {};
+}
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { QueryClient, QueryClientProvider, onlineManager } from '@tanstack/react-query';
@@ -62,7 +68,7 @@ function AppContent() {
   if (isBlocked) {
     return (
       <View style={styles.blockContainer}>
-        <LinearGradient colors={['#090D16', '#020408']} style={StyleSheet.absoluteFillObject} />
+        <LinearGradient colors={['#090D16', '#020408']} style={StyleSheet.absoluteFill} />
         <View style={styles.iconRing}>
           <MaterialCommunityIcons name="cog-sync" size={64} color="#F59E0B" />
         </View>
@@ -84,16 +90,23 @@ function AppContent() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade_from_bottom',
+          animationDuration: 240,
+          gestureEnabled: true,
+        }}
+      >
         <Stack.Screen name="index" />
-        <Stack.Screen name="terms-conditions" options={{ presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="terms-conditions" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="login" />
         <Stack.Screen name="first-time-login" />
         <Stack.Screen name="create-password" />
         <Stack.Screen name="activation-success" />
         <Stack.Screen name="forgot-password" />
         <Stack.Screen name="change-password" />
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
         <Stack.Screen name="opportunity-detail" options={{ presentation: 'card' }} />
         <Stack.Screen name="event-detail" options={{ presentation: 'card' }} />
         <Stack.Screen name="event-feedback" options={{ presentation: 'card' }} />
@@ -109,17 +122,35 @@ function AppContent() {
         <Stack.Screen name="community" options={{ presentation: 'card' }} />
         <Stack.Screen name="innovation" options={{ presentation: 'card' }} />
         <Stack.Screen name="institutional-settings" options={{ presentation: 'card' }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        <Stack.Screen name="stay-in-loop" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 220 }} />
+        <Stack.Screen name="stay-in-loop" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 220 }} />
         <Stack.Screen name="support" options={{ presentation: 'card' }} />
         <Stack.Screen name="about-feedx" options={{ presentation: 'card' }} />
         <Stack.Screen name="all-features" options={{ presentation: 'card' }} />
         <Stack.Screen name="roadmap" options={{ presentation: 'card' }} />
         <Stack.Screen name="rewards" options={{ presentation: 'card' }} />
         <Stack.Screen name="leaderboard" options={{ presentation: 'card' }} />
-        <Stack.Screen name="daily-quiz" options={{ presentation: 'fullScreenModal' }} />
+        <Stack.Screen name="daily-quiz" options={{ presentation: 'fullScreenModal', animation: 'slide_from_bottom' }} />
         <Stack.Screen name="daily-quiz-result" options={{ presentation: 'card' }} />
+        <Stack.Screen name="quick-learn-detail" options={{ presentation: 'card' }} />
+        <Stack.Screen name="certificate-view" options={{ presentation: 'card' }} />
+        <Stack.Screen name="verify-qr" options={{ presentation: 'card' }} />
+        <Stack.Screen name="super-admin" options={{ animation: 'fade' }} />
         <Stack.Screen name="admin/quiz-manager" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/polls" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/explore-manager" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/daily-challenges" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/organizer-dashboard" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/scanner" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/create-announcement" options={{ presentation: 'card' }} />
+        <Stack.Screen name="admin/grievances" options={{ presentation: 'card' }} />
+        <Stack.Screen name="community/post/[id]" options={{ presentation: 'card' }} />
+        <Stack.Screen name="daily-challenges/index" options={{ presentation: 'card' }} />
+        <Stack.Screen name="daily-challenges/[id]" options={{ presentation: 'card' }} />
+        <Stack.Screen name="daily-challenges/history" options={{ presentation: 'card' }} />
+        <Stack.Screen name="student/ticket" options={{ presentation: 'card' }} />
+        <Stack.Screen name="tools/id-generator" options={{ presentation: 'card' }} />
+        <Stack.Screen name="tools/percentage" options={{ presentation: 'card' }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
@@ -131,18 +162,6 @@ import { ThemeProvider as CustomThemeProvider } from '@/context/ThemeContext';
 import { GamificationProvider } from '@/context/GamificationContext';
 
 export default function RootLayout() {
-  useEffect(() => {
-    async function hide() {
-      try {
-        await SplashScreen.hideAsync();
-      } catch (e) {
-        console.warn('Splash hide error:', e);
-      }
-    }
-    const timer = setTimeout(hide, 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>

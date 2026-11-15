@@ -21,21 +21,21 @@ const TOPIC_SPECS: Record<string, TopicSpec> = {
     title: 'APIs & Web Services Quiz',
     category: 'Web Dev',
     questions: [
-      { text: 'What is an API?', a: 'An interface that lets software systems communicate', b: 'A database table', c: 'A programming keyboard', d: 'A graphics card', ans: 'A', exp: 'An API defines how software components communicate.' },
-      { text: 'What is an API endpoint?', a: 'A specific address for an API resource or action', b: 'A password', c: 'A compiler', d: 'A storage device', ans: 'A', exp: 'An endpoint is a defined API URL/address for a resource or operation.' },
-      { text: 'Which HTTP method commonly retrieves data?', a: 'GET', b: 'POST', c: 'DELETE', d: 'PATCH', ans: 'A', exp: 'GET is commonly used to retrieve resources.' },
-      { text: 'Which HTTP method commonly creates/submits data?', a: 'POST', b: 'GET', c: 'HEAD', d: 'OPTIONS', ans: 'A', exp: 'POST is commonly used to submit or create data.' },
-      { text: 'What is JSON?', a: 'A structured data format commonly used by web APIs', b: 'A network cable', c: 'A CPU', d: 'A firewall', ans: 'A', exp: 'JSON is a lightweight structured data format.' },
-      { text: 'What does an HTTP status code communicate?', a: 'The outcome of a request', b: 'A user’s password', c: 'A database schema', d: 'A screen resolution', ans: 'A', exp: 'Status codes indicate the result of an HTTP request.' },
-      { text: 'What is authentication?', a: 'Verifying who a user or system is', b: 'Choosing a UI color', c: 'Compressing images', d: 'Sorting a database', ans: 'A', exp: 'Authentication verifies identity.' },
-      { text: 'What is authorization?', a: 'Determining what an authenticated user can access', b: 'Verifying an IP cable', c: 'Creating HTML', d: 'Encrypting a monitor', ans: 'A', exp: 'Authorization controls permissions after identity is established.' },
-      { text: 'What is a request?', a: 'A message sent by a client to a server', b: 'A database table', c: 'A programming language', d: 'A hard disk', ans: 'A', exp: 'A request asks a server to perform an operation or return data.' },
-      { text: 'What is a response?', a: 'A message returned by a server', b: 'A Git branch', c: 'A password manager', d: 'A circuit', ans: 'A', exp: 'A server sends a response back to the client.' },
-      { text: 'What is an API key?', a: 'A credential used by APIs to identify or authorize a caller', b: 'A keyboard key', c: 'A database column', d: 'A router port', ans: 'A', exp: 'Some APIs use API keys as credentials.' },
-      { text: 'What is rate limiting?', a: 'Restricting how frequently requests can be made', b: 'Encrypting all files', c: 'Changing a domain name', d: 'Creating a UI button', ans: 'A', exp: 'Rate limiting controls request frequency to protect services.' },
-      { text: 'What is an API header?', a: 'Metadata sent with an HTTP request or response', b: 'A database row', c: 'A mobile screen', d: 'A Git tag', ans: 'A', exp: 'Headers carry metadata such as content type or authorization.' },
-      { text: 'What is a webhook?', a: 'A mechanism for sending event notifications to another service', b: 'A password hash', c: 'A CSS selector', d: 'A database index', ans: 'A', exp: 'Webhooks notify another service when an event occurs.' },
-      { text: 'Why is API documentation important?', a: 'It explains endpoints, inputs, outputs and usage', b: 'It increases CPU speed', c: 'It replaces testing', d: 'It stores photos', ans: 'A', exp: 'Documentation tells developers how to correctly use an API.' }
+      { text: 'What is an API?', a: 'A database table', b: 'An interface that lets software systems communicate', c: 'A programming keyboard', d: 'A graphics card', ans: 'B', exp: 'Option B is correct. An API (Application Programming Interface) defines rules and protocols for software components to communicate.' },
+      { text: 'What is an API endpoint?', a: 'A specific URL/address where an API resource is accessed', b: 'A user login password', c: 'A code compiler', d: 'A hardware storage drive', ans: 'A', exp: 'Option A is correct. An endpoint is a unique digital location/URL where an API receives requests for specific resources.' },
+      { text: 'Which HTTP method is specifically designed to retrieve data without side effects?', a: 'POST', b: 'DELETE', c: 'GET', d: 'PATCH', ans: 'C', exp: 'Option C is correct. GET is an idempotent HTTP method used to fetch or retrieve resources from a server.' },
+      { text: 'Which HTTP method commonly creates or submits new data to a server?', a: 'GET', b: 'HEAD', c: 'OPTIONS', d: 'POST', ans: 'D', exp: 'Option D is correct. POST is used to send data to a server to create/update a resource.' },
+      { text: 'What does JSON stand for in web APIs?', a: 'Java Source Open Network', b: 'JavaScript Object Notation', c: 'Joint System Operation Node', d: 'Java Standard Output Name', ans: 'B', exp: 'Option B is correct. JSON stands for JavaScript Object Notation, a lightweight, text-based data interchange format.' },
+      { text: 'What does an HTTP 404 status code indicate?', a: 'Resource Not Found on the server', b: 'Internal Server Error', c: 'Request Succeeded OK', d: 'Unauthorized Access', ans: 'A', exp: 'Option A is correct. HTTP 404 indicates the origin server did not find a current representation for the target resource.' },
+      { text: 'What is the primary difference between Authentication and Authorization?', a: 'Both mean encrypting databases', b: 'Authentication verifies identity; Authorization determines access permissions', c: 'Authorization happens before Authentication', d: 'Authentication is for CSS styling only', ans: 'B', exp: 'Option B is correct. Authentication confirms WHO you are, while Authorization specifies WHAT you are permitted to do.' },
+      { text: 'What is an API key used for?', a: 'Formatting screen resolutions', b: 'Compressing images', c: 'Identifying and authorizing the calling application', d: 'Cooling server processors', ans: 'C', exp: 'Option C is correct. API keys act as unique identifiers to authenticate and rate-limit API clients.' },
+      { text: 'What is rate limiting in API design?', a: 'Restricting the frequency of client requests to protect the server', b: 'Reducing bandwidth speed permanently', c: 'Deleting old databases automatically', d: 'Increasing font sizes on web pages', ans: 'A', exp: 'Option A is correct. Rate limiting prevents API abuse and denial-of-service by capping requests per time window.' },
+      { text: 'What is a webhook?', a: 'A hardware cable connecting routers', b: 'An automated HTTP callback triggered by an event in a service', c: 'A password hashing algorithm', d: 'A frontend styling library', ans: 'B', exp: 'Option B is correct. Webhooks deliver real-time data to other applications as soon as specific events occur.' },
+      { text: 'Which HTTP status code signifies a successful request?', a: '500', b: '403', c: '200', d: '301', ans: 'C', exp: 'Option C is correct. HTTP 200 OK indicates that the request has succeeded.' },
+      { text: 'What is REST in API architecture?', a: 'Representational State Transfer architectural style', b: 'Random Execution Server Table', c: 'Real-time Encrypted Storage Tool', d: 'Remote Error Solution Terminal', ans: 'A', exp: 'Option A is correct. REST (Representational State Transfer) is a software architectural style for distributed hypermedia systems.' },
+      { text: 'Why is comprehensive API documentation essential?', a: 'It allows developers to understand endpoints, request schemas, and response formats', b: 'It eliminates the need for unit testing', c: 'It speeds up physical CPU clock cycles', d: 'It converts SQL databases into HTML', ans: 'A', exp: 'Option A is correct. Clear documentation enables engineers to correctly integrate and consume API services.' },
+      { text: 'Which header tells the server what media type the client expects in response?', a: 'Host', b: 'User-Agent', c: 'Accept', d: 'Connection', ans: 'C', exp: 'Option C is correct. The Accept HTTP request header indicates which content types the client is able to understand.' },
+      { text: 'What is CORS in web services?', a: 'Central Output Resource System', b: 'Cross-Origin Resource Sharing security mechanism', c: 'Cascading Object Rendering Server', d: 'Computer Operation Reset Standard', ans: 'B', exp: 'Option B is correct. CORS is an HTTP-header based mechanism that allows a server to indicate any origins other than its own from which a browser should permit loading resources.' }
     ]
   },
   'q-3': {
@@ -43,21 +43,21 @@ const TOPIC_SPECS: Record<string, TopicSpec> = {
     title: 'Cloud Computing Fundamentals Quiz',
     category: 'Cloud',
     questions: [
-      { text: 'What is cloud computing?', a: 'On-demand delivery of compute, storage, and DB over internet', b: 'Local hard disk storage', c: 'Physical network cabling', d: 'Computer screen resolution', ans: 'A', exp: 'Cloud delivers computing services over the internet.' },
-      { text: 'What does IaaS stand for?', a: 'Infrastructure as a Service', b: 'Internet as a System', c: 'Integrated App Service', d: 'Internal Architecture Storage', ans: 'A', exp: 'IaaS provides raw infrastructure like virtual machines.' },
-      { text: 'What does PaaS stand for?', a: 'Platform as a Service', b: 'Public Access System', c: 'Private Application Storage', d: 'Protocol as a Service', ans: 'A', exp: 'PaaS provides execution environments for developers.' },
-      { text: 'What does SaaS stand for?', a: 'Software as a Service', b: 'System as a Storage', c: 'Secure Application Server', d: 'Server as a Service', ans: 'A', exp: 'SaaS provides ready-to-use software applications.' },
-      { text: 'What is cloud elasticity?', a: 'The ability to dynamically scale resources up or down', b: 'Physical rubber cables', c: 'Fixed server memory', d: 'Network latency', ans: 'A', exp: 'Elasticity allows rapid resource scaling based on demand.' },
-      { text: 'What is a Public Cloud?', a: 'Cloud infrastructure shared across multiple organizations', b: 'A personal USB drive', c: 'Private home network', d: 'Offline server room', ans: 'A', exp: 'Public clouds are owned and operated by third-party providers.' },
-      { text: 'What is a Private Cloud?', a: 'Cloud infrastructure used exclusively by one single organization', b: 'Public Wi-Fi network', c: 'Hosted blog site', d: 'Open source software', ans: 'A', exp: 'Private clouds offer dedicated infrastructure for one entity.' },
-      { text: 'What is a Hybrid Cloud?', a: 'A combination of public and private cloud environments', b: 'A hybrid car engine', c: 'Wireless router', d: 'Dual monitor setup', ans: 'A', exp: 'Hybrid clouds connect private and public environments.' },
-      { text: 'What is an Availability Zone?', a: 'Isolated data center locations within a cloud region', b: 'Time zone setting', c: 'Browser cache area', d: 'USB port slot', ans: 'A', exp: 'AZs provide fault isolation within cloud regions.' },
-      { text: 'What is Serverless computing?', a: 'Cloud execution where cloud provider manages server infrastructure', b: 'Computing without any hardware', c: 'Offline computer usage', d: 'Bluetooth communication', ans: 'A', exp: 'Serverless abstracts server management away from developers.' },
-      { text: 'What is Object Storage in cloud?', a: 'Scalable storage for unstructured data like images and backups', b: 'CPU RAM memory', c: 'Relational SQL table', d: 'Printer spooler', ans: 'A', exp: 'Object storage handles massive unstructured data files.' },
-      { text: 'What is Load Balancing?', a: 'Distributing incoming traffic across multiple target servers', b: 'Weighing computer hardware', c: 'Charging laptop battery', d: 'Cleaning cooling fans', ans: 'A', exp: 'Load balancers prevent single server overload.' },
-      { text: 'What is Cloud Migration?', a: 'Moving data and applications from local servers to the cloud', b: 'Travelling with a laptop', c: 'Changing internet providers', d: 'Upgrading monitor screens', ans: 'A', exp: 'Migration shifts digital assets to cloud infrastructure.' },
-      { text: 'What is a Cloud Region?', a: 'A geographical area containing multiple Availability Zones', b: 'A country code domain', c: 'A local suburb', d: 'A WiFi signal range', ans: 'A', exp: 'Regions group redundant data centers geographically.' },
-      { text: 'Why use cloud auto-scaling?', a: 'To automatically adjust server capacity based on real-time load', b: 'To increase font sizes', c: 'To shut down the office', d: 'To format hard drives', ans: 'A', exp: 'Auto-scaling maintains performance during traffic spikes.' }
+      { text: 'What is cloud computing?', a: 'Local hard disk storage only', b: 'On-demand delivery of compute, storage, and database services over the internet', c: 'Physical network cabling', d: 'Offline computer usage', ans: 'B', exp: 'Option B is correct. Cloud computing delivers on-demand IT resources over the Internet with pay-as-you-go pricing.' },
+      { text: 'What does IaaS stand for in cloud architecture?', a: 'Infrastructure as a Service', b: 'Internet as a System', c: 'Integrated App Service', d: 'Internal Architecture Storage', ans: 'A', exp: 'Option A is correct. IaaS (Infrastructure as a Service) provides virtualized computing resources over the internet.' },
+      { text: 'What does PaaS stand for?', a: 'Public Access System', b: 'Private Application Storage', c: 'Platform as a Service', d: 'Protocol as a Service', ans: 'C', exp: 'Option C is correct. PaaS provides a hardware and software framework for developers to build and run custom applications.' },
+      { text: 'What does SaaS stand for?', a: 'System as a Storage', b: 'Secure Application Server', c: 'Server as a Service', d: 'Software as a Service', ans: 'D', exp: 'Option D is correct. SaaS delivers complete software applications over the internet on a subscription basis.' },
+      { text: 'What is cloud elasticity?', a: 'The ability to dynamically scale computing resources up or down on demand', b: 'Physical rubber server cables', c: 'Fixed memory that cannot change', d: 'Network latency delays', ans: 'A', exp: 'Option A is correct. Elasticity allows cloud systems to match resource allocation to current workload demands automatically.' },
+      { text: 'What is a Public Cloud?', a: 'A personal USB flash drive', b: 'Third-party cloud infrastructure shared across multiple tenant organizations', c: 'A local offline home network', d: 'A private single-company datacenter', ans: 'B', exp: 'Option B is correct. Public clouds are owned and operated by third-party cloud service providers delivering compute resources over the web.' },
+      { text: 'What is a Private Cloud?', a: 'Cloud infrastructure provisioned for exclusive use by a single organization', b: 'Public airport Wi-Fi network', c: 'Open-source code repository', d: 'A commercial shared web host', ans: 'A', exp: 'Option A is correct. Private cloud consists of cloud computing resources used exclusively by one business or organization.' },
+      { text: 'What is a Hybrid Cloud?', a: 'A combination of public and private cloud environments sharing data and applications', b: 'An electric vehicle charging network', c: 'A dual-monitor workstation', d: 'A hybrid programming language', ans: 'A', exp: 'Option A is correct. Hybrid cloud connects private infrastructure with public cloud services.' },
+      { text: 'What is an Availability Zone (AZ)?', a: 'A global time zone setting', b: 'Browser cache memory', c: 'Isolated, redundant data center facilities within a cloud geographic region', d: 'A USB port interface', ans: 'C', exp: 'Option C is correct. Availability Zones provide fault isolation and high availability within a cloud region.' },
+      { text: 'What is Serverless computing?', a: 'Computing without any hardware existing', b: 'Execution model where the cloud provider manages infrastructure provisioning and scaling', c: 'Running software completely offline', d: 'Bluetooth wireless pairing', ans: 'B', exp: 'Option B is correct. Serverless abstracts server management, automatically executing code in response to events.' },
+      { text: 'What is Object Storage primarily used for in the cloud?', a: 'Storing massive unstructured data like images, videos, and backups with high durability', b: 'CPU L1 cache registers', c: 'Relational database indexing only', d: 'Displaying desktop wallpapers', ans: 'A', exp: 'Option A is correct. Object storage (e.g. AWS S3, Google Cloud Storage) stores unstructured data objects at massive scale.' },
+      { text: 'What is the primary function of a Cloud Load Balancer?', a: 'Measuring physical hardware weight', b: 'Distributing incoming application traffic across multiple healthy target servers', c: 'Charging device batteries', d: 'Speeding up keyboard typing', ans: 'B', exp: 'Option B is correct. Load balancers distribute traffic across multiple servers to ensure high availability and reliability.' },
+      { text: 'What is Cloud Auto-Scaling?', a: 'Automatically adjusting active compute instances based on real-time traffic demand', b: 'Increasing screen font size during presentations', c: 'Formatting hard drives periodically', d: 'Upgrading monitor brightness', ans: 'A', exp: 'Option A is correct. Auto-scaling adds or removes compute instances automatically to maintain performance.' },
+      { text: 'Which cloud deployment model provides the highest level of regulatory control and isolation?', a: 'Public Multi-tenant Cloud', b: 'Anonymous Proxy Network', c: 'Dedicated Private Cloud / On-Premise', d: 'Public Community Forum', ans: 'C', exp: 'Option C is correct. Dedicated private clouds provide complete control and compliance isolation for sensitive enterprise workloads.' },
+      { text: 'What is a Cloud Region?', a: 'A separate geographical location in the world containing multiple Availability Zones', b: 'A country top-level domain name', c: 'A local neighborhood Wi-Fi hotspot', d: 'A regional keyboard layout', ans: 'A', exp: 'Option A is correct. A cloud region is a separate geographic area containing multiple isolated data center locations.' }
     ]
   }
 };
@@ -88,10 +88,10 @@ export function getTopicQuiz(quizId: string, title?: string): DailyQuiz {
       id: cleanQuizId,
       quiz_date: new Date().toISOString().split('T')[0],
       title: spec.title,
-      description: `Test your knowledge with 15 questions on ${spec.title}. Earn Gold Coins!`,
+      description: `Test your mastery with 15 focused questions on ${spec.title}. Earn Task Tokens!`,
       status: 'published',
       total_questions: spec.questions.length,
-      coins_reward: 15,
+      coins_reward: 50,
       questions: spec.questions.map((q, idx) => ({
         id: getUuid(quizId, String(idx + 1)),
         quiz_id: cleanQuizId,
@@ -107,39 +107,161 @@ export function getTopicQuiz(quizId: string, title?: string): DailyQuiz {
     };
   }
 
-  // Dynamic Generator for any topic title to produce 15 unique, distinct MCQs
-  const topicName = title || 'Technical Concepts';
+  // Dynamic Generator for any topic title to produce 15 unique, distinct MCQs with balanced A, B, C, D distribution
+  const topicName = title || 'Technical Engineering';
   const questions: QuizQuestion[] = [];
-  const ASPECTS = [
-    { text: `Which option best defines ${topicName}?`, a: `Core standard definition and architecture of ${topicName}`, b: 'An unrelated legacy protocol', c: 'Hardware display resolution setting', d: 'Deprecated database driver', ans: 'A' as const, exp: `Option A correctly states the core concept of ${topicName}.` },
-    { text: `What is a primary advantage of utilizing ${topicName}?`, a: 'Increased system reliability, efficiency, and scalability', b: 'Higher physical power consumption', c: 'Increased manual data entry requirement', d: 'Reduced network compatibility', ans: 'A' as const, exp: `Utilizing ${topicName} improves performance and architectural scalability.` },
-    { text: `In ${topicName}, what is the main responsibility of the primary module?`, a: 'Processing and orchestrating core data workflows', b: 'Storing temporary browser cookies only', c: 'Formatting physical printer pages', d: 'Measuring CPU fan speed', ans: 'A' as const, exp: 'The primary module manages workflow execution and data integrity.' },
-    { text: `Which protocol or standard is most closely associated with ${topicName}?`, a: 'Industry-standard open communication specs', b: 'Analog dial-up modem signals', c: '8-bit audio waveform encoding', d: 'Legacy serial port pinouts', ans: 'A' as const, exp: 'Modern applications rely on standardized open protocols.' },
-    { text: `What occurs when an unhandled error happens in ${topicName}?`, a: 'Exception handlers trigger graceful fallback procedures', b: 'The motherboard physically resets', c: 'The display screen turns off', d: 'All local files are deleted', ans: 'A' as const, exp: 'Exception handling ensures system stability during errors.' },
-    { text: `How does ${topicName} maintain data security and integrity?`, a: 'Via strict authentication, authorization, and encryption', b: 'By disabling all firewall rules', c: 'By storing plain-text passwords', d: 'By broadcasting data over open networks', ans: 'A' as const, exp: 'Security measures protect data against unauthorized access.' },
-    { text: `What is a common best practice when configuring ${topicName}?`, a: 'Follow principle of least privilege and modular structure', b: 'Hardcode sensitive credentials in source code', c: 'Disable logging and monitoring', d: 'Skip testing environments', ans: 'A' as const, exp: 'Following best practices prevents vulnerabilities and errors.' },
-    { text: `Which performance metric is most crucial for evaluating ${topicName}?`, a: 'Response latency and throughput efficiency', b: 'Physical weight of server rack', c: 'Color scheme of user desktop', d: 'Keyboard layout region', ans: 'A' as const, exp: 'Latency and throughput determine operational efficiency.' },
-    { text: `How is state managed in a distributed ${topicName} deployment?`, a: 'Through synchronized cache or centralized datastores', b: 'By writing text files to random desktop folders', c: 'By restarting servers every minute', d: 'By ignoring state changes', ans: 'A' as const, exp: 'Centralized datastores ensure state consistency across nodes.' },
-    { text: `What is the role of continuous monitoring in ${topicName}?`, a: 'To detect performance bottlenecks and alert anomalies', b: 'To increase internet subscription costs', c: 'To change screen wallpapers automatically', d: 'To block valid user logins', ans: 'A' as const, exp: 'Monitoring provides real-time visibility into system health.' },
-    { text: `In ${topicName}, what does horizontal scaling involve?`, a: 'Adding more instance nodes to distribute load', b: 'Replacing RAM chips manually', c: 'Buying a wider computer monitor', d: 'Increasing font size across apps', ans: 'A' as const, exp: 'Horizontal scaling adds nodes to handle higher volume.' },
-    { text: `Why is automated testing essential for ${topicName}?`, a: 'To catch regressions early and ensure code quality', b: 'To slow down development speed', c: 'To replace software documentation', d: 'To generate fake user accounts', ans: 'A' as const, exp: 'Automated testing guarantees software stability before release.' },
-    { text: `What is the purpose of caching in ${topicName}?`, a: 'To serve frequent requests faster by storing temporary data', b: 'To permanently delete old database records', c: 'To encrypt all outgoing network packets', d: 'To format secondary hard drives', ans: 'A' as const, exp: 'Caching reduces database load and speeds up response time.' },
-    { text: `Which tool or command is used to inspect ${topicName} activity logs?`, a: 'Standard CLI log streams or central logging dashboards', b: 'Microsoft Paint', c: 'Calculator app', d: 'Device volume slider', ans: 'A' as const, exp: 'Log streams display operational diagnostics and errors.' },
-    { text: `What is the final step when deploying updates to ${topicName}?`, a: 'Verification, health check, and monitoring post-release', b: 'Deleting repository source code', c: 'Unplugging network cables', d: 'Reinstalling operating system', ans: 'A' as const, exp: 'Post-release health checks confirm successful deployment.' },
+  
+  const TEMPLATES = [
+    {
+      q: `Which statement best defines ${topicName}?`,
+      correct: `Core architectural principles, standards, and lifecycle management of ${topicName}.`,
+      d1: `A deprecated 8-bit legacy communication standard.`,
+      d2: `An operating system desktop display configuration.`,
+      d3: `A hardware power cord specification.`,
+      exp: `Understanding the core architecture and operational principles of ${topicName} is fundamental for scalable engineering.`
+    },
+    {
+      q: `What is a primary engineering benefit of properly implementing ${topicName}?`,
+      correct: `Increased system reliability, fault tolerance, and computational efficiency.`,
+      d1: `Higher manual data entry and hardware power consumption.`,
+      d2: `Reduced cross-platform compatibility and stability.`,
+      d3: `Complete elimination of software unit tests.`,
+      exp: `Proper implementation enhances reliability and computational throughput while minimizing downtime.`
+    },
+    {
+      q: `In ${topicName}, what is the primary role of the orchestration engine?`,
+      correct: `Coordinating workflow execution, resource scheduling, and data consistency.`,
+      d1: `Storing temporary browser cookies exclusively.`,
+      d2: `Measuring physical cooling fan rotation speeds.`,
+      d3: `Formatting printed physical documents.`,
+      exp: `The orchestration engine manages workflow state transitions, execution tasks, and resource allocation.`
+    },
+    {
+      q: `How does ${topicName} maintain data security and end-to-end integrity?`,
+      correct: `Through standardized authentication, role-based authorization, and TLS encryption.`,
+      d1: `By broadcasting unencrypted data packets across public networks.`,
+      d2: `By storing unhashed credentials in public directories.`,
+      d3: `By disabling firewall rules and access tokens.`,
+      exp: `Robust access controls, encryption at rest and in transit ensure system security and compliance.`
+    },
+    {
+      q: `What is the standard procedure when an unexpected runtime exception occurs in ${topicName}?`,
+      correct: `Catching the exception and executing graceful fallback mechanisms with diagnostic logging.`,
+      d1: `Immediately turning off the host device display.`,
+      d2: `Deleting all local application configurations.`,
+      d3: `Restarting physical power supplies unconditionally.`,
+      exp: `Graceful exception handling preserves system uptime and generates actionable error logs.`
+    },
+    {
+      q: `Which metric is most critical for evaluating the performance of ${topicName}?`,
+      correct: `Request latency, throughput, and system resource utilization efficiency.`,
+      d1: `Physical weight of server rack mounting brackets.`,
+      d2: `The background wallpaper color of client workstations.`,
+      d3: `Keyboard language layout selection.`,
+      exp: `Response latency and throughput measure actual computational efficiency and user satisfaction.`
+    },
+    {
+      q: `What is a recognized best practice when deploying ${topicName} in production?`,
+      correct: `Adhering to the principle of least privilege, automated CI/CD, and continuous monitoring.`,
+      d1: `Hardcoding sensitive credentials directly in public source repositories.`,
+      d2: `Disabling all monitoring alerts and health probes.`,
+      d3: `Skipping staging environment testing before deployment.`,
+      exp: `Automated pipelines and least privilege access prevent configuration drift and security vulnerabilities.`
+    },
+    {
+      q: `How is state persistence managed in a modern ${topicName} distributed system?`,
+      correct: `Using resilient, synchronized datastores and distributed caching layers.`,
+      d1: `By writing plain text notes to volatile memory without backups.`,
+      d2: `By resetting system clocks every 60 seconds.`,
+      d3: `By ignoring database transactions and locks.`,
+      exp: `Distributed caching and reliable datastores maintain state consistency across multiple nodes.`
+    },
+    {
+      q: `What does horizontal scaling achieve in ${topicName}?`,
+      correct: `Distributing higher user traffic across multiple parallel compute instances.`,
+      d1: `Purchasing a physically wider monitor screen.`,
+      d2: `Increasing operating system font size across applications.`,
+      d3: `Manually replacing CPU thermal paste.`,
+      exp: `Horizontal scaling adds compute nodes to handle increased workload demands smoothly.`
+    },
+    {
+      q: `Why is automated testing indispensable for ${topicName}?`,
+      correct: `It prevents regressions, verifies contract compliance, and accelerates release velocity.`,
+      d1: `It artificially slows down developer delivery timelines.`,
+      d2: `It eliminates the need for technical documentation.`,
+      d3: `It creates dummy user accounts in production.`,
+      exp: `Automated test suites catch breaking changes early and guarantee software correctness.`
+    },
+    {
+      q: `What is the role of caching in optimizing ${topicName}?`,
+      correct: `Serving frequently accessed data with sub-millisecond latency to decrease database load.`,
+      d1: `Permanently deleting archival database records.`,
+      d2: `Encrypting outgoing monitor video signals.`,
+      d3: `Formatting secondary storage devices.`,
+      exp: `In-memory caching accelerates data retrieval and shields backend databases from high query volumes.`
+    },
+    {
+      q: `Which tool or mechanism is typically used to inspect operational logs in ${topicName}?`,
+      correct: `Centralized logging dashboards and streaming telemetry aggregators.`,
+      d1: `Standard desktop image editors.`,
+      d2: `Physical audio volume controls.`,
+      d3: `Basic desktop calculator programs.`,
+      exp: `Centralized logging aggregates real-time event logs for debugging and operational visibility.`
+    },
+    {
+      q: `What is the crucial final phase in a successful ${topicName} release pipeline?`,
+      correct: `Automated health check verification, canary analysis, and active metric monitoring.`,
+      d1: `Deleting all source code branches immediately.`,
+      d2: `Disconnecting physical ethernet cables.`,
+      d3: `Reinstalling the host operating system.`,
+      exp: `Post-release verification ensures that deployed updates function properly in live production.`
+    },
+    {
+      q: `How does rate limiting protect a ${topicName} infrastructure?`,
+      correct: `It prevents denial-of-service abuse by throttling anomalous request spikes per client.`,
+      d1: `It restricts network bandwidth to 10 kbps permanently.`,
+      d2: `It limits the number of code lines engineers can write.`,
+      d3: `It forces user passwords to expire every 5 minutes.`,
+      exp: `Rate limiting protects server capacity from malicious spikes and abusive traffic patterns.`
+    },
+    {
+      q: `What is the primary purpose of version control in ${topicName}?`,
+      correct: `Tracking historical modifications, facilitating team collaboration, and enabling rollbacks.`,
+      d1: `Increasing local hard drive temperature.`,
+      d2: `Replacing database backups with screenshots.`,
+      d3: `Converting application code into plain HTML.`,
+      exp: `Version control provides an audit trail of changes and enables safe collaboration among engineering teams.`
+    }
   ];
 
-  ASPECTS.forEach((asp, idx) => {
+  const TARGET_OPTIONS: Array<'A' | 'B' | 'C' | 'D'> = ['A', 'B', 'C', 'D', 'B', 'A', 'C', 'D', 'A', 'B', 'C', 'D', 'A', 'B', 'C'];
+
+  TEMPLATES.forEach((tmpl, idx) => {
+    const targetOpt = TARGET_OPTIONS[idx % TARGET_OPTIONS.length];
+    const dists = [tmpl.d1, tmpl.d2, tmpl.d3];
+    
+    let a = '', b = '', c = '', d = '';
+    if (targetOpt === 'A') {
+      a = tmpl.correct; b = dists[0]; c = dists[1]; d = dists[2];
+    } else if (targetOpt === 'B') {
+      a = dists[0]; b = tmpl.correct; c = dists[1]; d = dists[2];
+    } else if (targetOpt === 'C') {
+      a = dists[0]; b = dists[1]; c = tmpl.correct; d = dists[2];
+    } else {
+      a = dists[0]; b = dists[1]; c = dists[2]; d = tmpl.correct;
+    }
+
     questions.push({
       id: getUuid(quizId, String(idx + 1)),
       quiz_id: cleanQuizId,
       question_number: idx + 1,
-      question_text: asp.text,
-      option_a: asp.a,
-      option_b: asp.b,
-      option_c: asp.c,
-      option_d: asp.d,
-      correct_option: asp.ans,
-      explanation: asp.exp,
+      question_text: `Q${idx + 1}. ${tmpl.q}`,
+      option_a: a,
+      option_b: b,
+      option_c: c,
+      option_d: d,
+      correct_option: targetOpt,
+      explanation: `Option ${targetOpt} is correct. ${tmpl.exp}`,
     });
   });
 
@@ -147,10 +269,10 @@ export function getTopicQuiz(quizId: string, title?: string): DailyQuiz {
     id: cleanQuizId,
     quiz_date: new Date().toISOString().split('T')[0],
     title: topicName,
-    description: `Master ${topicName} with 15 distinct, topic-focused practice MCQs.`,
+    description: `Master ${topicName} with 15 distinct, topic-focused practice MCQs. Earn Task Tokens!`,
     status: 'published',
     total_questions: 15,
-    coins_reward: 15,
+    coins_reward: 50,
     questions,
   };
 }

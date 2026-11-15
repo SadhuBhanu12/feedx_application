@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { ButtonLoading } from '@/components/ui/Loaders';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -18,6 +17,7 @@ export default function FirstTimeLoginScreen() {
   const [student, setStudent] = useState(null);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
+  const [isAlreadyActivated, setIsAlreadyActivated] = useState(false);
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,77 +49,77 @@ export default function FirstTimeLoginScreen() {
     }
     setLoading(true);
     setError('');
+    setIsAlreadyActivated(false);
     try {
       console.log('[FirstTimeLogin] Looking up email:', mail);
 
-      // Check if it is a superadmin/admin in the base users table
+      // Check if it is a superadmin/admin in the base users table (case-insensitive)
       const { data: userProfile, error: profileErr } = await supabase
         .from('users')
         .select('*')
-        .eq('email', mail)
+        .ilike('email', mail)
         .maybeSingle();
 
       if (profileErr) throw profileErr;
 
-      if (userProfile && (userProfile.role === 'super_admin' || userProfile.role === 'admin' || userProfile.role === 'inst_admin')) {
-        console.log('[FirstTimeLogin] Admin/SuperAdmin detected, bypassing OTP');
-        // Bypass OTP for admins/superadmins
-        // Invalidate any old unused sessions first
-        await supabase
-          .from('activation_sessions')
-          .update({ used: true })
-          .eq('user_id', userProfile.id)
-          .eq('used', false);
 
-        const activationToken = Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
-        const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
-        const { error: sessionError } = await supabase
-          .from('activation_sessions')
-          .insert({
-            user_id: userProfile.id,
-            token: activationToken,
-            expires_at: expiresAt,
-            used: false,
-          });
-
-        if (sessionError) throw sessionError;
-
-        router.push({
-          pathname: '/create-password',
-          params: {
-            token: activationToken,
-            name: userProfile.full_name || 'Super Admin',
-          },
-        });
-        return;
-      }
-
-      // 1. Verify that email exists in the pre-registered students list
-      const { data, error: dbError } = await supabase
+      // 1. Verify that email exists in the pre-registered students list (case-insensitive)
+      let { data, error: dbError } = await supabase
         .from('students')
         .select('*')
-        .eq('email', mail)
+        .ilike('email', mail)
         .maybeSingle();
 
       if (dbError) throw dbError;
 
+      // Fallback: If not found in students table directly, check userProfile from users table
+      if (!data && userProfile) {
+        console.log('[FirstTimeLogin] Found profile in users table without students row, using as fallback');
+        data = {
+          id: userProfile.id,
+          roll_number: userProfile.pin_number || userProfile.roll_no || userProfile.admin_code || mail.split('@')[0].toUpperCase(),
+          full_name: userProfile.full_name || 'Student',
+          email: userProfile.email || mail,
+          is_password_set: userProfile.is_password_set === true,
+        };
+      }
+
       if (!data) {
-        setError('Email not found in student registry. Please contact feedxhub@gmail.com for assistance.');
+        setError('Email not found in student registry. Please check your spelling or contact feedxhub@gmail.com for assistance.');
         return;
       }
 
-      if (data.is_password_set) {
-        setError('This account has already been activated. Please log in.');
+      // Check whether password is set in either record
+      const isPasswordAlreadySet = Boolean(data?.is_password_set === true || userProfile?.is_password_set === true);
+
+      if (isPasswordAlreadySet) {
+        setIsAlreadyActivated(true);
+        setError('This account has already been activated with a password. If you forgot your password, please reset it.');
         return;
       }
 
-      console.log('[FirstTimeLogin] Student found:', data.roll_number, '| Sending OTP...');
+      // If password is not set, ALWAYS enforce fresh OTP verification.
+      // Invalidate any old unused activation sessions for this user so they cannot be reused.
+      const targetUserId = data.id || userProfile?.id;
+      if (targetUserId) {
+        try {
+          await supabase
+            .from('activation_sessions')
+            .update({ used: true })
+            .eq('user_id', targetUserId)
+            .eq('used', false);
+        } catch (sessionCleanErr) {
+          console.warn('[FirstTimeLogin] Non-critical activation sessions cleanup notice:', sessionCleanErr);
+        }
+      }
+
+      console.log('[FirstTimeLogin] Account found with password unset:', data.roll_number, '| Dispatching fresh OTP...');
 
       // 2. Dispatch OTP to target email address
-      // skipEmailCheck=true because we already verified the student exists in the students table
       await sendOtp(data.roll_number, mail, { skipEmailCheck: true });
       setStudent(data);
+      setOtp('');
       setStep(2);
       setCooldown(30);
     } catch (e) {
@@ -205,6 +205,8 @@ export default function FirstTimeLoginScreen() {
           ? 'Provide your email address to check your account status.'
           : 'Enter the verification code sent to your email.'
       }
+      showBack={true}
+      onBack={step === 2 ? () => { setStep(1); setOtp(''); setError(''); } : () => router.replace('/login')}
     >
       <Animated.View entering={FadeInUp.duration(350)}>
         {step === 1 && (
@@ -221,6 +223,7 @@ export default function FirstTimeLoginScreen() {
                   onChangeText={(v) => {
                     setEmail(v);
                     setError('');
+                    setIsAlreadyActivated(false);
                   }}
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -235,9 +238,30 @@ export default function FirstTimeLoginScreen() {
               </View>
             ) : null}
 
+            {isAlreadyActivated ? (
+              <View style={styles.activatedHelperWrap}>
+                <TouchableOpacity
+                  style={styles.actionBtnOutline}
+                  onPress={() => router.push('/login')}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="log-in" size={15} color="#60A5FA" />
+                  <Text style={styles.actionBtnOutlineText}>Go to Login</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionBtnOutline}
+                  onPress={() => router.push({ pathname: '/forgot-password', params: { email: email.trim().toLowerCase() } })}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="key" size={15} color="#60A5FA" />
+                  <Text style={styles.actionBtnOutlineText}>Reset Password</Text>
+                </TouchableOpacity>
+              </View>
+            ) : null}
+
             <TouchableOpacity style={styles.cta} onPress={handleSendOtp} disabled={loading}>
               <LinearGradient colors={COLORS.gradientPrimary} style={styles.ctaGradient}>
-                {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.ctaText}>Send OTP</Text>}
+                {loading ? <ActivityIndicator size="small" color="#FFF" /> : <Text style={styles.ctaText}>Send OTP</Text>}
               </LinearGradient>
             </TouchableOpacity>
           </View>
@@ -275,19 +299,34 @@ export default function FirstTimeLoginScreen() {
 
             <TouchableOpacity style={styles.cta} onPress={handleVerifyOtp} disabled={loading}>
               <LinearGradient colors={COLORS.gradientPrimary} style={styles.ctaGradient}>
-                {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.ctaText}>Verify OTP</Text>}
+                {loading ? <ActivityIndicator size="small" color="#FFF" /> : <Text style={styles.ctaText}>Verify OTP</Text>}
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-              style={[styles.resendBtn, cooldown > 0 && styles.resendDisabled]} 
-              onPress={handleResendOtp}
-              disabled={cooldown > 0 || loading}
-            >
-              <Text style={styles.resendText}>
-                {cooldown > 0 ? `Resend OTP in ${cooldown}s` : 'Resend OTP'}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.otpActionsRow}>
+              <TouchableOpacity 
+                style={[styles.resendBtn, cooldown > 0 && styles.resendDisabled]} 
+                onPress={handleResendOtp}
+                disabled={cooldown > 0 || loading}
+              >
+                <Text style={styles.resendText}>
+                  {cooldown > 0 ? `Resend OTP in ${cooldown}s` : 'Resend OTP'}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.changeEmailBtn}
+                onPress={() => {
+                  setStep(1);
+                  setOtp('');
+                  setError('');
+                }}
+                activeOpacity={0.7}
+              >
+                <Feather name="edit-2" size={13} color="rgba(255,255,255,0.6)" />
+                <Text style={styles.changeEmailText}>Change Email</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </Animated.View>
@@ -326,7 +365,54 @@ const styles = StyleSheet.create({
   ctaText: { color: '#FFF', fontWeight: '800', fontSize: 16, letterSpacing: 0.5 },
   welcomeText: { color: '#FFF', fontSize: 18, fontWeight: '900', marginBottom: 4, textAlign: 'center' },
   maskedEmailText: { color: '#60A5FA', fontSize: 13.5, fontWeight: '600', marginBottom: 20, textAlign: 'center' },
-  resendBtn: { marginTop: 16, alignSelf: 'center', paddingVertical: 8, paddingHorizontal: 16, minHeight: 44, justifyContent: 'center' },
-  resendText: { color: '#60A5FA', fontWeight: '800', fontSize: 14 },
+  otpActionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 18,
+    paddingHorizontal: 4,
+  },
+  resendBtn: {
+    paddingVertical: 8,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  resendText: { color: '#60A5FA', fontWeight: '800', fontSize: 13.5 },
   resendDisabled: { opacity: 0.5 },
+  changeEmailBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 8,
+    minHeight: 44,
+    justifyContent: 'center',
+  },
+  changeEmailText: {
+    color: 'rgba(255, 255, 255, 0.65)',
+    fontWeight: '600',
+    fontSize: 13.5,
+  },
+  activatedHelperWrap: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 14,
+    marginTop: 2,
+  },
+  actionBtnOutline: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    height: 46,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: 'rgba(96, 165, 250, 0.4)',
+    backgroundColor: 'rgba(96, 165, 250, 0.08)',
+  },
+  actionBtnOutlineText: {
+    color: '#60A5FA',
+    fontSize: 13,
+    fontWeight: '700',
+  },
 });

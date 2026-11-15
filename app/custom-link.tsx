@@ -44,7 +44,7 @@ export default function CustomLinkScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>

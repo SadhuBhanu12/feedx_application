@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, ScrollView, Platform } from 'react-native';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { adminDeleteAdmin, adminListAdmins, adminUpsertAdmin, adminResetUserPassword, adminListColleges } from '@/services/supabaseService';
+import { adminDeleteAdmin, adminListAdmins, adminUpsertAdmin, adminListColleges } from '@/services/supabaseService';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
@@ -31,7 +31,7 @@ export default function AdminRegistry() {
   const [colleges, setColleges] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
-  const [form, setForm] = useState({ id: '', full_name: '', email: '', phone: '', college_id: '', role: 'inst_admin', custom_password: '' });
+  const [form, setForm] = useState({ id: '', full_name: '', email: '', phone: '', college_id: '', role: 'inst_admin' });
 
   const loadData = async () => {
     setLoading(true);
@@ -68,32 +68,6 @@ export default function AdminRegistry() {
     }
   };
 
-  const handleQuickReset = async (studentId: string, name: string) => {
-    Alert.alert(
-      'Reset Student Password',
-      `Are you sure you want to reset the password for ${name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Reset Password',
-          style: 'destructive',
-          onPress: async () => {
-            setLoading(true);
-            try {
-              await adminResetUserPassword(studentId, null);
-              Alert.alert('Success', `Password for ${name} has been reset.`);
-              loadData();
-            } catch (err: any) {
-              Alert.alert('Reset Failed', err.message);
-            } finally {
-              setLoading(false);
-            }
-          }
-        }
-      ]
-    );
-  };
-
   const handleSave = async () => {
     if (!form.email || !form.full_name) {
       Alert.alert('Incomplete Identity', 'Email and Full Name are mandatory.');
@@ -112,12 +86,8 @@ export default function AdminRegistry() {
 
       if (error) throw error;
 
-      if (form.custom_password.trim() && data?.id) {
-        await adminResetUserPassword(data.id, form.custom_password.trim());
-      }
-
-      Alert.alert('Identity Synchronized', 'Admin record and authentication details have been updated.');
-      setForm({ id: '', full_name: '', email: '', phone: '', college_id: '', role: 'inst_admin', custom_password: '' });
+      Alert.alert('Identity Synchronized', 'Admin record and details have been updated.');
+      setForm({ id: '', full_name: '', email: '', phone: '', college_id: '', role: 'inst_admin' });
       loadData();
     } catch (e: any) {
       Alert.alert('Sync Failed', e.message);
@@ -133,7 +103,7 @@ export default function AdminRegistry() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -216,18 +186,6 @@ export default function AdminRegistry() {
                 </View>
               </View>
 
-              <View style={styles.field}>
-                <Text style={styles.label}>Temporary Password (Optional)</Text>
-                <TextInput 
-                  style={styles.input} 
-                  value={form.custom_password} 
-                  onChangeText={t => setForm(f => ({ ...f, custom_password: t }))} 
-                  placeholder="Leave empty to keep current" 
-                  placeholderTextColor="rgba(255,255,255,0.2)"
-                  secureTextEntry
-                />
-              </View>
-
               <TouchableOpacity style={styles.primaryButton} onPress={handleSave}>
                 <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.buttonGradient}>
                    <Text style={styles.primaryButtonText}>{form.id ? 'UPDATE ADMIN' : 'REGISTER ADMIN'}</Text>
@@ -264,20 +222,13 @@ export default function AdminRegistry() {
                    </View>
                    <Text style={styles.studentMeta}>{item.colleges?.name || 'Global'} • {item.email}</Text>
                 </View>
-                <TouchableOpacity 
-                  style={[styles.editBtn, { backgroundColor: 'rgba(245, 158, 11, 0.05)', marginRight: 8 }]} 
-                  onPress={() => handleQuickReset(item.id, item.full_name || 'Admin')}
-                >
-                   <Feather name="key" size={16} color="#F59E0B" />
-                </TouchableOpacity>
                 <TouchableOpacity style={styles.editBtn} onPress={() => setForm({
                   id: item.id,
                   full_name: item.full_name || '',
                   email: item.email || '',
                   phone: item.phone || '',
                   college_id: item.college_id || '',
-                  role: item.role || 'inst_admin',
-                  custom_password: ''
+                  role: item.role || 'inst_admin'
                 })}>
                    <Feather name="edit-3" size={18} color="#3B82F6" />
                 </TouchableOpacity>
@@ -294,8 +245,8 @@ export default function AdminRegistry() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn: { width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' },
   headerText: { flex: 1 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },

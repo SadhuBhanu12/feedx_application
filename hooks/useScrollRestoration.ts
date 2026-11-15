@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused } from 'expo-router';
 
 const scrollRegistry: Record<string, number> = {};
 

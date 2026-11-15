@@ -7,6 +7,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { adminCreateEvent } from '@/services/supabaseService';
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/lib/supabase';
+import * as ImagePicker from 'expo-image-picker';
+import { uploadImageToSupabaseStorage } from '@/services/uploadService';
 
 export default function CreateEventScreen() {
   const router = useRouter();
@@ -46,6 +48,11 @@ export default function CreateEventScreen() {
     date: '',
     time: '',
     banner_url: '',
+    organizer_name: '',
+    registration_url: '',
+    registration_deadline: '',
+    eligibility: '',
+    event_source: 'feedx', // 'feedx' or 'external'
     max_participants: '',
     event_type: 'Offline',
     registration_required: true,
@@ -70,6 +77,11 @@ export default function CreateEventScreen() {
               date: data.date || data.event_date || '',
               time: data.time || '',
               banner_url: data.banner_url || data.image_url || '',
+              organizer_name: data.organizer_name || data.organizer || '',
+              registration_url: data.registration_url || '',
+              registration_deadline: data.registration_deadline || '',
+              eligibility: data.eligibility || '',
+              event_source: data.event_source || (data.registration_url ? 'external' : 'feedx'),
               max_participants: data.max_participants ? String(data.max_participants) : '',
               event_type: data.location || 'Offline',
               registration_required: !!data.registration_required,
@@ -89,25 +101,67 @@ export default function CreateEventScreen() {
     }
   }, [id]);
 
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const handlePickImage = async () => {
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.8,
+      });
+      if (!res.canceled && res.assets && res.assets.length > 0) {
+        setUploadingImage(true);
+        const publicUrl = await uploadImageToSupabaseStorage(
+          res.assets[0].uri,
+          user?.id || 'admin',
+          'events'
+        );
+        if (publicUrl) {
+          setForm(prev => ({ ...prev, banner_url: publicUrl }));
+        }
+      }
+    } catch (err: any) {
+      Alert.alert('Upload Failed', err?.message || 'Could not upload image.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleCreate = async () => {
-    console.log('handleCreate started', form);
-    if (!form.title || !form.date || !form.venue) {
-      console.log('Validation failed');
+    if (!form.title.trim() || !form.date.trim() || !form.venue.trim()) {
       return Alert.alert('Validation Error', 'Title, Date, and Venue are required.');
     }
-    console.log('Validation passed, setting loading true');
+
+    if (form.registration_url.trim()) {
+      const trimmedUrl = form.registration_url.trim();
+      if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+        return Alert.alert('Validation Error', 'Registration URL must begin with http:// or https://');
+      }
+    }
+
+    if (form.event_source === 'external' && !form.registration_url.trim()) {
+      return Alert.alert('Validation Error', 'External opportunity requires a valid registration URL.');
+    }
+
     setLoading(true);
     try {
-      const payload = {
-        title: form.title,
-        description: form.description,
+      const payload: any = {
+        title: form.title.trim(),
+        description: form.description.trim(),
         date: form.date,
         event_date: form.date,
         time: form.time,
         location: form.event_type,
-        venue: form.venue,
-        banner_url: form.banner_url,
-        image_url: form.banner_url,
+        venue: form.venue.trim(),
+        banner_url: form.banner_url.trim(),
+        image_url: form.banner_url.trim(),
+        organizer_name: form.organizer_name.trim() || (form.event_source === 'external' ? 'External Partner' : 'FEEDX'),
+        organizer: form.organizer_name.trim() || (form.event_source === 'external' ? 'External Partner' : 'FEEDX'),
+        registration_url: form.registration_url.trim() || null,
+        registration_deadline: form.registration_deadline.trim() || null,
+        eligibility: form.eligibility.trim() || null,
+        event_source: form.event_source,
         max_participants: form.max_participants ? parseInt(form.max_participants) : null,
         registration_required: form.registration_required,
         attendance_required: form.attendance_required,
@@ -160,7 +214,7 @@ export default function CreateEventScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
@@ -219,8 +273,86 @@ export default function CreateEventScreen() {
           </View>
         </View>
 
-        <InputRow label="Venue / Location *" value={form.venue} onChangeText={(t: string) => setForm({...form, venue: t})} placeholder="Main Auditorium" />
-        <InputRow label="Banner Image URL" value={form.banner_url} onChangeText={(t: string) => setForm({...form, banner_url: t})} placeholder="https://..." />
+        {/* Event Category / Source Toggle */}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={styles.label}>Event Category & Source</Text>
+          <View style={styles.toggleGroup}>
+            {[
+              { id: 'feedx', label: 'FEEDX Organised' },
+              { id: 'external', label: 'External Opportunity' }
+            ].map(source => (
+              <TouchableOpacity 
+                key={source.id} 
+                style={[styles.toggleBtn, form.event_source === source.id && styles.toggleBtnActive]}
+                onPress={() => setForm({...form, event_source: source.id})}
+              >
+                <Text style={styles.toggleText}>{source.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <InputRow 
+          label="Organizer Name" 
+          value={form.organizer_name} 
+          onChangeText={(t: string) => setForm({...form, organizer_name: t})} 
+          placeholder="FEEDX / Google Developer Groups / State Technical Board" 
+        />
+
+        <View style={{ marginBottom: 16 }}>
+          <Text style={styles.label}>Event Poster Image</Text>
+          <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center', marginBottom: 8 }}>
+            <TouchableOpacity 
+              style={[styles.toggleBtn, { flex: 1, backgroundColor: 'rgba(59, 130, 246, 0.12)', borderColor: '#3B82F6', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, paddingVertical: 12 }]}
+              onPress={handlePickImage}
+              disabled={uploadingImage}
+            >
+              {uploadingImage ? (
+                <ActivityIndicator size="small" color="#3B82F6" />
+              ) : (
+                <Feather name="image" size={16} color="#3B82F6" />
+              )}
+              <Text style={[styles.toggleText, { color: '#3B82F6', fontWeight: '800' }]}>
+                {uploadingImage ? 'Uploading Image...' : form.banner_url ? 'Change Image from Device' : 'Upload Poster from Device'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <InputRow 
+            label="Or Enter Image / Poster URL" 
+            value={form.banner_url} 
+            onChangeText={(t: string) => setForm({...form, banner_url: t})} 
+            placeholder="https://... or leave empty for default FEEDX logo" 
+          />
+
+          <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, marginTop: 2 }}>
+            💡 If no image is uploaded, the official FEEDX event brand image will be automatically used.
+          </Text>
+        </View>
+
+        <InputRow 
+          label="Event Registration URL (External Portal)" 
+          value={form.registration_url} 
+          onChangeText={(t: string) => setForm({...form, registration_url: t})} 
+          placeholder="https://forms.gle/... or https://unstop.com/..." 
+        />
+
+        <InputRow 
+          label="Registration Deadline" 
+          value={form.registration_deadline} 
+          onChangeText={(t: string) => setForm({...form, registration_deadline: t})} 
+          placeholder="e.g. 2026-10-31 11:59 PM" 
+        />
+
+        <InputRow 
+          label="Eligibility Criteria" 
+          value={form.eligibility} 
+          onChangeText={(t: string) => setForm({...form, eligibility: t})} 
+          placeholder="Open to 2nd & 3rd year diploma students, all engineering branches" 
+          multiline 
+        />
+
+        <InputRow label="Venue / Location *" value={form.venue} onChangeText={(t: string) => setForm({...form, venue: t})} placeholder="Main Auditorium or Google Meet" />
         
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <View style={{ flex: 1 }}>

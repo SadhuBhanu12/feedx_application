@@ -35,13 +35,12 @@ export class ErrorBoundary extends Component<Props, State> {
   private handleGoHome = () => {
     this.setState({ hasError: false, error: null });
     try {
-      if (router.canGoBack()) {
-        router.back();
-      } else {
-        router.replace('/(tabs)');
-      }
+      router.replace('/(tabs)');
     } catch (e) {
       console.warn('[ErrorBoundary] Navigation goHome notice:', e);
+      try {
+        router.replace('/');
+      } catch (_) {}
     }
   };
 
@@ -57,7 +56,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <View style={styles.container}>
-          <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+          <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
           <View style={styles.content}>
             <View style={styles.iconContainer}>
               <Feather name="shield-off" size={48} color="#F43F5E" />
@@ -67,9 +66,11 @@ export class ErrorBoundary extends Component<Props, State> {
               An isolated interface exception occurred. Your local session and offline data remain completely safe and secure.
             </Text>
             
-            {__DEV__ && this.state.error && (
+            {this.state.error && (
               <View style={styles.devErrorBox}>
-                <Text style={styles.devErrorText}>{this.state.error.message}</Text>
+                <Text style={styles.devErrorText} numberOfLines={4}>
+                  {this.state.error.message || 'An unexpected interface exception was isolated.'}
+                </Text>
               </View>
             )}
 

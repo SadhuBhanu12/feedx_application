@@ -1,7 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { ButtonLoading } from '@/components/ui/Loaders';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -23,8 +30,15 @@ export default function CreatePasswordScreen() {
   const [confirm, setConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      router.replace('/login');
+    }
+  }, [token, router]);
 
   const validation = useMemo(() => validatePassword(password), [password]);
   const matched = passwordsMatch(password, confirm);
@@ -48,7 +62,6 @@ export default function CreatePasswordScreen() {
         errorMsg = e;
       } else if (e?.message) {
         errorMsg = e.message;
-        // Add helpful hints for common errors
         if (errorMsg.includes('expired') || errorMsg.includes('Session')) {
           errorMsg += '\n\nPlease go back and verify your identity again.';
         }
@@ -60,136 +73,321 @@ export default function CreatePasswordScreen() {
   };
 
   if (!token) {
-    return (
-      <AuthShell title="Create Password" subtitle="Session expired.">
-        <Text style={styles.errorText}>Please verify your identity again.</Text>
-        <TouchableOpacity style={styles.linkBtn} onPress={() => router.replace('/first-time-login')}>
-          <Text style={styles.linkText}>Go to First Time Login</Text>
-        </TouchableOpacity>
-      </AuthShell>
-    );
+    return null;
   }
 
   return (
     <AuthShell
       title="Create Password"
       subtitle={name ? `Welcome ${name}. Set a secure password for your account.` : 'Set a secure password for your account.'}
-      showBack={false}>
+      showBack={true}
+      onBack={() => router.replace('/login')}
+    >
       <Animated.View entering={FadeInUp.duration(350)}>
+        
+        {/* New Password Input Group */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>New Password</Text>
-          <View style={styles.inputWrap}>
-            <Feather name="lock" size={18} color="rgba(255,255,255,0.4)" />
+          <View style={[styles.inputWrap, focusedField === 'password' && styles.inputWrapFocused]}>
+            <Feather
+              name="lock"
+              size={18}
+              color={focusedField === 'password' ? '#60A5FA' : 'rgba(255,255,255,0.45)'}
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
-              placeholder="New Password"
-              placeholderTextColor="rgba(255,255,255,0.25)"
+              placeholder="Enter new password"
+              placeholderTextColor="rgba(255,255,255,0.35)"
               secureTextEntry={!showPassword}
               value={password}
               onChangeText={(v) => {
                 setPassword(v);
                 setError('');
               }}
+              onFocus={() => setFocusedField('password')}
+              onBlur={() => setFocusedField(null)}
               autoCapitalize="none"
+              autoCorrect={false}
+              selectionColor="#60A5FA"
             />
-            <TouchableOpacity onPress={() => setShowPassword((p) => !p)}>
-              <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="rgba(255,255,255,0.4)" />
+            <TouchableOpacity
+              onPress={() => setShowPassword((p) => !p)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={styles.eyeBtn}
+            >
+              <Feather
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={18}
+                color={showPassword ? '#60A5FA' : 'rgba(255,255,255,0.45)'}
+              />
             </TouchableOpacity>
           </View>
         </View>
 
+        {/* Confirm Password Input Group */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Confirm Password</Text>
-          <View style={styles.inputWrap}>
-            <Feather name="lock" size={18} color="rgba(255,255,255,0.4)" />
+          <View style={[styles.inputWrap, focusedField === 'confirm' && styles.inputWrapFocused]}>
+            <Feather
+              name="check-circle"
+              size={18}
+              color={focusedField === 'confirm' ? '#60A5FA' : 'rgba(255,255,255,0.45)'}
+              style={styles.inputIcon}
+            />
             <TextInput
               style={styles.input}
-              placeholder="Confirm Password"
-              placeholderTextColor="rgba(255,255,255,0.25)"
+              placeholder="Re-enter your password"
+              placeholderTextColor="rgba(255,255,255,0.35)"
               secureTextEntry={!showConfirm}
               value={confirm}
               onChangeText={(v) => {
                 setConfirm(v);
                 setError('');
               }}
+              onFocus={() => setFocusedField('confirm')}
+              onBlur={() => setFocusedField(null)}
               autoCapitalize="none"
+              autoCorrect={false}
+              selectionColor="#60A5FA"
             />
-            <TouchableOpacity onPress={() => setShowConfirm((p) => !p)}>
-              <Feather name={showConfirm ? 'eye' : 'eye-off'} size={18} color="rgba(255,255,255,0.4)" />
+            <TouchableOpacity
+              onPress={() => setShowConfirm((p) => !p)}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              style={styles.eyeBtn}
+            >
+              <Feather
+                name={showConfirm ? 'eye' : 'eye-off'}
+                size={18}
+                color={showConfirm ? '#60A5FA' : 'rgba(255,255,255,0.45)'}
+              />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.strengthWrap}>
-          <View style={styles.strengthBarBg}>
-            <View
-              style={[
-                styles.strengthBarFill,
-                {
-                  width: `${(validation.score / 5) * 100}%`,
-                  backgroundColor: STRENGTH_COLORS[validation.strength],
-                },
-              ]}
-            />
-          </View>
-          <Text style={[styles.strengthLabel, { color: STRENGTH_COLORS[validation.strength] }]}>
-            Password strength: {validation.strength}
-          </Text>
-        </View>
-
-        <View style={styles.rules}>
-          {validation.rules.map((rule) => (
-            <View key={rule.key} style={styles.ruleRow}>
-              <Feather
-                name={validation.checks[rule.key] ? 'check-circle' : 'circle'}
-                size={14}
-                color={validation.checks[rule.key] ? COLORS.success : 'rgba(255,255,255,0.25)'}
+        {/* Strength Indicator */}
+        {password.length > 0 && (
+          <View style={styles.strengthWrap}>
+            <View style={styles.strengthBarBg}>
+              <View
+                style={[
+                  styles.strengthBarFill,
+                  {
+                    width: `${(validation.score / 5) * 100}%`,
+                    backgroundColor: STRENGTH_COLORS[validation.strength],
+                  },
+                ]}
               />
-              <Text style={[styles.ruleText, validation.checks[rule.key] && styles.ruleMet]}>{rule.label}</Text>
             </View>
-          ))}
+            <View style={styles.strengthLabelRow}>
+              <Text style={styles.strengthSubText}>Security Assessment:</Text>
+              <Text style={[styles.strengthLabel, { color: STRENGTH_COLORS[validation.strength] }]}>
+                {validation.strength?.toUpperCase()}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Password Policy Rules */}
+        <View style={styles.rules}>
+          {validation.rules.map((rule) => {
+            const isMet = validation.checks[rule.key];
+            return (
+              <View key={rule.key} style={styles.ruleRow}>
+                <Feather
+                  name={isMet ? 'check-circle' : 'circle'}
+                  size={13}
+                  color={isMet ? COLORS.success : 'rgba(255,255,255,0.25)'}
+                />
+                <Text style={[styles.ruleText, isMet && styles.ruleMet]}>{rule.label}</Text>
+              </View>
+            );
+          })}
         </View>
 
-        {confirm.length > 0 && !matched ? <Text style={styles.errorText}>Passwords do not match.</Text> : null}
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {confirm.length > 0 && !matched ? (
+          <View style={styles.errorBox}>
+            <Feather name="alert-circle" size={15} color={COLORS.danger} />
+            <Text style={styles.errorText}>Passwords do not match.</Text>
+          </View>
+        ) : null}
 
-        <TouchableOpacity style={[styles.cta, !canSubmit && styles.ctaDisabled]} onPress={handleCreate} disabled={!canSubmit}>
+        {error ? (
+          <View style={styles.errorBox}>
+            <Feather name="alert-circle" size={15} color={COLORS.danger} />
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
+
+        <TouchableOpacity
+          style={[styles.cta, !canSubmit && styles.ctaDisabled]}
+          onPress={handleCreate}
+          disabled={!canSubmit}
+          activeOpacity={0.85}
+        >
           <LinearGradient colors={COLORS.gradientPrimary} style={styles.ctaGradient}>
-            {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.ctaText}>Create Password</Text>}
+            {loading ? (
+              <ActivityIndicator size="small" color="#FFF" />
+            ) : (
+              <View style={styles.ctaContent}>
+                <Text style={styles.ctaText}>Set Password & Finish</Text>
+                <Feather name="arrow-right" size={18} color="#FFF" />
+              </View>
+            )}
           </LinearGradient>
         </TouchableOpacity>
+
       </Animated.View>
     </AuthShell>
   );
 }
 
 const styles = StyleSheet.create({
-  inputGroup: { gap: 6, marginBottom: 14 },
-  label: { fontSize: 11, fontWeight: '700', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: 0.8, marginLeft: 2 },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 11.5,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.6)',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    marginLeft: 2,
+  },
   inputWrap: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 56,
     borderRadius: 16,
     paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: 'rgba(255,255,255,0.04)',
   },
-  input: { flex: 1, marginLeft: 12, color: '#FFF', fontSize: 15, fontWeight: '500' },
-  strengthWrap: { marginBottom: 12 },
-  strengthBarBg: { height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden' },
-  strengthBarFill: { height: 6, borderRadius: 3 },
-  strengthLabel: { marginTop: 6, fontSize: 12, fontWeight: '800' },
-  rules: { gap: 6, marginBottom: 12 },
-  ruleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  ruleText: { color: 'rgba(255,255,255,0.45)', fontSize: 12, fontWeight: '500' },
-  ruleMet: { color: 'rgba(255,255,255,0.9)', fontWeight: '600' },
-  errorText: { color: COLORS.danger, fontWeight: '600', marginBottom: 8, fontSize: 13 },
-  cta: { height: 54, borderRadius: 14, overflow: 'hidden', marginTop: 8, ...SHADOWS.glow(COLORS.primary) },
-  ctaDisabled: { opacity: 0.5 },
-  ctaGradient: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  ctaText: { color: '#FFF', fontWeight: '800', fontSize: 16, letterSpacing: 0.5 },
-  linkBtn: { marginTop: 14, alignItems: 'center', minHeight: 44, justifyContent: 'center' },
-  linkText: { color: '#60A5FA', fontWeight: '800', fontSize: 14 },
+  inputWrapFocused: {
+    borderColor: '#3B82F6',
+    backgroundColor: 'rgba(59, 130, 246, 0.08)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#3B82F6',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.35,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  inputIcon: {
+    marginRight: 12,
+  },
+  input: {
+    flex: 1,
+    height: '100%',
+    paddingVertical: 0,
+    color: '#FFFFFF',
+    fontSize: 15.5,
+    fontWeight: '600',
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+  },
+  eyeBtn: {
+    padding: 6,
+    marginLeft: 6,
+  },
+  strengthWrap: {
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  strengthBarBg: {
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    overflow: 'hidden',
+  },
+  strengthBarFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  strengthLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 6,
+    paddingHorizontal: 2,
+  },
+  strengthSubText: {
+    fontSize: 11.5,
+    color: 'rgba(255,255,255,0.45)',
+    fontWeight: '500',
+  },
+  strengthLabel: {
+    fontSize: 11.5,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  rules: {
+    gap: 6,
+    marginBottom: 16,
+    paddingHorizontal: 2,
+  },
+  ruleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  ruleText: {
+    color: 'rgba(255,255,255,0.45)',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  ruleMet: {
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '600',
+  },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 14,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.25)',
+    marginBottom: 14,
+  },
+  errorText: {
+    color: COLORS.danger,
+    fontWeight: '600',
+    fontSize: 13,
+    flex: 1,
+  },
+  cta: {
+    height: 54,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 6,
+    ...SHADOWS.glow(COLORS.primary),
+  },
+  ctaDisabled: {
+    opacity: 0.45,
+  },
+  ctaGradient: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ctaContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  ctaText: {
+    color: '#FFF',
+    fontWeight: '800',
+    fontSize: 15.5,
+    letterSpacing: 0.4,
+  },
 });

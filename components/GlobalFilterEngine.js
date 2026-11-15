@@ -13,6 +13,7 @@ import {
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, SPACING } from '@/constants/theme';
 import { BlurView } from 'expo-blur';
+import * as Haptics from 'expo-haptics';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -82,7 +83,7 @@ export function FilterBottomSheet({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
-        <BlurView intensity={20} style={StyleSheet.absoluteFillObject} tint="dark" />
+        <BlurView intensity={20} style={StyleSheet.absoluteFill} tint="dark" />
         <TouchableOpacity style={styles.dismissArea} onPress={onClose} activeOpacity={1} />
         
         <View style={styles.sheet}>
@@ -125,8 +126,12 @@ export function FilterBottomSheet({
                         return (
                           <TouchableOpacity
                             key={optVal}
+                            activeOpacity={0.8}
                             style={[styles.chip, isSelected && styles.chipActive]}
-                            onPress={() => setFilterValue(sec.key, optVal)}
+                            onPress={() => {
+                              try { Haptics.selectionAsync().catch(() => {}); } catch {}
+                              setFilterValue(sec.key, optVal);
+                            }}
                           >
                             <Text style={[styles.chipText, isSelected && styles.chipTextActive]}>
                               {optLabel}
@@ -148,8 +153,12 @@ export function FilterBottomSheet({
                         return (
                           <TouchableOpacity
                             key={optVal}
+                            activeOpacity={0.8}
                             style={[styles.chip, isSelected && styles.chipActive]}
-                            onPress={() => toggleMultiSelect(sec.key, optVal)}
+                            onPress={() => {
+                              try { Haptics.selectionAsync().catch(() => {}); } catch {}
+                              toggleMultiSelect(sec.key, optVal);
+                            }}
                           >
                             <Text style={[styles.chipText, isSelected && styles.chipTextActive]}>
                               {optLabel}

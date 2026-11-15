@@ -16,7 +16,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { saListColleges, saCreateAdmin, saUpdateAdminPassword, saDeleteAdmin } from '@/services/supabaseService';
+import { saListColleges, saCreateAdmin, saDeleteAdmin } from '@/services/supabaseService';
 import { supabase } from '@/lib/supabase';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
@@ -235,22 +235,35 @@ export default function CollegesManager() {
     setCollegeStats(null);
     try {
       const [
-        { count: branchesCount },
-        { count: studentsCount },
-        { count: adminsCount }
+        { count: branchesCount, error: bErr },
+        { count: studentsCount, error: sErr },
+        { count: adminsCount, error: aErr },
+        { count: usersAdminCount, error: uErr }
       ] = await Promise.all([
         supabase.from('branches').select('id', { count: 'exact', head: true }).eq('college_id', selectedCollege.id),
         supabase.from('students').select('id', { count: 'exact', head: true }).eq('college_id', selectedCollege.id),
         supabase.from('admins').select('id', { count: 'exact', head: true }).eq('institution_id', selectedCollege.id),
+        supabase.from('users').select('id', { count: 'exact', head: true }).eq('college_id', selectedCollege.id).in('role', ['admin', 'inst_admin']),
       ]);
+
+      if (bErr) console.warn('Branches stats error:', bErr.message);
+      if (sErr) console.warn('Students stats error:', sErr.message);
+      if (aErr) console.warn('Admins stats error:', aErr.message);
+
+      const totalAdmins = Math.max(adminsCount || 0, usersAdminCount || 0);
 
       setCollegeStats({
         branches: branchesCount || 0,
         students: studentsCount || 0,
-        admins: adminsCount || 0
+        admins: totalAdmins
       });
-    } catch (e) {
-      console.error(e);
+    } catch (e: any) {
+      console.error('Fetch Stats error:', e);
+      setCollegeStats({
+        branches: 0,
+        students: 0,
+        admins: 0
+      });
     }
   };
 
@@ -302,24 +315,6 @@ export default function CollegesManager() {
             handleFetchAdmins();
           } catch (e: any) {
             Alert.alert('Error', e.message || 'Failed to delete admin');
-          }
-        }
-      }
-    ]);
-  };
-
-  const handleUpdatePassword = (adminId: string) => {
-    Alert.prompt('Update Password', 'Enter the new password for this admin', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Update',
-        onPress: async (newPassword?: string) => {
-          if (!newPassword || newPassword.length < 6) return Alert.alert('Error', 'Password must be at least 6 characters');
-          try {
-            await saUpdateAdminPassword(adminId, newPassword);
-            Alert.alert('Success', 'Password updated successfully');
-          } catch (e: any) {
-            Alert.alert('Error', e.message || 'Failed to update password');
           }
         }
       }
@@ -503,7 +498,7 @@ export default function CollegesManager() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#000000']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#000000']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -772,9 +767,6 @@ export default function CollegesManager() {
                     <Text style={styles.adminNameText}>{item.admin_name || item.name || 'Admin'}</Text>
                     <Text style={styles.adminEmailText}>{item.email}</Text>
                   </View>
-                  <TouchableOpacity style={{ padding: 8 }} onPress={() => handleUpdatePassword(item.id)}>
-                    <Feather name="key" size={18} color="#F59E0B" />
-                  </TouchableOpacity>
                   <TouchableOpacity style={{ padding: 8 }} onPress={() => handleDeleteAdmin(item.id)}>
                     <Feather name="trash-2" size={18} color="#EF4444" />
                   </TouchableOpacity>
@@ -898,8 +890,8 @@ export default function CollegesManager() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 70 : 50, paddingBottom: 20 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingBottom: 20 },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.03)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },
   addBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#3B82F6', alignItems: 'center', justifyContent: 'center' },

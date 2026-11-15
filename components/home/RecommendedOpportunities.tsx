@@ -5,6 +5,7 @@ import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import BookmarkButton from '@/components/ui/BookmarkButton';
+import PressableCard from '@/components/ui/PressableCard';
 import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
 
 interface RecommendedOpportunitiesProps {
@@ -19,7 +20,7 @@ export function RecommendedOpportunities({ opportunities = [] }: RecommendedOppo
 
   if (!activeOpps || activeOpps.length === 0) {
     return (
-      <Animated.View entering={FadeInUp.duration(400).delay(350).springify()} style={styles.container}>
+      <Animated.View entering={FadeInUp.duration(300).delay(200)} style={styles.container}>
         <View style={styles.header}>
           <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Recommended Opportunities</Text>
           <TouchableOpacity onPress={() => router.push('/(tabs)/opportunities')}>
@@ -39,7 +40,7 @@ export function RecommendedOpportunities({ opportunities = [] }: RecommendedOppo
   }
 
   return (
-    <Animated.View entering={FadeInUp.duration(400).delay(350).springify()} style={styles.container}>
+    <Animated.View entering={FadeInUp.duration(300).delay(200)} style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleGroup}>
           <Feather name="briefcase" size={18} color={colors.primary} />
@@ -61,57 +62,55 @@ export function RecommendedOpportunities({ opportunities = [] }: RecommendedOppo
             : 'Open';
 
           return (
-            <TouchableOpacity
+            <PressableCard
               key={opp.id || idx}
-              style={[styles.oppCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
               onPress={() => router.push(`/(tabs)/opportunities`)}
-              activeOpacity={0.8}
             >
-              <View style={styles.oppHeader}>
-                <View style={styles.typeTag}>
-                  <Text style={styles.typeTagText}>{opp.type || 'INTERNSHIP'}</Text>
-                </View>
-                <BookmarkButton
-                  isBookmarked={false}
-                  onPress={() => router.push('/bookmarks')}
-                  size={30}
-                  iconSize={14}
-                />
-              </View>
-
-              <Text style={[styles.oppTitle, { color: colors.textPrimary }]} numberOfLines={2}>
-                {opp.title}
-              </Text>
-
-              <Text style={[styles.companyText, { color: colors.textSecondary }]} numberOfLines={1}>
-                {opp.company || opp.organization || 'FeedX Community'}
-              </Text>
-
-              <View style={styles.metaRow}>
-                {opp.stipend || opp.location ? (
-                  <View style={styles.metaItem}>
-                    <Feather name="map-pin" size={11} color={colors.textMuted} />
-                    <Text style={[styles.metaText, { color: colors.textMuted }]} numberOfLines={1}>
-                      {opp.location || opp.stipend || 'Remote'}
-                    </Text>
+              <View style={[styles.oppCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
+                <View style={styles.oppHeader}>
+                  <View style={styles.typeTag}>
+                    <Text style={styles.typeTagText}>{opp.type || 'INTERNSHIP'}</Text>
                   </View>
-                ) : null}
+                  <BookmarkButton
+                    isBookmarked={false}
+                    onPress={() => router.push('/bookmarks')}
+                    size={30}
+                    iconSize={14}
+                  />
+                </View>
 
-                <View style={styles.metaItem}>
-                  <Feather name="calendar" size={11} color={colors.textMuted} />
-                  <Text style={[styles.metaText, { color: colors.textMuted }]}>Deadline: {deadlineText}</Text>
+                <Text style={[styles.oppTitle, { color: colors.textPrimary }]} numberOfLines={2}>
+                  {opp.title}
+                </Text>
+
+                <Text style={[styles.companyText, { color: colors.textSecondary }]} numberOfLines={1}>
+                  {opp.company || opp.organization || 'FEEDX Community'}
+                </Text>
+
+                <View style={styles.metaRow}>
+                  {opp.stipend || opp.location ? (
+                    <View style={styles.metaItem}>
+                      <Feather name="map-pin" size={11} color={colors.textMuted} />
+                      <Text style={[styles.metaText, { color: colors.textMuted }]} numberOfLines={1}>
+                        {opp.location || opp.stipend || 'Remote'}
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  <View style={styles.metaItem}>
+                    <Feather name="calendar" size={11} color={colors.textMuted} />
+                    <Text style={[styles.metaText, { color: colors.textMuted }]}>Deadline: {deadlineText}</Text>
+                  </View>
+                </View>
+
+                <View
+                  style={[styles.viewBtn, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.2)' }]}
+                >
+                  <Text style={styles.viewBtnText}>View Opportunity</Text>
+                  <Feather name="arrow-right" size={12} color="#3B82F6" />
                 </View>
               </View>
-
-              <TouchableOpacity
-                style={[styles.viewBtn, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.2)' }]}
-                onPress={() => router.push(`/(tabs)/opportunities`)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.viewBtnText}>View Opportunity</Text>
-                <Feather name="arrow-right" size={12} color="#3B82F6" />
-              </TouchableOpacity>
-            </TouchableOpacity>
+            </PressableCard>
           );
         })}
       </ScrollView>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View, Platform } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -76,7 +76,7 @@ export default function SecurityConsole() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -159,8 +159,8 @@ export default function SecurityConsole() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn: { width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' },
   headerInfo: { flex: 1 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },

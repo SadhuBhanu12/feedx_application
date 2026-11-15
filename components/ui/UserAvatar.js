@@ -15,13 +15,17 @@ import { LinearGradient } from 'expo-linear-gradient';
 export function getGenderAvatarUri(userOrGender, styleSeed = 'default') {
   let g = '';
   let customUrl = '';
+  let effectiveSeed = styleSeed;
 
   if (typeof userOrGender === 'string') {
+    if (userOrGender.startsWith('http') || userOrGender.startsWith('file://') || userOrGender.startsWith('data:') || userOrGender.startsWith('ph://')) {
+      return userOrGender.trim();
+    }
     g = userOrGender.trim().toLowerCase();
   } else if (userOrGender && typeof userOrGender === 'object') {
-    customUrl = userOrGender.profile_picture || userOrGender.avatar_url || userOrGender.user_metadata?.avatar_url || '';
-    if (customUrl && String(customUrl).trim().length > 10) {
-      return customUrl.trim();
+    customUrl = userOrGender.avatar_url || userOrGender.profile_image || userOrGender.profile_picture || userOrGender.avatar || userOrGender.user_metadata?.avatar_url || '';
+    if (customUrl && String(customUrl).trim().length > 5) {
+      return String(customUrl).trim();
     }
     g = String(
       userOrGender.gender ||
@@ -29,52 +33,76 @@ export function getGenderAvatarUri(userOrGender, styleSeed = 'default') {
       userOrGender.user_metadata?.gender ||
       ''
     ).trim().toLowerCase();
+
+    if (styleSeed === 'default') {
+      const uniqueId = userOrGender.id || userOrGender.email || userOrGender.roll_no || userOrGender.roll_number || userOrGender.full_name || 'Student';
+      effectiveSeed = `FX_${String(uniqueId).replace(/[^a-zA-Z0-9]/g, '').slice(0, 16)}`;
+    }
   }
 
   // 3D Animated Student Avatars
-  if (g === 'male' || g === 'm' || g === 'boy') {
-    return `https://api.dicebear.com/7.x/bottts/png?seed=${styleSeed === 'default' ? 'MaleStudent' : styleSeed}&backgroundColor=3b82f6`;
-  }
   if (g === 'female' || g === 'f' || g === 'girl') {
-    return `https://api.dicebear.com/7.x/bottts/png?seed=${styleSeed === 'default' ? 'FemaleStudent' : styleSeed}&backgroundColor=ec4899`;
+    return `https://api.dicebear.com/7.x/bottts/png?seed=${effectiveSeed === 'default' ? 'FemaleStudent' : effectiveSeed}&backgroundColor=ec4899`;
   }
-  return `https://api.dicebear.com/7.x/bottts/png?seed=${styleSeed === 'default' ? 'NeutralStudent' : styleSeed}&backgroundColor=06b6d4`;
+  return `https://api.dicebear.com/7.x/bottts/png?seed=${effectiveSeed === 'default' ? 'MaleStudent' : effectiveSeed}&backgroundColor=3b82f6`;
 }
 
+/**
+ * @param {{
+ *   user?: any,
+ *   gender?: string,
+ *   avatarUrl?: string,
+ *   fullName?: string,
+ *   size?: number,
+ *   showBadge?: boolean,
+ *   animated?: boolean,
+ *   style?: any
+ * }} props
+ */
 export function UserAvatar({
   user = null,
   gender = null,
+  avatarUrl = null,
+  fullName = '',
   size = 48,
   showBadge = false,
   animated = false,
   style = null,
 }) {
   const [imageError, setImageError] = React.useState(false);
-  const avatarUri = getGenderAvatarUri(user || gender);
-  const fallbackUri = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'Student')}&background=3b82f6&color=fff`;
+  const effectiveUser = user || (avatarUrl || fullName ? { avatar_url: avatarUrl, full_name: fullName, gender } : null);
+  const avatarUri = getGenderAvatarUri(avatarUrl || effectiveUser || gender);
+  const fallbackName = fullName || user?.full_name || 'Student';
+  const fallbackUri = `https://ui-avatars.com/api/?name=${encodeURIComponent(fallbackName)}&background=3b82f6&color=fff`;
   const activeUri = imageError ? fallbackUri : avatarUri;
   const breathScale = useSharedValue(1);
   const haloOpacity = useSharedValue(0.4);
 
   useEffect(() => {
     if (animated) {
-      breathScale.value = withRepeat(
-        withSequence(
-          withTiming(1.04, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-          withTiming(1.00, { duration: 1500, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        true
-      );
+      try {
+        if (typeof withRepeat === 'function' && typeof withSequence === 'function' && typeof withTiming === 'function') {
+          breathScale.value = withRepeat(
+            withSequence(
+              withTiming(1.04, { duration: 1500, easing: Easing?.inOut ? Easing.inOut(Easing.ease) : undefined }),
+              withTiming(1.00, { duration: 1500, easing: Easing?.inOut ? Easing.inOut(Easing.ease) : undefined })
+            ),
+            -1,
+            true
+          );
 
-      haloOpacity.value = withRepeat(
-        withSequence(
-          withTiming(0.8, { duration: 1500, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0.4, { duration: 1500, easing: Easing.inOut(Easing.ease) })
-        ),
-        -1,
-        true
-      );
+          haloOpacity.value = withRepeat(
+            withSequence(
+              withTiming(0.8, { duration: 1500, easing: Easing?.inOut ? Easing.inOut(Easing.ease) : undefined }),
+              withTiming(0.4, { duration: 1500, easing: Easing?.inOut ? Easing.inOut(Easing.ease) : undefined })
+            ),
+            -1,
+            true
+          );
+        }
+      } catch (err) {
+        // Fallback gracefully without crash
+      }
     }
   }, [animated]);
 
@@ -87,7 +115,7 @@ export function UserAvatar({
   }));
 
   return (
-    <View style={[styles.outerWrapper, { width: size + 6, height: size + 6 }, style]}>
+    <View style={[styles.outerWrapper, { width: animated ? size + 6 : size, height: animated ? size + 6 : size }, style]}>
       {animated && (
         <Animated.View
           style={[
@@ -174,3 +202,5 @@ const styles = StyleSheet.create({
     borderColor: '#0F172A',
   },
 });
+
+export default UserAvatar;

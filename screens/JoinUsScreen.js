@@ -16,8 +16,6 @@ import {
   Image
 } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import { Feather, FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { ButtonLoading, FullScreenLoader } from '@/components/ui/Loaders';
 import { COLORS, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp, Layout } from 'react-native-reanimated';
@@ -110,31 +108,54 @@ export default function JoinUsScreen() {
     setXp((prev) => prev + amount);
   };
 
+  const renderFormattedTaggedContent = (text) => {
+    if (!text) return null;
+    const parts = text.split(/(@[a-zA-Z0-9_.-]+|#[a-zA-Z0-9_.-]+)/g);
+    return parts.map((part, index) => {
+      if (part.startsWith('@')) {
+        return (
+          <Text key={index} style={{ color: '#38BDF8', fontWeight: '800' }}>
+            {part}
+          </Text>
+        );
+      }
+      if (part.startsWith('#')) {
+        return (
+          <Text key={index} style={{ color: '#C084FC', fontWeight: '800' }}>
+            {part}
+          </Text>
+        );
+      }
+      return part;
+    });
+  };
+
   const getReputationLevel = (pts) => {
-    if (pts < 200) return 'Beginner 🌟';
-    if (pts < 400) return 'Contributor 🛡️';
-    if (pts < 600) return 'Expert 🎖️';
-    if (pts < 900) return 'Mentor 🎓';
-    return 'Campus Leader 👑';
+    if (pts < 200) return 'Beginner Tier';
+    if (pts < 400) return 'Contributor Tier';
+    if (pts < 600) return 'Expert Tier';
+    if (pts < 900) return 'Mentor Tier';
+    return 'Campus Leader';
   };
 
   // Real-time Supabase loading hook
   const loadRealtimeData = async () => {
     if (!user?.id) return;
     try {
-      const posts = await getCommunityPosts(user.college_id);
+      const posts = await getCommunityPosts(0, 20, 'All', '', 'Newest', user.id);
       setFeedPosts(posts && posts.length > 0 ? posts.map(p => ({
         id: p.id,
-        author: p.author_name || 'Anonymous',
+        author: p.author_name || p.users?.full_name || 'Anonymous',
         roll: p.author_roll || 'ST-2026',
-        role: p.author_role || 'Student',
+        role: p.author_role || p.users?.role || 'Student',
         avatar: p.users?.avatar_url || null,
         image: p.image_url || null,
+        images: p.images || [],
         time: p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'Recent',
         type: p.type || 'general',
-        content: p.content,
-        likes: p.likes_count || 0,
-        hasLiked: p.likes?.some(l => l.user_id === user.id) || false,
+        content: p.content || p.caption || '',
+        likes: p.likes || p.likes_count || 0,
+        hasLiked: Boolean(p.hasLiked),
         comments: p.comments?.map(c => ({
           id: c.id,
           author: c.users?.full_name || c.author_name || 'Anonymous',
@@ -327,21 +348,32 @@ export default function JoinUsScreen() {
 
   const handleLikePost = async (postId) => {
     const post = feedPosts.find(p => p.id === postId);
-    if (!post) return;
+    if (!post || !user?.id) return;
+    const prevLiked = Boolean(post.hasLiked);
+    const prevCount = post.likes || 0;
+
+    // Optimistic update
+    setFeedPosts(prev => prev.map(p => p.id === postId ? {
+      ...p,
+      hasLiked: !prevLiked,
+      likes: prevLiked ? Math.max(0, prevCount - 1) : prevCount + 1
+    } : p));
+
     try {
-      const newLikes = await togglePostLike(postId, user.id, post.hasLiked);
-      setFeedPosts(feedPosts.slice(0, 15).map(p => p.id === postId ? { ...p, likes: newLikes, hasLiked: !p.hasLiked } : p));
+      const res = await togglePostLike(postId, user.id, prevLiked);
+      if (res) {
+        setFeedPosts(prev => prev.map(p => p.id === postId ? {
+          ...p,
+          hasLiked: res.hasLiked,
+          likes: res.likes
+        } : p));
+      }
     } catch {
-      setFeedPosts(feedPosts.slice(0, 15).map(p => {
-        if (p.id === postId) {
-          return {
-            ...p,
-            likes: p.hasLiked ? p.likes - 1 : p.likes + 1,
-            hasLiked: !p.hasLiked
-          };
-        }
-        return p;
-      }));
+      setFeedPosts(prev => prev.map(p => p.id === postId ? {
+        ...p,
+        hasLiked: prevLiked,
+        likes: prevCount
+      } : p));
     }
   };
 
@@ -679,7 +711,10 @@ export default function JoinUsScreen() {
 
             {/* Pinned Announcements */}
             <View style={styles.announcementSection}>
-              <Text style={styles.sectionHeading}>📢 College Announcements</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+                <MaterialCommunityIcons name="bullhorn-outline" size={18} color="#8B5CF6" />
+                <Text style={[styles.sectionHeading, { marginBottom: 0 }]}>College Announcements</Text>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.announcementScroll}>
                 {announcements.map(ann => (
                   <View key={ann.id} style={styles.announcementCard}>
@@ -694,7 +729,10 @@ export default function JoinUsScreen() {
             </View>
 
             {/* Categories Selection Grid */}
-            <Text style={styles.sectionHeading}>🛠️ Community Channels</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+              <Feather name="grid" size={16} color="#8B5CF6" />
+              <Text style={[styles.sectionHeading, { marginBottom: 0 }]}>Community Channels</Text>
+            </View>
             <View style={styles.grid}>
               <TouchableOpacity style={styles.gridCard} onPress={() => setCurrentView('feed')}>
                 <View style={[styles.gridIconCircle, { backgroundColor: 'rgba(59, 130, 246, 0.15)' }]}>
@@ -818,7 +856,7 @@ export default function JoinUsScreen() {
                     <TouchableOpacity style={styles.instaActionIconBtn} onPress={() => handleLikePost(post.id)}>
                       <Ionicons name={post.hasLiked ? "heart" : "heart-outline"} size={24} color={post.hasLiked ? "#EF4444" : "#FFF"} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.instaActionIconBtn} onPress={() => setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)}>
+                    <TouchableOpacity style={styles.instaActionIconBtn} onPress={() => router.push(`/community/post/${post.id}`)}>
                       <Ionicons name="chatbubble-outline" size={22} color="#FFF" />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.instaActionIconBtn} onPress={() => Share.share({ message: `Check out this update on FEEDX: ${post.content}` })}>
@@ -841,11 +879,11 @@ export default function JoinUsScreen() {
                 </View>
 
                 {/* View Comments Trigger */}
-                {post.comments.length > 0 && activeCommentPostId !== post.id && (
-                  <TouchableOpacity style={styles.instaCommentsTrigger} onPress={() => setActiveCommentPostId(post.id)}>
-                    <Text style={styles.instaCommentsTriggerText}>View all {post.comments.length} comments</Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity style={styles.instaCommentsTrigger} onPress={() => router.push(`/community/post/${post.id}`)}>
+                  <Text style={styles.instaCommentsTriggerText}>
+                    {post.comments?.length > 0 ? `View all ${post.comments.length} comments` : 'Add or view comments'}
+                  </Text>
+                </TouchableOpacity>
 
                 {/* Comments List & Input */}
                 {activeCommentPostId === post.id && (
@@ -861,9 +899,19 @@ export default function JoinUsScreen() {
                         )}
                         <View style={styles.instaCommentInfo}>
                           <Text style={styles.instaCommentText}>
-                            <Text style={styles.instaCommentAuthor}>{c.author}</Text>
-                            {"  "}{c.content}
+                            <Text style={[styles.instaCommentAuthor, { color: '#818CF8' }]}>{c.author}</Text>
+                            {"  "}{renderFormattedTaggedContent(c.content)}
                           </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              const tagHandle = `@${c.author.replace(/\s+/g, '_')} `;
+                              setNewCommentText(prev => prev.includes(tagHandle) ? prev : `${tagHandle}${prev}`);
+                            }}
+                            style={{ marginTop: 3 }}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={{ fontSize: 11, color: '#38BDF8', fontWeight: '800' }}>Reply / Tag</Text>
+                          </TouchableOpacity>
                         </View>
                       </View>
                     ))}
@@ -1138,7 +1186,7 @@ export default function JoinUsScreen() {
                     <Text style={styles.marketItemTitle}>{item.title}</Text>
                     <Text style={styles.marketItemMeta}>Condition: {item.condition} • By {item.author}</Text>
                   </View>
-                  <Text style={styles.marketItemPrice}>₹{item.price}</Text>
+                  <Text style={styles.marketItemPrice}>{item.price} pts</Text>
                 </View>
                 <Text style={styles.marketItemDesc}>{item.description}</Text>
                 <View style={styles.marketActions}>
@@ -1236,7 +1284,7 @@ export default function JoinUsScreen() {
 
       {/* COMPOSER MODALS */}
       {activeModal && (
-        <BlurView intensity={35} style={StyleSheet.absoluteFillObject} tint="dark">
+        <BlurView intensity={35} style={StyleSheet.absoluteFill} tint="dark">
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.modalCentered}>
             <View style={styles.modalView}>
               <View style={styles.modalHeader}>
@@ -1377,7 +1425,7 @@ export default function JoinUsScreen() {
                     onChangeText={setNewMarketTitle}
                   />
                   <TextInput
-                    placeholder="Price in ₹"
+                    placeholder="Price in Points (Tokens)"
                     placeholderTextColor="rgba(255,255,255,0.3)"
                     keyboardType="numeric"
                     style={styles.modalTextInputLine}

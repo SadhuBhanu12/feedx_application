@@ -1,47 +1,59 @@
 /**
- * Google Drive Image Processing & Validation Utility for FEEDX
+ * Google Drive & Community Media Processing Utility for FEEDX
  */
+
+import {
+  extractDriveFileId as resolverExtractDriveFileId,
+  extractYouTubeId as resolverExtractYouTubeId,
+  extractVimeoId as resolverExtractVimeoId,
+  isVideoFormat as resolverIsVideoFormat,
+  resolveCommunityMedia as resolverResolveCommunityMedia,
+  resolveSingleMediaUrl as resolverResolveSingleMediaUrl,
+} from './mediaResolver';
+
+export const extractDriveFileId = resolverExtractDriveFileId;
+export const extractYouTubeId = resolverExtractYouTubeId;
+export const extractVimeoId = resolverExtractVimeoId;
+export const isVideoFormat = resolverIsVideoFormat;
+export const resolveCommunityMedia = resolverResolveCommunityMedia;
+export const resolveSingleMediaUrl = resolverResolveSingleMediaUrl;
+
+const SUPABASE_STORAGE_URL = 'https://ktontqbfcinzqvalxyqd.supabase.co/storage/v1/object/public';
 
 /**
- * Extracts Google Drive File ID from various shareable URL formats.
+ * Resolves any image or media URL (Supabase, CDN, or Google Drive) into a direct display URL.
  */
-export function extractDriveFileId(url) {
-  if (!url || typeof url !== 'string') return null;
-  let cleanUrl = url.trim();
+export function resolveMediaUrl(url, defaultBucket = 'community-images1') {
+  if (!url || typeof url !== 'string') return '';
+  const cleanUrl = url.trim();
 
-  try {
-    cleanUrl = decodeURIComponent(cleanUrl);
-  } catch (e) {}
-
-  // Pattern 0: Direct raw file ID (20+ chars alphanumeric with _ or -)
-  if (/^[a-zA-Z0-9_-]{20,}$/.test(cleanUrl)) {
+  // If already a full HTTP(S) URL
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+    const fileId = extractDriveFileId(cleanUrl);
+    if (fileId) {
+      return `https://lh3.googleusercontent.com/d/${fileId}=w600`;
+    }
     return cleanUrl;
   }
 
-  // Pattern 1: /d/FILE_ID or /file/d/FILE_ID or /file/u/0/d/FILE_ID
-  const dPattern = /\/d\/([a-zA-Z0-9_-]{15,})/;
-  const matchD = cleanUrl.match(dPattern);
-  if (matchD && matchD[1] && matchD[1] !== 'file') return matchD[1];
-
-  // Pattern 2: id=FILE_ID or &id=FILE_ID
-  const idPattern = /[?&]id=([a-zA-Z0-9_-]{15,})/;
-  const matchId = cleanUrl.match(idPattern);
-  if (matchId && matchId[1]) return matchId[1];
-
-  // Pattern 3: googleusercontent.com/d/FILE_ID or /u/0/d/FILE_ID
-  const lh3Pattern = /googleusercontent\.com(?:\/u\/\d+)?\/d\/([a-zA-Z0-9_-]{15,})/;
-  const matchLh3 = cleanUrl.match(lh3Pattern);
-  if (matchLh3 && matchLh3[1]) return matchLh3[1];
-
-  // Pattern 4: Fallback 25-45 char ID inside Google URLs
-  if (cleanUrl.includes('drive.google.com') || cleanUrl.includes('googleusercontent.com')) {
-    const generalMatch = cleanUrl.match(/([a-zA-Z0-9_-]{25,45})/);
-    if (generalMatch && generalMatch[1]) {
-      return generalMatch[1];
-    }
+  // If it's a relative Supabase storage path with recognized bucket
+  if (
+    cleanUrl.startsWith('community-images1/') ||
+    cleanUrl.startsWith('community-images/') ||
+    cleanUrl.startsWith('uploads/') ||
+    cleanUrl.startsWith('avatars/') ||
+    cleanUrl.startsWith('banners/') ||
+    cleanUrl.startsWith('resources/') ||
+    cleanUrl.startsWith('support-attachments/')
+  ) {
+    return `${SUPABASE_STORAGE_URL}/${cleanUrl}`;
   }
 
-  return null;
+  if (cleanUrl.length > 3) {
+    return `${SUPABASE_STORAGE_URL}/${defaultBucket}/${cleanUrl}`;
+  }
+
+  return cleanUrl;
 }
 
 /**
@@ -49,16 +61,19 @@ export function extractDriveFileId(url) {
  */
 export function convertDriveUrlToImageUrl(driveUrl) {
   if (!driveUrl || typeof driveUrl !== 'string') return '';
-  const cleanUrl = driveUrl.trim();
-  const fileId = extractDriveFileId(cleanUrl);
+  return resolveMediaUrl(driveUrl);
+}
+
+/**
+ * Converts a Google Drive share URL into a direct downloadable byte-stream URL for video players.
+ */
+export function convertDriveUrlToStreamUrl(driveUrl) {
+  if (!driveUrl || typeof driveUrl !== 'string') return '';
+  const fileId = extractDriveFileId(driveUrl);
   if (fileId) {
-    // Ultra-fast Google Global Edge CDN (serves WebP images in under 50ms!)
-    return `https://lh3.googleusercontent.com/d/${fileId}=s1000`;
+    return `https://drive.google.com/uc?export=download&id=${fileId}&confirm=t`;
   }
-  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
-    return cleanUrl;
-  }
-  return '';
+  return driveUrl;
 }
 
 /**
@@ -70,8 +85,8 @@ export function getDriveImageFallbackUrls(driveUrl) {
   const fileId = extractDriveFileId(cleanUrl);
   if (fileId) {
     return [
-      `https://lh3.googleusercontent.com/d/${fileId}=s1000`,
-      `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
+      `https://lh3.googleusercontent.com/d/${fileId}=w800`,
+      `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`,
       `https://drive.google.com/uc?export=view&id=${fileId}`,
       `https://lh3.googleusercontent.com/d/${fileId}`,
       `https://drive.google.com/uc?id=${fileId}`,
@@ -107,7 +122,6 @@ export function convertDriveUrlToPdfViewerUrl(url) {
   const fileId = extractDriveFileId(cleanUrl);
 
   if (fileId) {
-    // Directly embedded preview URL - bypasses account selector and renders instantly in webview/browser
     return `https://drive.google.com/file/d/${fileId}/preview`;
   }
 
@@ -127,6 +141,16 @@ export function sanitizeUrl(url) {
   }
   if (cleanUrl.includes('/view')) {
     return cleanUrl.replace('/view', '/preview');
+  }
+  return cleanUrl;
+}
+
+export function getDriveDirectDownloadUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const cleanUrl = url.trim();
+  const fileId = extractDriveFileId(cleanUrl);
+  if (fileId) {
+    return `https://lh3.googleusercontent.com/d/${fileId}=s2000`;
   }
   return cleanUrl;
 }

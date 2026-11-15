@@ -14,6 +14,7 @@ import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-ico
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useUser } from '@/context/UserContext';
+import { useGamification } from '@/context/GamificationContext';
 import { useTheme } from '@/context/ThemeContext';
 import {
   getTodayChallenge,
@@ -38,16 +39,17 @@ const CATEGORIES = [
 export default function DailyChallengesDashboardScreen() {
   const router = useRouter();
   const { user } = useUser();
+  const { streak: gamificationStreak } = useGamification();
   const { colors, isDark } = useTheme();
 
   const [todayChallenge, setTodayChallenge] = useState<DailyChallenge | null>(null);
   const [moreChallenges, setMoreChallenges] = useState<DailyChallenge[]>([]);
   const [stats, setStats] = useState<StudentProgressStats>({
-    currentStreak: 7,
-    longestStreak: 14,
-    totalXp: 420,
-    completedCount: 18,
-    userLevel: 4,
+    currentStreak: gamificationStreak?.current_streak ?? user?.streak_count ?? user?.streak ?? 1,
+    longestStreak: gamificationStreak?.longest_streak ?? user?.max_streak ?? user?.longest_streak ?? user?.streak_count ?? 1,
+    totalXp: gamificationStreak?.xp_points ?? user?.xp_points ?? 0,
+    completedCount: 0,
+    userLevel: Math.max(1, Math.floor((user?.xp_points || 0) / 500) + 1),
   });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,6 +75,17 @@ export default function DailyChallengesDashboardScreen() {
   };
 
   useEffect(() => {
+    if (gamificationStreak) {
+      setStats((prev) => ({
+        ...prev,
+        currentStreak: gamificationStreak.current_streak ?? prev.currentStreak,
+        longestStreak: gamificationStreak.longest_streak ?? prev.longestStreak,
+        totalXp: gamificationStreak.xp_points ?? prev.totalXp,
+      }));
+    }
+  }, [gamificationStreak]);
+
+  useEffect(() => {
     loadDashboardData();
   }, [user?.id]);
 
@@ -88,7 +101,7 @@ export default function DailyChallengesDashboardScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.cardBorder }]}>
@@ -161,7 +174,7 @@ export default function DailyChallengesDashboardScreen() {
                   <Text style={styles.diffBadgeText}>{todayChallenge.difficulty}</Text>
                 </View>
                 <View style={styles.xpTag}>
-                  <Text style={styles.xpTagText}>+{todayChallenge.xp_reward} XP</Text>
+                  <Text style={styles.xpTagText}>+{todayChallenge.xp_reward} Tokens</Text>
                 </View>
               </View>
 
@@ -236,7 +249,7 @@ export default function DailyChallengesDashboardScreen() {
                   <Text style={[styles.listSub, { color: colors.textMuted }]}>{item.category} • {item.difficulty}</Text>
                 </View>
                 <View style={styles.listXpTag}>
-                  <Text style={styles.listXpText}>+{item.xp_reward} XP</Text>
+                  <Text style={styles.listXpText}>+{item.xp_reward} Tokens</Text>
                 </View>
               </TouchableOpacity>
             ))}

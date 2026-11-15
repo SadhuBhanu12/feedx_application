@@ -27,6 +27,7 @@ interface IssueItem {
   title: string;
   description: string;
   category: string;
+  college_id?: string | null;
   triage_status: string;
   status: string;
   response?: string;
@@ -124,7 +125,7 @@ export default function SuperAdminSupportTriage() {
     fetchIssues();
   };
 
-  const handleApprove = async (issueId: string) => {
+  const handleApprove = async (issueId: string, itemCollegeId?: string) => {
     Alert.alert(
       'Approve Ticket',
       'This will forward the issue to the respective College Admin queue for resolution. Proceed?',
@@ -135,7 +136,7 @@ export default function SuperAdminSupportTriage() {
           onPress: async () => {
             setActionLoading(true);
             try {
-              await superAdminApproveIssue(issueId, undefined, user?.id);
+              await superAdminApproveIssue(issueId, itemCollegeId, user?.id);
               Alert.alert('Success', 'Ticket approved and dispatched to college desk.');
               fetchIssues();
             } catch (err: any) {
@@ -214,7 +215,7 @@ export default function SuperAdminSupportTriage() {
 
                 <TouchableOpacity 
                   style={[styles.actionBtn, styles.approveBtn]} 
-                  onPress={(e) => { e.stopPropagation(); handleApprove(item.id); }}
+                  onPress={(e) => { e.stopPropagation(); handleApprove(item.id, item.college_id || undefined); }}
                   disabled={actionLoading}
                 >
                   <Feather name="check" size={16} color="#10B981" />
@@ -230,7 +231,7 @@ export default function SuperAdminSupportTriage() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFill} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -427,8 +428,8 @@ export default function SuperAdminSupportTriage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#020408' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 70 : 50, paddingBottom: 15 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingBottom: 15 },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.03)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
   headerTitle: { fontSize: 24, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 },
   headerSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: '600', marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },

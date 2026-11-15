@@ -40,11 +40,10 @@ export const FullScreenLoader = ({ message = LoadingMessages.DEFAULT, isDark: ex
       -1,
       true
     );
-  }, [pulse]);
+  }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: pulse.value }],
-    opacity: pulse.value === 1 ? 0.8 : 1,
   }));
 
   const bgColor = darkTheme ? COLORS.backgroundDark : Colors.light.background;
@@ -54,11 +53,11 @@ export const FullScreenLoader = ({ message = LoadingMessages.DEFAULT, isDark: ex
   return (
     <View style={[styles.fullScreenContainer, { backgroundColor: bgColor }]}>
       <Animated.View style={[styles.logoContainer, animatedStyle]}>
-        <Image source={require('../../assets/images/icon.png')} style={styles.logo} resizeMode="cover" />
+        <Image source={require('../../assets/images/icon.png')} style={styles.logo} resizeMode="contain" />
       </Animated.View>
       <ActivityIndicator size="large" color={COLORS.primary} style={styles.spinner} />
       <Text style={[styles.message, { color: textColor }]}>{message}</Text>
-      <Text style={[styles.subMessage, { color: subTextColor }]}>FeedX Enterprise</Text>
+      <Text style={[styles.subMessage, { color: subTextColor }]}>FEEDX Enterprise</Text>
     </View>
   );
 };
@@ -84,7 +83,7 @@ export const GlobalLoading = ({ visible, message, isDark: explicitDark }: Global
     <View style={styles.globalOverlay}>
       <View style={[styles.globalBox, { backgroundColor: boxBg }]}>
         <View style={styles.smallLogoContainer}>
-          <Image source={require('../../assets/images/icon.png')} style={styles.smallLogo} resizeMode="cover" />
+          <Image source={require('../../assets/images/icon.png')} style={styles.smallLogo} resizeMode="contain" />
         </View>
         <ActivityIndicator size="small" color={COLORS.primary} style={{ marginTop: 8 }} />
         {message && <Text style={[styles.globalMessage, { color: textColor }]}>{message}</Text>}
@@ -110,7 +109,7 @@ export const InlineLoader = ({ message = 'Loading...', color, isDark: explicitDa
   return (
     <View style={styles.inlineContainer}>
       <View style={styles.tinyLogoContainer}>
-        <Image source={require('../../assets/images/icon.png')} style={styles.tinyLogo} resizeMode="cover" />
+        <Image source={require('../../assets/images/icon.png')} style={styles.tinyLogo} resizeMode="contain" />
       </View>
       <ActivityIndicator size="small" color={finalColor} style={{ marginLeft: 8 }} />
       {message ? <Text style={[styles.inlineMessage, { color: textColor }]}>{message}</Text> : null}
@@ -171,11 +170,15 @@ export const ButtonLoading = ({ color = COLORS.white, size = 'small' }: ButtonLo
 const styles = StyleSheet.create({
   fullScreenContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   logoContainer: { 
-    width: 100, 
-    height: 100, 
-    borderRadius: RADIUS.xl, 
+    width: 96, 
+    height: 96, 
+    borderRadius: 22, 
+    backgroundColor: '#FFFFFF',
     overflow: 'hidden', 
     marginBottom: SPACING.xl, 
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 8,
     ...SHADOWS.large
   },
   logo: { width: '100%', height: '100%' },
@@ -184,7 +187,7 @@ const styles = StyleSheet.create({
   subMessage: { fontSize: FONT.size.xs, fontWeight: FONT.weight.medium, textTransform: 'uppercase', letterSpacing: 1.5 },
   
   globalOverlay: { 
-    ...StyleSheet.absoluteFillObject, 
+    ...StyleSheet.absoluteFill, 
     backgroundColor: 'rgba(0,0,0,0.6)', 
     justifyContent: 'center', 
     alignItems: 'center', 
@@ -200,22 +203,30 @@ const styles = StyleSheet.create({
   },
   globalMessage: { marginTop: SPACING.md, fontSize: FONT.size.sm, fontWeight: FONT.weight.semibold },
   smallLogoContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: RADIUS.md,
+    width: 58,
+    height: 58,
+    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
     overflow: 'hidden',
     marginBottom: SPACING.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(59, 130, 246, 0.2)',
   },
   smallLogo: { width: '100%', height: '100%' },
   tinyLogoContainer: {
-    width: 24,
-    height: 24,
-    borderRadius: 4,
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
     overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 2,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(59, 130, 246, 0.2)',
   },
   tinyLogo: { width: '100%', height: '100%' },
   

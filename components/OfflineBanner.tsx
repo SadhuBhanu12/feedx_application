@@ -129,7 +129,7 @@ export function OfflineBanner() {
     };
   });
 
-  if (!bannerConfig.visible && translateY.value === -150) return null;
+  if (!bannerConfig.visible) return null;
 
   return (
     <Animated.View style={[

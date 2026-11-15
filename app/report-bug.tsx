@@ -17,7 +17,7 @@ import { COLORS } from '@/constants/theme';
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/lib/supabase';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadToCloudinary } from '@/services/cloudinaryService';
+import { uploadImageToSupabaseStorage } from '@/services/uploadService';
 import { Image } from 'expo-image';
 
 export default function ReportBugScreen() {
@@ -63,7 +63,7 @@ export default function ReportBugScreen() {
     try {
       let uploadedScreenshotUrl = null;
       if (screenshot) {
-        uploadedScreenshotUrl = await uploadToCloudinary(screenshot, user?.id || 'anonymous', undefined, undefined);
+        uploadedScreenshotUrl = await uploadImageToSupabaseStorage(screenshot, user?.id || 'anonymous', 'bug_reports');
       }
 
       const systemInfo = {
@@ -171,7 +171,7 @@ export default function ReportBugScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       {/* Header */}
       <View style={styles.header}>

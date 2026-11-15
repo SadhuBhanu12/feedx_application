@@ -129,7 +129,7 @@ export async function pushAutoNotification() {
   const item = {
     id: `n-${Date.now()}`,
     title: ['New internship posted', 'Project deadline nearing', 'Mentor session starts soon'][rnd(0, 2)],
-    body: 'Check FeedX to stay ahead.',
+    body: 'Check FEEDX to stay ahead.',
     created_at: new Date().toISOString(),
   };
   await write(KEYS.notifications, [item, ...all].slice(0, 25));

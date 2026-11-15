@@ -22,7 +22,7 @@ export default function TimetableScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
       
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -42,7 +42,7 @@ export default function TimetableScreen() {
               <View style={[styles.iconGlow, { backgroundColor: colors.inputBg }]}>
                 <MaterialCommunityIcons name="clock-outline" size={28} color={colors.primary} />
               </View>
-              <Text style={[styles.comingSoonTitle, { color: colors.textPrimary }]}>Smart Timetable 🚀</Text>
+              <Text style={[styles.comingSoonTitle, { color: colors.textPrimary }]}>Smart Timetable</Text>
               <Text style={[styles.comingSoonSub, { color: colors.textSecondary }]}>We are building a smart, interactive timetable to organize your academics.</Text>
             </View>
             

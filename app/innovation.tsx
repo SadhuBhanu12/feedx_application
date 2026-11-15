@@ -370,7 +370,7 @@ export default function InnovationScreen() {
           setIdeas(prev => [newIdea, ...prev]);
           // Award +5 Gold Coins on Innovation Submission
           try {
-            await triggerActivity('innovation_submitted', 5, 50);
+            await triggerActivity('innovation_submitted', 5, 50, undefined, true);
           } catch (e) {}
         }
       }
@@ -530,7 +530,7 @@ export default function InnovationScreen() {
   if (loading) {
     return (
       <View style={[styles.container, { padding: 20 }]}>
-        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
         
         {/* Header Skeleton */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20, marginTop: 40 }}>
@@ -579,7 +579,7 @@ export default function InnovationScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
       {isDark && <View style={[styles.glowBlob, { top: -100, left: -50, backgroundColor: 'rgba(59, 130, 246, 0.15)' }]} />}
       {isDark && <View style={[styles.glowBlob, { bottom: 100, right: -100, backgroundColor: 'rgba(139, 92, 246, 0.12)' }]} />}
 
@@ -648,7 +648,7 @@ export default function InnovationScreen() {
         {activeTab === 'landing' && (
           <View>
             <View style={styles.banner}>
-              <LinearGradient colors={['#3B82F6', '#8B5CF6']} style={StyleSheet.absoluteFillObject} start={{ x:0, y:0 }} end={{ x:1, y:1 }} />
+              <LinearGradient colors={['#3B82F6', '#8B5CF6']} style={StyleSheet.absoluteFill} start={{ x:0, y:0 }} end={{ x:1, y:1 }} />
               <Text style={styles.bannerTitle}>Turn Ideas into Reality 🚀</Text>
               <Text style={styles.bannerDesc}>Submit start-up pitches, project definitions, and research proposals to institutional reviewers.</Text>
               <TouchableOpacity style={styles.bannerBtn} onPress={() => setWizardModalVisible(true)}>
@@ -967,7 +967,7 @@ export default function InnovationScreen() {
       <Modal visible={ideaModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            {isDark && ( <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} start={{ x:0, y:0 }} end={{ x:1, y:1 }} /> )}
+            {isDark && ( <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} start={{ x:0, y:0 }} end={{ x:1, y:1 }} /> )}
             <View style={styles.modalHeaderRow}>
               <Text style={[styles.modalHeaderTitle, { color: colors.textPrimary }]}>{editingIdeaId ? 'Edit Proposal' : 'New Innovation Proposal'}</Text>
               <TouchableOpacity onPress={() => setIdeaModalVisible(false)}>
@@ -1136,7 +1136,7 @@ export default function InnovationScreen() {
       <Modal visible={viewDetailsVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.background, borderColor: colors.border }]}>
-            {isDark && ( <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} start={{ x:0, y:0 }} end={{ x:1, y:1 }} /> )}
+            {isDark && ( <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} start={{ x:0, y:0 }} end={{ x:1, y:1 }} /> )}
             {selectedIdea && (
               <>
                 <View style={styles.modalHeaderRow}>
@@ -1263,7 +1263,7 @@ export default function InnovationScreen() {
       {/* MODAL 3: Admin Review Decision Comments */}
       <Modal visible={feedbackModalVisible} animationType="fade" transparent={true}>
         <View style={styles.modalOverlay}>
-          <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFillObject} />
+          <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
           <View style={styles.commentModalContent}>
             <Text style={styles.commentModalTitle}>{feedbackActionType} Decision Comments</Text>
             <Text style={styles.commentModalDesc}>Please provide your reviews, remarks, or suggestions for the student project.</Text>

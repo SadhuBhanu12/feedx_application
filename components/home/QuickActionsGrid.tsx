@@ -1,36 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Svg, { Path, G, Rect } from 'react-native-svg';
-import Animated, { FadeInUp, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Svg, { Path, G } from 'react-native-svg';
+import Animated, { FadeInUp, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { SPACING, FONT, RADIUS, SHADOWS, COLORS } from '@/constants/theme';
-
-const { width } = Dimensions.get('window');
+import { MOTION_DURATIONS, MOTION_EASINGS, MOTION_SCALE } from '@/constants/motion';
 
 interface QuickActionItem {
   id: string;
   label: string;
   iconName: string;
   iconColor: string;
-  tileBg?: string;
-  isQuestionTile?: boolean;
   route: string;
   action?: () => void;
 }
 
-function ActionItem({ item, cols = 3 }: { item: QuickActionItem; cols?: number }) {
+function ActionItem({ item, cols = 4 }: { item: QuickActionItem; cols?: number }) {
   const { colors, isDark } = useTheme();
   const router = useRouter();
   const scale = useSharedValue(1);
+  const { width } = useWindowDimensions();
 
   const animStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const sidePadding = SPACING.md * 2;
-  const itemWidth = Math.floor((width - sidePadding) / cols);
+  const itemWidth = Math.floor((width - sidePadding - 32) / cols);
 
   const handlePress = () => {
     if (item.action) {
@@ -43,65 +42,101 @@ function ActionItem({ item, cols = 3 }: { item: QuickActionItem; cols?: number }
     }
   };
 
+  const getTileColors = (id: string, defaultColor: string) => {
+    switch (id) {
+      case 'events':
+        return {
+          gradient: isDark ? ['rgba(255, 46, 99, 0.24)', 'rgba(255, 46, 99, 0.08)'] : ['#FFE4EC', '#FFF0F5'],
+          border: isDark ? 'rgba(255, 46, 99, 0.4)' : 'rgba(255, 46, 99, 0.22)',
+          iconColor: '#FF2E63',
+        };
+      case 'opportunities':
+        return {
+          gradient: isDark ? ['rgba(255, 159, 28, 0.24)', 'rgba(255, 159, 28, 0.08)'] : ['#FFF3E0', '#FFF8E1'],
+          border: isDark ? 'rgba(255, 159, 28, 0.4)' : 'rgba(255, 159, 28, 0.22)',
+          iconColor: '#FF9F1C',
+        };
+      case 'resources':
+        return {
+          gradient: isDark ? ['rgba(59, 130, 246, 0.24)', 'rgba(59, 130, 246, 0.08)'] : ['#EFF6FF', '#DBEAFE'],
+          border: isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.22)',
+          iconColor: '#3B82F6',
+        };
+      case 'roadmap':
+        return {
+          gradient: isDark ? ['rgba(6, 182, 212, 0.24)', 'rgba(6, 182, 212, 0.08)'] : ['#ECFEFF', '#CFFAFE'],
+          border: isDark ? 'rgba(6, 182, 212, 0.4)' : 'rgba(6, 182, 212, 0.22)',
+          iconColor: '#06B6D4',
+        };
+      default:
+        return {
+          gradient: isDark ? ['rgba(168, 85, 247, 0.24)', 'rgba(168, 85, 247, 0.08)'] : ['#F3E8FF', '#FAF5FF'],
+          border: isDark ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.22)',
+          iconColor: defaultColor || '#8B5CF6',
+        };
+    }
+  };
+
+  const tileTheme = getTileColors(item.id, item.iconColor);
+
   return (
-    <View style={{ width: itemWidth, alignItems: 'center', marginBottom: SPACING.md }}>
+    <View style={{ width: itemWidth, alignItems: 'center', marginBottom: SPACING.xs }}>
       <TouchableOpacity
         onPress={handlePress}
-        onPressIn={() => { scale.value = withSpring(0.92); }}
-        onPressOut={() => { scale.value = withSpring(1); }}
-        activeOpacity={0.88}
+        onPressIn={() => {
+          scale.value = withTiming(MOTION_SCALE.cardPress, {
+            duration: MOTION_DURATIONS.micro,
+            easing: MOTION_EASINGS.press,
+          });
+        }}
+        onPressOut={() => {
+          scale.value = withTiming(1, {
+            duration: MOTION_DURATIONS.micro,
+            easing: MOTION_EASINGS.standard,
+          });
+        }}
+        delayPressIn={0}
+        activeOpacity={0.7}
         style={{ alignItems: 'center' }}
       >
         <Animated.View style={[styles.actionWrap, animStyle]}>
-          <View
+          <LinearGradient
+            colors={tileTheme.gradient as any}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={[
               styles.iconBox,
               {
-                backgroundColor: item.tileBg || (isDark ? '#0F172A' : '#1E293B'),
-                borderColor: item.tileBg ? 'transparent' : (isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'),
+                borderColor: tileTheme.border,
               },
             ]}
           >
-            {item.id === 'quiz' ? (
-              <MaterialCommunityIcons name="help-box" size={30} color="#8B5CF6" />
-            ) : item.id === 'roadmap' ? (
-              <Svg width={36} height={36} viewBox="0 0 48 48" fill="none">
-                {/* S-curve road */}
+            {item.id === 'roadmap' ? (
+              <Svg width={32} height={32} viewBox="0 0 48 48" fill="none">
                 <Path
                   d="M 8 40 C 20 40 18 20 36 20"
                   stroke="#FFFFFF"
-                  strokeWidth="7"
+                  strokeWidth="6.5"
                   strokeLinecap="round"
                 />
-                {/* Dashed Center line */}
                 <Path
                   d="M 8 40 C 20 40 18 20 36 20"
-                  stroke="#0F172A"
+                  stroke="#0891B2"
                   strokeWidth="1.8"
                   strokeDasharray="3 3"
                   strokeLinecap="round"
                 />
-                {/* Cyan Flag at top */}
                 <G transform="translate(32, 4)">
                   <Path d="M 0 0 L 0 16" stroke="#38BDF8" strokeWidth="2" strokeLinecap="round" />
                   <Path d="M 1 1 L 14 5 L 1 10 Z" fill="#00B2FE" stroke="#38BDF8" strokeWidth="0.8" />
-                  <Path d="M 4 5.5 L 9 5.5" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
                 </G>
-                {/* Diamond Node 1 */}
-                <Path
-                  d="M 18 10 L 22 14 L 18 18 L 14 14 Z"
-                  fill="#38BDF8"
-                />
-                {/* Diamond Node 2 */}
-                <Path
-                  d="M 36 32 L 39 35 L 36 38 L 33 35 Z"
-                  fill="#38BDF8"
-                />
+                <Path d="M 18 10 L 22 14 L 18 18 L 14 14 Z" fill="#06B6D4" />
+                <Path d="M 36 32 L 39 35 L 36 38 L 33 35 Z" fill="#06B6D4" />
               </Svg>
             ) : (
-              <MaterialCommunityIcons name={item.iconName as any} size={28} color={item.iconColor} />
+              <MaterialCommunityIcons name={item.iconName as any} size={26} color={tileTheme.iconColor} />
             )}
-          </View>
+          </LinearGradient>
           <Text style={[styles.actionLabel, { color: colors.textPrimary }]} numberOfLines={1}>
             {item.label}
           </Text>
@@ -112,84 +147,76 @@ function ActionItem({ item, cols = 3 }: { item: QuickActionItem; cols?: number }
 }
 
 export function QuickActionsGrid({ isAdmin = false, onCustomAction }: { isAdmin?: boolean; onCustomAction?: (key: string) => void }) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
 
   const studentActions: QuickActionItem[] = [
-    {
-      id: 'innovation',
-      label: 'Innovation Hub',
-      iconName: 'lightbulb-on-outline',
-      iconColor: '#FACC15', // Bright Yellow
-      route: '/innovation',
-    },
     {
       id: 'events',
       label: 'Events',
       iconName: 'calendar-star',
-      iconColor: '#FF2E63', // Vibrant Pink / Magenta
+      iconColor: '#FF2E63',
       route: '/(tabs)/events',
     },
     {
       id: 'opportunities',
       label: 'Opportunities',
-      iconName: 'briefcase',
-      iconColor: '#FF9F1C', // Golden Orange
+      iconName: 'briefcase-outline',
+      iconColor: '#FF9F1C',
       route: '/(tabs)/opportunities',
-    },
-    {
-      id: 'colleges',
-      label: 'Colleges',
-      iconName: 'town-hall',
-      iconColor: '#A855F7', // Bright Purple
-      route: '/colleges',
-    },
-    {
-      id: 'roadmap',
-      label: 'AI Roadmap',
-      iconName: 'map-marker-path',
-      iconColor: '#38BDF8', // Cyan Winding Road
-      route: '/roadmap',
     },
     {
       id: 'resources',
       label: 'Resources',
-      iconName: 'file-document',
-      iconColor: '#3B82F6', // Vivid Blue Paper
-      route: '/(tabs)/academics',
+      iconName: 'book-open-page-variant-outline',
+      iconColor: '#3B82F6',
+      route: '/(tabs)/explore?tab=resources',
     },
     {
-      id: 'quiz',
-      label: 'Quiz Zone',
-      iconName: 'help-box',
-      iconColor: '#8B5CF6', // Vivid Purple Tile Icon
-      route: '/daily-quiz',
-    },
-    {
-      id: 'quick_learn',
-      label: 'Quick Learn',
-      iconName: 'book-open-variant',
-      iconColor: '#10B981', // Emerald Green Book
-      route: '/(tabs)/explore?tab=quick',
+      id: 'roadmap',
+      label: 'Roadmaps',
+      iconName: 'map-marker-path',
+      iconColor: '#38BDF8',
+      route: '/roadmap',
     },
   ];
 
   const adminActions: QuickActionItem[] = [
-    { id: 'registry', label: 'Registry', iconName: 'account-group', iconColor: '#A855F7', route: '/(tabs)/admin/students' },
-    { id: 'control', label: 'Control', iconName: 'cog', iconColor: '#06B6D4', route: '/(tabs)/admin/' },
-    { id: 'broadcast', label: 'Broadcast', iconName: 'send', iconColor: '#EC4899', route: '/(tabs)/admin/notifications' },
-    { id: 'support', label: 'Support Desk', iconName: 'forum', iconColor: '#F59E0B', route: '/(tabs)/admin/issues' },
+    { id: 'registry', label: 'Registry', iconName: 'account-group-outline', iconColor: '#A855F7', route: '/(tabs)/admin/students' },
+    { id: 'control', label: 'Control', iconName: 'cog-outline', iconColor: '#06B6D4', route: '/(tabs)/admin/' },
+    { id: 'broadcast', label: 'Broadcast', iconName: 'send-outline', iconColor: '#EC4899', route: '/(tabs)/admin/notifications' },
+    { id: 'support', label: 'Support Desk', iconName: 'forum-outline', iconColor: '#F59E0B', route: '/(tabs)/admin/issues' },
   ];
 
   const actions = isAdmin ? adminActions : studentActions;
 
   return (
     <Animated.View entering={FadeInUp.duration(400).delay(300).springify()} style={styles.container}>
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Quick Actions</Text>
-      <View style={styles.grid}>
-        {actions.map((item) => (
-          <ActionItem key={item.id} item={item} cols={4} />
-        ))}
-      </View>
+      <LinearGradient
+        colors={isDark ? ['#131E3A', '#0B132B'] : ['#FFFFFF', '#F8FAFC']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[
+          styles.cardWrapper,
+          {
+            borderColor: isDark ? 'rgba(59, 130, 246, 0.25)' : 'rgba(0, 0, 0, 0.08)',
+          },
+        ]}
+      >
+        <View style={styles.headerRow}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={styles.accentBar} />
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Quick Access</Text>
+          </View>
+          <View style={[styles.badgePill, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.16)' : '#EFF6FF' }]}>
+            <Text style={styles.badgeText}>SHORTCUTS</Text>
+          </View>
+        </View>
+        <View style={styles.singleRow}>
+          {actions.map((item) => (
+            <ActionItem key={item.id} item={item} cols={4} />
+          ))}
+        </View>
+      </LinearGradient>
     </Animated.View>
   );
 }
@@ -199,62 +226,74 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     marginBottom: SPACING.md,
   },
+  cardWrapper: {
+    paddingTop: 14,
+    paddingBottom: 8,
+    paddingHorizontal: 12,
+    borderRadius: 22,
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  accentBar: {
+    width: 3.5,
+    height: 14,
+    borderRadius: 2,
+    backgroundColor: '#3B82F6',
+  },
   sectionTitle: {
     fontSize: FONT.size.md,
     fontWeight: '800',
-    marginBottom: 16,
   },
-  grid: {
+  badgePill: {
+    paddingHorizontal: 8,
+    paddingVertical: 2.5,
+    borderRadius: 6,
+  },
+  badgeText: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#3B82F6',
+    letterSpacing: 0.5,
+  },
+  singleRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   actionWrap: {
     alignItems: 'center',
-    gap: 8,
+    gap: 7,
   },
   iconBox: {
-    width: 58,
-    height: 58,
-    borderRadius: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  questionSquare: {
-    width: 58,
-    height: 58,
-    borderRadius: 16,
-    backgroundColor: '#7C3AED',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#7C3AED',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  roadmapBox: {
-    width: 58,
-    height: 58,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  questionMarkText: {
-    fontSize: 34,
-    fontWeight: '900',
-    color: '#FFFFFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 2,
   },
   actionLabel: {
     fontSize: 11,
     fontWeight: '700',
     textAlign: 'center',
-    marginTop: 2,
+    marginTop: 1,
   },
 });
+
+export default QuickActionsGrid;

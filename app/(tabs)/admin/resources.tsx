@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator , Modal } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator , Modal, Platform } from 'react-native';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { adminDeleteNote, adminListNotes, adminUpsertNote, uploadResourceFile , adminListColleges } from '@/services/supabaseService';
@@ -19,6 +19,8 @@ interface ResourceItem {
   title: string;
   file_url: string;
   type: string;
+  college_id?: string | null;
+  uploaded_by?: string;
 }
 
 export default function MaterialRegistry() {
@@ -27,14 +29,20 @@ export default function MaterialRegistry() {
   const [items, setItems] = useState<ResourceItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const PREDEFINED_TYPES = ['Previous Paper', 'Notes', 'Syllabus', 'Lab Manual', 'Reference Book', 'Other'];
+  const [selectedType, setSelectedType] = useState('Previous Paper');
+  const [customType, setCustomType] = useState('');
   const [form, setForm] = useState({ 
-    id: '', title: '', type: 'Notes', file_url: ''
+    id: '', title: '', type: 'Previous Paper', file_url: ''
   });
+
+  const isSuperAdmin = user?.role === 'super_admin';
+  const effectiveCollegeId = user?.college_id || (!isSuperAdmin ? '6dd12d63-e276-4ff8-8e58-bcd2cc878626' : null);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const data = await adminListNotes();
+      const data = await adminListNotes(effectiveCollegeId || undefined);
       setItems(data || []);
     } catch (e: any) {
       console.log('Resource load error', e);
@@ -46,11 +54,12 @@ export default function MaterialRegistry() {
   useEffect(() => {
     loadData();
     // Real-time Asset Sync
-    const channel = supabase.channel(`material-registry-rt-${Date.now()}`)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'resources' }, loadData)
+    const channelName = `material-registry-rt-${effectiveCollegeId || 'all'}-${Date.now()}`;
+    const channel = supabase.channel(channelName)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'resources', ...(effectiveCollegeId ? { filter: `college_id=eq.${effectiveCollegeId}` } : {}) }, loadData)
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user?.college_id]);
+  }, [effectiveCollegeId]);
 
   const handlePickFile = async () => {
     try {
@@ -74,16 +83,26 @@ export default function MaterialRegistry() {
       Alert.alert('Registry Error', 'Asset Title and File Source are mandatory.');
       return;
     }
+    const finalType = selectedType === 'Other' ? customType.trim() : selectedType;
+    if (selectedType === 'Other' && !finalType) {
+      Alert.alert('Validation Error', 'Please specify the custom resource type.');
+      return;
+    }
+
     setLoading(true);
     try {
       await adminUpsertNote({
         id: form.id || undefined,
         title: form.title.trim(),
         file_url: form.file_url.trim(),
-        type: form.type.trim() || 'Notes',
+        type: finalType || 'Notes',
+        college_id: effectiveCollegeId || null,
+        uploaded_by: user?.id,
       });
       Alert.alert('Asset Live', 'Resource successfully published to institutional library.');
       setForm({ id: '', title: '', type: 'Notes', file_url: '' });
+      setSelectedType('Previous Paper');
+      setCustomType('');
       loadData();
     } catch (e: any) {
       Alert.alert('Publication Error', e.message);
@@ -92,7 +111,29 @@ export default function MaterialRegistry() {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    Alert.alert('Delete Resource', 'Are you sure you want to remove this academic asset?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await adminDeleteNote(id, user?.college_id);
+            Alert.alert('Removed', 'Resource deleted from campus library.');
+            loadData();
+          } catch (e: any) {
+            Alert.alert('Delete Error', e.message);
+          }
+        },
+      },
+    ]);
+  };
+
   const setFromRow = (row: ResourceItem) => {
+    const isPredefined = PREDEFINED_TYPES.filter(t => t !== 'Other').includes(row.type);
+    setSelectedType(isPredefined ? row.type : 'Other');
+    setCustomType(isPredefined ? '' : row.type);
     setForm({
       id: row.id,
       title: row.title || '',
@@ -103,17 +144,17 @@ export default function MaterialRegistry() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
            <Feather name="arrow-left" size={22} color="#FFF" />
         </TouchableOpacity>
         <View style={styles.headerInfo}>
-           <Text style={styles.headerTitle}>Material Registry</Text>
+           <Text style={styles.headerTitle}>Previous Papers</Text>
            <View style={styles.statusRow}>
               <View style={styles.statusDot} />
-              <Text style={styles.statusText}>DIGITAL ASSET VAULT ACTIVE</Text>
+              <Text style={styles.statusText}>QUESTION PAPERS & MATERIALS</Text>
            </View>
         </View>
         <View style={styles.logoBox}>
@@ -145,17 +186,41 @@ export default function MaterialRegistry() {
                 />
               </View>
 
-              <View style={styles.inputGrid}>
-                <View style={[styles.field, { flex: 1 }]}>
-                  <Text style={styles.label}>Asset Type</Text>
-                  <TextInput 
-                    style={styles.input} 
-                     value={form.type} 
-                     onChangeText={t => setForm(f => ({ ...f, type: t }))} 
-                     placeholder="Notes / Syllabus / Papers" 
-                    placeholderTextColor="rgba(255,255,255,0.2)" 
-                  />
+              <View style={styles.field}>
+                <Text style={styles.label}>Asset Type</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: selectedType === 'Other' ? 12 : 0 }}>
+                  {PREDEFINED_TYPES.map(type => (
+                    <TouchableOpacity
+                      key={type}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        borderRadius: 10,
+                        backgroundColor: selectedType === type ? '#8B5CF6' : 'rgba(255,255,255,0.05)',
+                        borderWidth: 1,
+                        borderColor: selectedType === type ? '#8B5CF6' : 'rgba(255,255,255,0.1)'
+                      }}
+                      onPress={() => setSelectedType(type)}
+                    >
+                      <Text style={{ color: selectedType === type ? '#FFF' : 'rgba(255,255,255,0.7)', fontSize: 12, fontWeight: '700' }}>
+                        {type}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
+
+                {selectedType === 'Other' && (
+                  <View style={{ marginTop: 8 }}>
+                    <Text style={[styles.label, { color: '#8B5CF6' }]}>Specify Resource Type *</Text>
+                    <TextInput 
+                      style={styles.input} 
+                      value={customType} 
+                      onChangeText={setCustomType} 
+                      placeholder="e.g. Lab Manual, Blueprint, Case Study" 
+                      placeholderTextColor="rgba(255,255,255,0.2)" 
+                    />
+                  </View>
+                )}
               </View>
 
               <View style={styles.field}>
@@ -204,11 +269,16 @@ export default function MaterialRegistry() {
                   <Text style={styles.itemMeta}>Global Academic Resource</Text>
                   <View style={styles.itemFooter}>
                      <View style={styles.targetPill}>
-                        <Text style={styles.targetText}>GLOBAL ACCESS</Text>
+                        <Text style={styles.targetText}>{item.college_id ? 'CAMPUS ACCESS' : 'GLOBAL ACCESS'}</Text>
                      </View>
-                     <TouchableOpacity style={styles.editBtn} onPress={() => setFromRow(item)}>
-                        <Feather name="edit-3" size={16} color="#8B5CF6" />
-                     </TouchableOpacity>
+                     <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+                       <TouchableOpacity style={styles.editBtn} onPress={() => setFromRow(item)}>
+                          <Feather name="edit-3" size={16} color="#8B5CF6" />
+                       </TouchableOpacity>
+                       <TouchableOpacity style={[styles.editBtn, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]} onPress={() => handleDelete(item.id)}>
+                          <Feather name="trash-2" size={16} color="#EF4444" />
+                       </TouchableOpacity>
+                     </View>
                   </View>
                </View>
             </View>
@@ -221,8 +291,8 @@ export default function MaterialRegistry() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn: { width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' },
   headerInfo: { flex: 1 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },

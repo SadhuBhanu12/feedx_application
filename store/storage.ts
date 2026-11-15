@@ -1,16 +1,24 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+import { Platform } from 'react-native';
 
 let nativeStorage: any = null;
 let isMMKVAvailable = false;
 
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { MMKV } = require('react-native-mmkv');
-  nativeStorage = new MMKV();
-  isMMKVAvailable = true;
-} catch (e) {
-  console.warn('MMKV native modules not found. Falling back to AsyncStorage (Expo Go/Web friendly).');
+const isExpoGo =
+  Constants.executionEnvironment === ExecutionEnvironment.StoreClient ||
+  (Constants as any).appOwnership === 'expo';
+
+if (!isExpoGo && Platform.OS !== 'web') {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { MMKV } = require('react-native-mmkv');
+    nativeStorage = new MMKV();
+    isMMKVAvailable = true;
+  } catch (e) {
+    // Graceful fallback to AsyncStorage
+  }
 }
 
 // Memory cache for synchronous fallback (Expo Go / Web)

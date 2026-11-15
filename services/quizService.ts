@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { awardActivity } from './gamificationService';
+import { awardActivity, getCalendarDateString } from './gamificationService';
 import { getTopicQuiz } from './quizTopicQuestions';
 
 export interface QuizQuestion {
@@ -660,7 +660,8 @@ export async function saveQuizAnswer(
 
 // 4. Submit Quiz Attempt & Award Coins (RPC with resilient client fallback)
 export async function submitQuizAttempt(
-  attemptId: string
+  attemptId: string,
+  options?: { isDaily?: boolean; source?: string }
 ): Promise<{ success: boolean; score?: number; coins_awarded?: number; already_completed?: boolean }> {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(attemptId);
   try {
@@ -690,6 +691,15 @@ export async function submitQuizAttempt(
       quizId = att.quiz_id;
       status = att.status;
     }
+
+    // Determine whether this is a Daily Mission quiz (50 tokens) or Explore quiz (15 tokens)
+    const isDaily = options?.isDaily !== undefined 
+      ? options.isDaily 
+      : (options?.source === 'daily_mission' || options?.source !== 'explore');
+    const tokenReward = isDaily ? 50 : 15;
+    const activityType = isDaily ? 'home_daily_quiz' : 'explore_quiz';
+    const todayStr = getCalendarDateString();
+    const refId = isDaily ? `daily_quiz_${userId}_${todayStr}` : `explore_quiz_${quizId}_${userId}_${todayStr}`;
 
     if (status === 'COMPLETED') {
       const att = cachedAttempt ? JSON.parse(cachedAttempt) : {};
@@ -722,12 +732,10 @@ export async function submitQuizAttempt(
           status: 'COMPLETED',
           score: calculatedScore,
           completed_at: new Date().toISOString(),
+          coins_awarded: tokenReward,
         })
         .eq('id', attemptId);
     }
-
-    const tokenReward = Math.max(10, calculatedScore * 10);
-    const xpReward = Math.max(15, calculatedScore * 15);
 
     // Update in AsyncStorage
     const updatedAttempt = {
@@ -743,9 +751,9 @@ export async function submitQuizAttempt(
     await AsyncStorage.setItem(`@quiz_attempt_${attemptId}`, JSON.stringify(updatedAttempt));
     await AsyncStorage.setItem(`@completed_quiz_${userId || 'guest'}_${quizId}`, 'true');
 
-    // Award Points & Tokens for quiz completion
+    // Award FEEDX Tokens authoritatively according to matrix (Today's Mission: 50, Explore: 15)
     if (userId && userId !== 'guest' && userId !== 'guest_user') {
-      await awardActivity(userId, 'quiz_completed', tokenReward, xpReward, `quiz_${quizId}`);
+      await awardActivity(userId, activityType, tokenReward, tokenReward, refId);
     }
 
     return {

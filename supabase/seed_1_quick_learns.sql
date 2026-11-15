@@ -1,19 +1,14 @@
 -- ==============================================================================
--- FEEDX SEED MIGRATION: PART 1 - 50 QUICK LEARNS (750 MCQS)
+-- FEEDX AUTHENTIC PDF SEED MIGRATION: QUICK LEARNS
 -- ==============================================================================
 
 BEGIN;
 
--- Clear existing tables
 TRUNCATE TABLE public.student_lesson_progress CASCADE;
-TRUNCATE TABLE public.explore_quiz_attempts CASCADE;
-TRUNCATE TABLE public.explore_quiz_questions CASCADE;
-TRUNCATE TABLE public.explore_quizzes CASCADE;
 TRUNCATE TABLE public.quick_learn_checks CASCADE;
 TRUNCATE TABLE public.quick_learn_lessons CASCADE;
-TRUNCATE TABLE public.fx_transactions CASCADE;
 
--- Quick Learn 1: GitHub & Git Basics
+-- Quick Learn 01: GitHub & Git Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000001',
@@ -49,32 +44,32 @@ VALUES (
   'Docker',
   'SQL',
   'A',
-  'Option A is correct. Git is the version-control tool used to track changes.'
-);
+  'Git is the version-control tool used to track changes.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000002',
   '00000000-0000-4000-a000-000000000001',
   'Q2. What is GitHub?',
-  'A computer network protocol',
+  'A hosted platform for Git repositories and collaboration',
   'A programming language',
   'A database engine',
-  'A hosted platform for Git repositories and collaboration',
-  'D',
-  'Option D is correct. GitHub provides hosted repositories and collaboration features around Git.'
-);
+  'A computer network protocol',
+  'A',
+  'GitHub provides hosted repositories and collaboration features around Git.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000003',
   '00000000-0000-4000-a000-000000000001',
   'Q3. What does a Git commit represent?',
-  'A network address',
+  'A saved change in repository history',
   'A remote server',
   'A programming language',
-  'A saved change in repository history',
-  'D',
-  'Option D is correct. A commit records a set of changes in Git history.'
-);
+  'A network address',
+  'A',
+  'A commit records a set of changes in Git history.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000004',
@@ -85,80 +80,80 @@ VALUES (
   'Running a database',
   'Creating a network',
   'A',
-  'Option A is correct. Branches let developers work on separate lines of development.'
-);
+  'Branches let developers work on separate lines of development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000005',
   '00000000-0000-4000-a000-000000000001',
   'Q5. What does git clone do?',
-  'Creates a password',
-  'Deletes a repository',
   'Copies a repository to a local environment',
+  'Deletes a repository',
+  'Creates a password',
   'Publishes a website',
-  'C',
-  'Option C is correct. Clone creates a local copy of a repository.'
-);
+  'A',
+  'Clone creates a local copy of a repository.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000006',
   '00000000-0000-4000-a000-000000000001',
   'Q6. What is a pull request?',
-  'A database query',
   'A proposal to merge changes',
+  'A database query',
   'A password reset',
   'A cloud storage bucket',
-  'B',
-  'Option B is correct. A pull request is used to propose and review changes before merging.'
-);
+  'A',
+  'A pull request is used to propose and review changes before merging.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000007',
   '00000000-0000-4000-a000-000000000001',
   'Q7. What does git push do?',
-  'Starts a firewall',
+  'Sends local commits to a remote repository',
   'Deletes commits',
   'Creates an HTML page',
-  'Sends local commits to a remote repository',
-  'D',
-  'Option D is correct. Push transfers local commits to a configured remote.'
-);
+  'Starts a firewall',
+  'A',
+  'Push transfers local commits to a configured remote.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000008',
   '00000000-0000-4000-a000-000000000001',
   'Q8. What does git pull commonly do?',
-  'Encrypts a password',
+  'Fetches and integrates changes from a remote',
   'Formats a disk',
   'Creates a database',
-  'Fetches and integrates changes from a remote',
-  'D',
-  'Option D is correct. Pull obtains remote changes and integrates them into the current branch.'
-);
+  'Encrypts a password',
+  'A',
+  'Pull obtains remote changes and integrates them into the current branch.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000009',
   '00000000-0000-4000-a000-000000000001',
   'Q9. What is a repository?',
-  'A password',
+  'A location containing a project''s files and version history',
   'A network cable',
   'A browser',
-  'A location containing a project''s files and version history',
-  'D',
-  'Option D is correct. A repository contains project files and version-control history.'
-);
+  'A password',
+  'A',
+  'A repository contains project files and version-control history.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000010',
   '00000000-0000-4000-a000-000000000001',
   'Q10. What is GitHub Actions commonly used for?',
-  'Drawing circuits',
-  'Writing SQL queries',
   'Automating workflows such as testing and deployment',
+  'Writing SQL queries',
+  'Drawing circuits',
   'Managing IP addresses',
-  'C',
-  'Option C is correct. GitHub Actions automates repository workflows.'
-);
+  'A',
+  'GitHub Actions automates repository workflows.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000011',
@@ -169,58 +164,58 @@ VALUES (
   'A network protocol',
   'A compiler',
   'A',
-  'Option A is correct. A fork creates a separate copy of a repository under another account or organization.'
-);
+  'A fork creates a separate copy of a repository under another account or organization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000012',
   '00000000-0000-4000-a000-000000000001',
   'Q12. What does the staging area do in Git?',
-  'Stores cloud backups',
   'Prepares selected changes for a commit',
+  'Stores cloud backups',
   'Runs a web server',
   'Encrypts traffic',
-  'B',
-  'Option B is correct. The staging area lets you choose changes to include in the next commit.'
-);
+  'A',
+  'The staging area lets you choose changes to include in the next commit.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000013',
   '00000000-0000-4000-a000-000000000001',
   'Q13. What does git diff show?',
-  'CPU temperature',
+  'Changes between versions or working states',
   'Internet speed',
   'Database tables',
-  'Changes between versions or working states',
-  'D',
-  'Option D is correct. Git diff displays differences between file states.'
-);
+  'CPU temperature',
+  'A',
+  'Git diff displays differences between file states.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000014',
   '00000000-0000-4000-a000-000000000001',
   'Q14. What is a Git tag often used for?',
-  'Creating a firewall',
   'Naming a specific point such as a release',
+  'Creating a firewall',
   'Storing passwords',
   'Running a database',
-  'B',
-  'Option B is correct. Tags provide named references to particular commits, often releases.'
-);
+  'A',
+  'Tags provide named references to particular commits, often releases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000001000015',
   '00000000-0000-4000-a000-000000000001',
   'Q15. Why use version control?',
-  'To compress videos',
+  'To track changes and collaborate safely',
   'To increase screen brightness',
   'To replace an operating system',
-  'To track changes and collaborate safely',
-  'D',
-  'Option D is correct. Version control tracks changes and supports collaboration and recovery.'
-);
+  'To compress videos',
+  'A',
+  'Version control tracks changes and supports collaboration and recovery.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 2: APIs & How They Work
+-- Quick Learn 02: APIs & How They Work
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000002',
@@ -234,15 +229,15 @@ VALUES (
   10,
   'Master APIs & How They Work fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-An API (Application Programming Interface) is a set of rules and protocols that allows different software applications to communicate with each other over HTTP using formats like JSON or XML.
+An API is a defined way for software systems to communicate. Web APIs commonly use HTTP requests and responses. A client sends a request to an endpoint and the server returns data or a result, often using JSON.
 
 ### Key Points
-- **REST**
-- **Endpoint**
-- **JSON**
-- **HTTP Methods**
-- **Status Codes**
-- **Authentication**',
+- **API**
+- **endpoint**
+- **HTTP**
+- **request**
+- **response**
+- **JSON**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -250,206 +245,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000002000001',
   '00000000-0000-4000-a000-000000000002',
-  'Q1. What does API stand for?',
-  'Application Programming Interface',
-  'Automated Process Integration',
-  'Application Protocol Index',
-  'Advanced Programming Interface',
+  'Q1. What is an API?',
+  'An interface that lets software systems communicate',
+  'A type of database',
+  'A programming keyboard',
+  'A graphics card',
   'A',
-  'Option A is correct. API stands for Application Programming Interface.'
-);
+  'An API defines how software components communicate.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000002',
   '00000000-0000-4000-a000-000000000002',
-  'Q2. What data format is most commonly used in modern REST APIs?',
-  'JSON',
-  'CSV',
-  'Plain Binary',
-  'Assembly Code',
+  'Q2. What is an API endpoint?',
+  'A specific address for an API resource or action',
+  'A password',
+  'A compiler',
+  'A storage device',
   'A',
-  'Option A is correct. JSON (JavaScript Object Notation) is the standard format for REST APIs.'
-);
+  'An endpoint is a defined API URL/address for a resource or operation.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000003',
   '00000000-0000-4000-a000-000000000002',
-  'Q3. Which HTTP method is used to retrieve data from an API?',
-  'POST',
+  'Q3. Which HTTP method commonly retrieves data?',
   'GET',
+  'POST',
   'DELETE',
-  'PUT',
-  'B',
-  'Option B is correct. GET requests fetch data from a server endpoint.'
-);
+  'PATCH',
+  'A',
+  'GET is commonly used to retrieve resources.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000004',
   '00000000-0000-4000-a000-000000000002',
-  'Q4. Which HTTP method is used to create a new resource via an API?',
+  'Q4. Which HTTP method commonly creates/submits data?',
   'POST',
   'GET',
-  'OPTIONS',
   'HEAD',
+  'OPTIONS',
   'A',
-  'Option A is correct. POST is standard for submitting data to create new records.'
-);
+  'POST is commonly used to submit or create data.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000005',
   '00000000-0000-4000-a000-000000000002',
-  'Q5. What HTTP status code indicates a successful request?',
-  '200 OK',
-  '404 Not Found',
-  '500 Server Error',
-  '403 Forbidden',
+  'Q5. What is JSON?',
+  'A structured data format commonly used by web APIs',
+  'A network cable',
+  'A CPU',
+  'A firewall',
   'A',
-  'Option A is correct. 200 OK signals a successful HTTP request response.'
-);
+  'JSON is a lightweight structured data format.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000006',
   '00000000-0000-4000-a000-000000000002',
-  'Q6. What HTTP status code indicates that a resource was not found?',
-  '404 Not Found',
-  '200 OK',
-  '301 Redirect',
-  '502 Bad Gateway',
+  'Q6. What does an HTTP status code communicate?',
+  'The outcome of a request',
+  'A user''s password',
+  'A database schema',
+  'A screen resolution',
   'A',
-  'Option A is correct. 404 means the requested endpoint or resource does not exist.'
-);
+  'Status codes indicate the result of an HTTP request.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000007',
   '00000000-0000-4000-a000-000000000002',
-  'Q7. What is an API endpoint?',
-  'A CSS style rule',
-  'A hardware processor pin',
-  'A database backup drive',
-  'A specific URL where an API receives requests',
-  'D',
-  'Option D is correct. An endpoint is a specific URI/URL path for interacting with a service.'
-);
+  'Q7. What is authentication?',
+  'Verifying who a user or system is',
+  'Choosing a UI color',
+  'Compressing images',
+  'Sorting a database',
+  'A',
+  'Authentication verifies identity.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000008',
   '00000000-0000-4000-a000-000000000002',
-  'Q8. What is API Rate Limiting?',
-  'Restricting the number of API requests a client can make in a given time',
-  'Increasing internet download bandwidth',
-  'Encrypting database passwords',
-  'Deleting unused server files',
+  'Q8. What is authorization?',
+  'Determining what an authenticated user can access',
+  'Verifying an IP cable',
+  'Creating HTML',
+  'Encrypting a monitor',
   'A',
-  'Option A is correct. Rate limiting prevents abuse by limiting request velocity.'
-);
+  'Authorization controls permissions after identity is established.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000009',
   '00000000-0000-4000-a000-000000000002',
-  'Q9. What header is used to pass authentication tokens in HTTP requests?',
-  'Content-Type',
-  'Authorization',
-  'Accept-Encoding',
-  'User-Agent',
-  'B',
-  'Option B is correct. The Authorization header carries Bearer tokens or credentials.'
-);
+  'Q9. What is a request?',
+  'A message sent by a client to a server',
+  'A database table',
+  'A programming language',
+  'A hard disk',
+  'A',
+  'A request asks a server to perform an operation or return data.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000010',
   '00000000-0000-4000-a000-000000000002',
-  'Q10. What is CORS in web APIs?',
-  'Cross-Origin Resource Sharing security mechanism',
-  'Central Operating Router System',
-  'Client Object Recovery Service',
-  'Cloud Operations Remote Storage',
+  'Q10. What is a response?',
+  'A message returned by a server',
+  'A Git branch',
+  'A password manager',
+  'A circuit',
   'A',
-  'Option A is correct. CORS controls cross-domain HTTP requests from browsers.'
-);
+  'A server sends a response back to the client.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000011',
   '00000000-0000-4000-a000-000000000002',
-  'Q11. Which HTTP method is used to update an existing resource completely?',
-  'GET',
-  'PUT',
-  'TRACE',
-  'CONNECT',
-  'B',
-  'Option B is correct. PUT updates or replaces a target resource representation.'
-);
+  'Q11. What is an API key?',
+  'A credential used by some APIs to identify or authorize a caller',
+  'A keyboard key',
+  'A database column',
+  'A router port',
+  'A',
+  'Some APIs use API keys as credentials.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000012',
   '00000000-0000-4000-a000-000000000002',
-  'Q12. Which HTTP method is used for partial updates to a resource?',
-  'GET',
-  'POST',
-  'OPTIONS',
-  'PATCH',
-  'D',
-  'Option D is correct. PATCH applies partial modifications to a resource.'
-);
+  'Q12. What is rate limiting?',
+  'Restricting how frequently requests can be made',
+  'Encrypting all files',
+  'Changing a domain name',
+  'Creating a UI button',
+  'A',
+  'Rate limiting controls request frequency to protect services.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000013',
   '00000000-0000-4000-a000-000000000002',
-  'Q13. What does statelessness mean in REST APIs?',
-  'Clients do not receive response codes',
-  'Servers store all user cookies in memory',
-  'APIs cannot connect to databases',
-  'Each request from a client contains all necessary information and no session state is stored on the server',
-  'D',
-  'Option D is correct. Statelessness means the server does not hold client session context between calls.'
-);
+  'Q13. What is an API header?',
+  'Metadata sent with an HTTP request or response',
+  'A database row',
+  'A mobile screen',
+  'A Git tag',
+  'A',
+  'Headers carry metadata such as content type or authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000014',
   '00000000-0000-4000-a000-000000000002',
-  'Q14. What is a Webhook?',
-  'A physical network plug',
-  'A browser extension',
-  'An automated HTTP callback triggered by an event',
-  'A CSS animation keyframe',
-  'C',
-  'Option C is correct. Webhooks send real-time event notifications via HTTP POST.'
-);
+  'Q14. What is a webhook?',
+  'A mechanism for sending event notifications to another service',
+  'A password hash',
+  'A CSS selector',
+  'A database index',
+  'A',
+  'Webhooks notify another service when an event occurs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000002000015',
   '00000000-0000-4000-a000-000000000002',
-  'Q15. What tool is commonly used to test and inspect HTTP APIs?',
-  'Photoshop',
-  'Postman or cURL',
-  'Docker Engine',
-  'Git Bash only',
-  'B',
-  'Option B is correct. Postman and cURL are industry standards for API testing.'
-);
+  'Q15. Why is API documentation important?',
+  'It explains endpoints, inputs, outputs and usage',
+  'It increases CPU speed',
+  'It replaces testing',
+  'It stores photos',
+  'A',
+  'Documentation tells developers how to correctly use an API.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 3: Cloud Computing Basics
+-- Quick Learn 03: Cloud Computing
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000003',
-  'Cloud Computing Basics',
-  'cloud-computing-basics',
+  'Cloud Computing',
+  'cloud-computing',
   'CSE',
   'Cloud',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Cloud Computing Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Cloud Computing fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Cloud computing delivers computing services—including servers, storage, databases, networking, software, and analytics—over the Internet (''the cloud'') to offer faster innovation and flexible resources.
+Cloud computing provides computing resources such as servers, storage, databases and networking over the internet. It allows organizations to scale resources and pay according to usage or service plans.
 
 ### Key Points
-- **IaaS**
-- **PaaS**
-- **SaaS**
-- **AWS**
-- **Scalability**
-- **Pay-as-you-go**',
+- **cloud**
+- **on-demand resources**
+- **server**
+- **storage**
+- **database**
+- **networking**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -457,184 +452,184 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000003000001',
   '00000000-0000-4000-a000-000000000003',
-  'Q1. What is Cloud Computing?',
-  'Local offline file storage on hard drives',
-  'On-demand delivery of IT resources and computing power over the Internet',
-  'Running programs on a floppy disk',
-  'Direct physical cable networking between PCs',
+  'Q1. What is cloud?',
+  'public cloud',
+  'cloud',
+  'elasticity',
+  'SaaS',
   'B',
-  'Option B is correct. Cloud computing delivers computing power, databases, and storage over the internet.'
-);
+  'cloud is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000002',
   '00000000-0000-4000-a000-000000000003',
-  'Q2. What does IaaS stand for in Cloud Computing?',
-  'Integrated Application System',
-  'Internet as a Storage',
-  'Internal Architecture as a Service',
-  'Infrastructure as a Service',
-  'D',
-  'Option D is correct. IaaS provides fundamental compute, networking, and storage infrastructure.'
-);
+  'Q2. Which option is most directly associated with on-demand resources?',
+  'on-demand resources',
+  'server',
+  'backup',
+  'IaaS',
+  'A',
+  'on-demand resources is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000003',
   '00000000-0000-4000-a000-000000000003',
-  'Q3. Which of the following is an example of SaaS (Software as a Service)?',
-  'AWS EC2',
-  'Google Workspace / Microsoft 365',
-  'VirtualBox',
-  'Physical Cisco Router',
-  'B',
-  'Option B is correct. SaaS delivers end-user applications directly over the browser.'
-);
+  'Q3. Which statement best describes server?',
+  'private cloud',
+  'availability zone',
+  'server',
+  'IaaS',
+  'C',
+  'server is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000004',
   '00000000-0000-4000-a000-000000000003',
-  'Q4. What is AWS EC2 used for?',
-  'Storing physical hard disks',
-  'Providing scalable virtual servers in the cloud',
-  'Designing frontend web pages',
-  'Writing SQL queries',
+  'Q4. In this topic, what does storage refer to?',
+  'networking',
+  'storage',
+  'elasticity',
+  'private cloud',
   'B',
-  'Option B is correct. Amazon EC2 provides resizable virtual machine instances.'
-);
+  'storage is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000005',
   '00000000-0000-4000-a000-000000000003',
-  'Q5. What is Amazon S3 primarily used for?',
-  'Scalable object storage in the cloud',
-  'Running relational SQL queries',
-  'Compiling C programs',
-  'Managing CPU clock speeds',
+  'Q5. What is database?',
+  'database',
+  'scalability',
+  'networking',
+  'on-demand resources',
   'A',
-  'Option A is correct. Amazon S3 stores images, videos, backups, and static files as objects.'
-);
+  'database is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000006',
   '00000000-0000-4000-a000-000000000003',
-  'Q6. What is elasticity in Cloud Computing?',
-  'Running CPU at 100% capacity constantly',
-  'Stretching physical server cables',
-  'Encrypting database tables',
-  'The ability to dynamically scale resources up or down based on demand',
+  'Q6. Which option is most directly associated with networking?',
+  'server',
+  'IaaS',
+  'storage',
+  'networking',
   'D',
-  'Option D is correct. Elasticity automatically provisions or deprovisions resources as workloads change.'
-);
+  'networking is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000007',
   '00000000-0000-4000-a000-000000000003',
-  'Q7. Which model offers a cloud environment exclusively used by a single organization?',
-  'Community Cloud',
-  'Public Cloud',
-  'Hybrid Cloud',
-  'Private Cloud',
+  'Q7. Which statement best describes scalability?',
+  'elasticity',
+  'managed service',
+  'public cloud',
+  'scalability',
   'D',
-  'Option D is correct. Private cloud infrastructure is operated solely for one organization.'
-);
+  'scalability is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000008',
   '00000000-0000-4000-a000-000000000003',
-  'Q8. What is a Hybrid Cloud?',
-  'A server powered by solar energy',
-  'A combination of public and private cloud environments sharing data and applications',
-  'An offline local USB hub',
-  'A peer-to-peer torrent network',
+  'Q8. In this topic, what does elasticity refer to?',
+  'public cloud',
+  'elasticity',
+  'cloud',
+  'region',
   'B',
-  'Option B is correct. Hybrid cloud connects private infrastructure with public cloud services.'
-);
+  'elasticity is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000009',
   '00000000-0000-4000-a000-000000000003',
-  'Q9. What is Serverless Computing (e.g., AWS Lambda)?',
-  'A cloud model where cloud providers automatically manage server provisioning and scaling',
-  'Computing without any physical computers existing anywhere',
-  'Running apps exclusively on mobile phones',
-  'Using paper forms instead of databases',
-  'A',
-  'Option A is correct. Serverless lets developers run code without managing underlying servers.'
-);
+  'Q9. What is IaaS?',
+  'hybrid cloud',
+  'networking',
+  'IaaS',
+  'database',
+  'C',
+  'IaaS is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000010',
   '00000000-0000-4000-a000-000000000003',
-  'Q10. What is Cloud Auto-Scaling?',
-  'Resizing desktop browser windows',
-  'Automatically adjusting server capacity based on real-time traffic',
-  'Scaling image file dimensions',
-  'Increasing monitor brightness',
-  'B',
-  'Option B is correct. Auto-scaling ensures sufficient instances run during traffic spikes and saves costs during lulls.'
-);
+  'Q10. Which option is most directly associated with PaaS?',
+  'scalability',
+  'networking',
+  'PaaS',
+  'private cloud',
+  'C',
+  'PaaS is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000011',
   '00000000-0000-4000-a000-000000000003',
-  'Q11. What does PaaS stand for?',
-  'Public Access Service',
-  'Protocol as a Storage',
-  'Private Application Server',
-  'Platform as a Service',
+  'Q11. Which statement best describes SaaS?',
+  'scalability',
+  'cloud',
+  'server',
+  'SaaS',
   'D',
-  'Option D is correct. PaaS provides runtime environments, OS, and deployment tools for developers (e.g. Heroku, AWS Elastic Beanstalk).'
-);
+  'SaaS is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000012',
   '00000000-0000-4000-a000-000000000003',
-  'Q12. What is a Region in major cloud providers like AWS or Azure?',
-  'A folder on a local hard drive',
-  'A geographic location containing multiple data center Availability Zones',
-  'A single microchip pin',
-  'A domain name extension',
-  'B',
-  'Option B is correct. Regions are physical geographic locations housing clusters of data centers.'
-);
+  'Q12. In this topic, what does public cloud refer to?',
+  'cloud',
+  'backup',
+  'public cloud',
+  'hybrid cloud',
+  'C',
+  'public cloud is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000013',
   '00000000-0000-4000-a000-000000000003',
-  'Q13. What is an Availability Zone (AZ)?',
-  'A Wi-Fi router password',
-  'A website page section',
-  'One or more isolated data centers within a Cloud Region equipped with independent power and networking',
-  'A software download speed test',
-  'C',
-  'Option C is correct. AZs provide fault isolation within a region to ensure high availability.'
-);
+  'Q13. What is private cloud?',
+  'on-demand resources',
+  'networking',
+  'server',
+  'private cloud',
+  'D',
+  'private cloud is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000014',
   '00000000-0000-4000-a000-000000000003',
-  'Q14. What cloud pricing model is most common?',
-  'Pay-as-you-go based on actual resource consumption',
-  'Fixed upfront lifetime fee',
-  'Free unlimited hardware forever',
-  'Per-keyboard keypress billing',
-  'A',
-  'Option A is correct. Pay-as-you-go bills users based on actual compute hours, memory, and bandwidth used.'
-);
+  'Q14. Which option is most directly associated with hybrid cloud?',
+  'elasticity',
+  'hybrid cloud',
+  'storage',
+  'PaaS',
+  'B',
+  'hybrid cloud is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000003000015',
   '00000000-0000-4000-a000-000000000003',
-  'Q15. What is Cloud Load Balancing used for?',
-  'Distributing incoming application traffic across multiple target servers',
-  'Balancing physical weight on server racks',
-  'Cleaning CPU cooling fans',
-  'Deleting old log files',
-  'A',
-  'Option A is correct. Load balancers distribute traffic evenly to prevent individual server bottlenecks.'
-);
+  'Q15. Which statement best describes region?',
+  'database',
+  'storage',
+  'availability zone',
+  'region',
+  'D',
+  'region is a key concept in Cloud Computing.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 4: Cybersecurity Basics
+-- Quick Learn 04: Cybersecurity Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000004',
@@ -648,15 +643,15 @@ VALUES (
   10,
   'Master Cybersecurity Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. Key fundamentals revolve around maintaining confidentiality, integrity, and availability (CIA triad).
+Cybersecurity protects systems, networks, applications and data from unauthorized access, disruption and misuse. Core goals include confidentiality, integrity and availability, commonly called the CIA triad.
 
 ### Key Points
-- **CIA Triad**
-- **Encryption**
-- **Firewalls**
-- **Phishing**
-- **MFA**
-- **Vulnerabilities**',
+- **confidentiality**
+- **integrity**
+- **availability**
+- **authentication**
+- **authorization**
+- **threat**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -664,184 +659,184 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000004000001',
   '00000000-0000-4000-a000-000000000004',
-  'Q1. What is the primary definition of Cybersecurity Basics?',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'A core technology or standard designed for managing and executing Cybersecurity Basics processes.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
+  'Q1. What is confidentiality?',
+  'backup',
+  'risk',
+  'confidentiality',
+  'incident response',
   'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Cybersecurity Basics processes.'
-);
+  'confidentiality is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000002',
   '00000000-0000-4000-a000-000000000004',
-  'Q2. Which key benefit is provided by Cybersecurity Basics?',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with integrity?',
+  'authentication',
+  'integrity',
+  'threat',
+  'malware',
+  'B',
+  'integrity is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000003',
   '00000000-0000-4000-a000-000000000004',
-  'Q3. What is a fundamental requirement when implementing Cybersecurity Basics?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Proper system configuration, security protocols, and integration standards.',
+  'Q3. Which statement best describes availability?',
+  'backup',
+  'security policy',
+  'MFA',
+  'availability',
   'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'availability is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000004',
   '00000000-0000-4000-a000-000000000004',
-  'Q4. How does Cybersecurity Basics handle data and execution states?',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does authentication refer to?',
+  'authentication',
+  'MFA',
+  'encryption',
+  'malware',
+  'A',
+  'authentication is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000005',
   '00000000-0000-4000-a000-000000000004',
-  'Q5. What is a recommended best practice when deploying Cybersecurity Basics?',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
+  'Q5. What is authorization?',
+  'logging',
+  'authorization',
+  'malware',
+  'incident response',
   'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'authorization is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000006',
   '00000000-0000-4000-a000-000000000004',
-  'Q6. Which layer or component plays a vital role in Cybersecurity Basics?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with threat?',
+  'patching',
+  'firewall',
+  'threat',
+  'encryption',
+  'C',
+  'threat is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000007',
   '00000000-0000-4000-a000-000000000004',
-  'Q7. What is a common bottleneck or challenge in Cybersecurity Basics?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes vulnerability?',
+  'malware',
+  'authorization',
+  'vulnerability',
+  'confidentiality',
+  'C',
+  'vulnerability is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000008',
   '00000000-0000-4000-a000-000000000004',
-  'Q8. How is security typically enforced within Cybersecurity Basics?',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
+  'Q8. In this topic, what does risk refer to?',
+  'vulnerability',
+  'authentication',
+  'risk',
+  'least privilege',
   'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'risk is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000009',
   '00000000-0000-4000-a000-000000000004',
-  'Q9. Which metric is critical for measuring the performance of Cybersecurity Basics?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is malware?',
+  'encryption',
+  'malware',
+  'risk',
+  'integrity',
+  'B',
+  'malware is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000010',
   '00000000-0000-4000-a000-000000000004',
-  'Q10. What is the role of versioning in Cybersecurity Basics?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with phishing?',
+  'security policy',
+  'risk',
+  'malware',
+  'phishing',
+  'D',
+  'phishing is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000011',
   '00000000-0000-4000-a000-000000000004',
-  'Q11. In what scenario is Cybersecurity Basics most effectively applied?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes firewall?',
+  'firewall',
+  'authorization',
+  'phishing',
+  'vulnerability',
+  'A',
+  'firewall is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000012',
   '00000000-0000-4000-a000-000000000004',
-  'Q12. Which tool or interface is standard for interacting with Cybersecurity Basics?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does encryption refer to?',
+  'encryption',
+  'authentication',
+  'risk',
+  'authorization',
+  'A',
+  'encryption is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000013',
   '00000000-0000-4000-a000-000000000004',
-  'Q13. What is the initial phase when developing with Cybersecurity Basics?',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is patching?',
+  'threat',
+  'confidentiality',
+  'logging',
+  'patching',
+  'D',
+  'patching is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000014',
   '00000000-0000-4000-a000-000000000004',
-  'Q14. Which debugging technique is recommended for Cybersecurity Basics?',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with MFA?',
+  'MFA',
+  'encryption',
+  'authentication',
+  'patching',
+  'A',
+  'MFA is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000004000015',
   '00000000-0000-4000-a000-000000000004',
-  'Q15. What is the overall goal of mastering Cybersecurity Basics?',
-  'Hardcoding static binary files without backup in Cybersecurity Basics.',
-  'Legacy manual processing for Cybersecurity Basics.',
-  'Bypassing standard security checks and protocols in Cybersecurity Basics.',
-  'To design, build, and maintain production-ready technology solutions.',
+  'Q15. Which statement best describes least privilege?',
+  'patching',
+  'security policy',
+  'authorization',
+  'least privilege',
   'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'least privilege is a key concept in Cybersecurity Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 5: Linux Basics
+-- Quick Learn 05: Linux Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000005',
@@ -855,15 +850,15 @@ VALUES (
   10,
   'Master Linux Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Linux is an open-source, Unix-like operating system kernel that powers servers, supercomputers, and mobile devices. It provides a robust command-line environment for file management and permissions.
+Linux is an open-source operating-system family based on the Linux kernel. It is widely used in servers, development environments, networking and embedded systems. Users commonly interact with Linux through a shell.
 
 ### Key Points
-- **Kernel**
-- **Terminal**
-- **Permissions**
-- **bash**
-- **root**
-- **CLI Commands**',
+- **kernel**
+- **shell**
+- **terminal**
+- **file system**
+- **process**
+- **permission**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -871,203 +866,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000005000001',
   '00000000-0000-4000-a000-000000000005',
-  'Q1. What is the primary definition of Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'A core technology or standard designed for managing and executing Linux Basics processes.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Linux Basics processes.'
-);
+  'Q1. What is kernel?',
+  'terminal',
+  'package manager',
+  'kernel',
+  'SSH',
+  'C',
+  'kernel is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000002',
   '00000000-0000-4000-a000-000000000005',
-  'Q2. Which key benefit is provided by Linux Basics?',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with shell?',
+  'file system',
+  'distribution',
+  'shell',
+  'kernel',
+  'C',
+  'shell is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000003',
   '00000000-0000-4000-a000-000000000005',
-  'Q3. What is a fundamental requirement when implementing Linux Basics?',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Proper system configuration, security protocols, and integration standards.',
+  'Q3. Which statement best describes terminal?',
+  'package manager',
+  'SSH',
+  'file system',
+  'terminal',
   'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'terminal is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000004',
   '00000000-0000-4000-a000-000000000005',
-  'Q4. How does Linux Basics handle data and execution states?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does file system refer to?',
+  'sudo',
+  'file system',
+  'permission',
+  'kernel',
+  'B',
+  'file system is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000005',
   '00000000-0000-4000-a000-000000000005',
-  'Q5. What is a recommended best practice when deploying Linux Basics?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is process?',
+  'process',
+  'pipe',
+  'process ID',
+  'shell',
+  'A',
+  'process is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000006',
   '00000000-0000-4000-a000-000000000005',
-  'Q6. Which layer or component plays a vital role in Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
+  'Q6. Which option is most directly associated with permission?',
+  'command',
+  'permission',
+  'pipe',
+  'shell',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'permission is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000007',
   '00000000-0000-4000-a000-000000000005',
-  'Q7. What is a common bottleneck or challenge in Linux Basics?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes root?',
+  'root',
+  'package manager',
+  'permission',
+  'environment variable',
+  'A',
+  'root is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000008',
   '00000000-0000-4000-a000-000000000005',
-  'Q8. How is security typically enforced within Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does directory refer to?',
+  'directory',
+  'terminal',
+  'file system',
+  'distribution',
+  'A',
+  'directory is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000009',
   '00000000-0000-4000-a000-000000000005',
-  'Q9. Which metric is critical for measuring the performance of Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
+  'Q9. What is command?',
+  'sudo',
+  'command',
+  'root',
+  'kernel',
   'B',
-  'Option B is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'command is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000010',
   '00000000-0000-4000-a000-000000000005',
-  'Q10. What is the role of versioning in Linux Basics?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with package manager?',
+  'package manager',
+  'redirection',
+  'sudo',
+  'SSH',
+  'A',
+  'package manager is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000011',
   '00000000-0000-4000-a000-000000000005',
-  'Q11. In what scenario is Linux Basics most effectively applied?',
-  'Legacy manual processing for Linux Basics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes open source?',
+  'open source',
+  'redirection',
+  'kernel',
+  'terminal',
+  'A',
+  'open source is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000012',
   '00000000-0000-4000-a000-000000000005',
-  'Q12. Which tool or interface is standard for interacting with Linux Basics?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does distribution refer to?',
+  'file system',
+  'distribution',
+  'command',
+  'redirection',
+  'B',
+  'distribution is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000013',
   '00000000-0000-4000-a000-000000000005',
-  'Q13. What is the initial phase when developing with Linux Basics?',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Legacy manual processing for Linux Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Linux Basics.',
+  'Q13. What is SSH?',
+  'sudo',
+  'log',
+  'SSH',
+  'root',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'SSH is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000014',
   '00000000-0000-4000-a000-000000000005',
-  'Q14. Which debugging technique is recommended for Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with process ID?',
+  'shell',
+  'file system',
+  'open source',
+  'process ID',
+  'D',
+  'process ID is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000005000015',
   '00000000-0000-4000-a000-000000000005',
-  'Q15. What is the overall goal of mastering Linux Basics?',
-  'Legacy manual processing for Linux Basics.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Linux Basics.',
-  'Hardcoding static binary files without backup in Linux Basics.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes environment variable?',
+  'package manager',
+  'root',
+  'file system',
+  'environment variable',
+  'D',
+  'environment variable is a key concept in Linux Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 6: Operating Systems Concepts
+-- Quick Learn 06: Operating Systems
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000006',
-  'Operating Systems Concepts',
-  'operating-systems-concepts',
+  'Operating Systems',
+  'operating-systems',
   'CSE',
   'OS',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Operating Systems Concepts fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Operating Systems fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Operating Systems Concepts is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+An operating system manages hardware and provides services for applications. Major responsibilities include process management, memory management, file management, device management and security.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Operating Systems Concepts.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **process**
+- **thread**
+- **memory management**
+- **file system**
+- **device driver**
+- **kernel**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -1075,184 +1073,184 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000006000001',
   '00000000-0000-4000-a000-000000000006',
-  'Q1. What is the primary definition of Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'A core technology or standard designed for managing and executing Operating Systems Concepts processes.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Operating Systems Concepts processes.'
-);
+  'Q1. What is process?',
+  'boot',
+  'process',
+  'virtual memory',
+  'memory management',
+  'B',
+  'process is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000002',
   '00000000-0000-4000-a000-000000000006',
-  'Q2. Which key benefit is provided by Operating Systems Concepts?',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with thread?',
+  'user interface',
+  'file system',
+  'boot',
+  'thread',
+  'D',
+  'thread is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000003',
   '00000000-0000-4000-a000-000000000006',
-  'Q3. What is a fundamental requirement when implementing Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes memory management?',
+  'virtual memory',
+  'memory management',
+  'process',
+  'boot',
+  'B',
+  'memory management is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000004',
   '00000000-0000-4000-a000-000000000006',
-  'Q4. How does Operating Systems Concepts handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does file system refer to?',
+  'system call',
+  'file system',
+  'boot',
+  'process',
+  'B',
+  'file system is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000005',
   '00000000-0000-4000-a000-000000000006',
-  'Q5. What is a recommended best practice when deploying Operating Systems Concepts?',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is device driver?',
+  'device driver',
+  'scheduler',
+  'deadlock',
+  'kernel',
+  'A',
+  'device driver is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000006',
   '00000000-0000-4000-a000-000000000006',
-  'Q6. Which layer or component plays a vital role in Operating Systems Concepts?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
+  'Q6. Which option is most directly associated with kernel?',
+  'kernel',
+  'device driver',
+  'virtual memory',
+  'security',
   'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'kernel is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000007',
   '00000000-0000-4000-a000-000000000006',
-  'Q7. What is a common bottleneck or challenge in Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes scheduler?',
+  'boot',
+  'multitasking',
+  'interrupt',
+  'scheduler',
+  'D',
+  'scheduler is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000008',
   '00000000-0000-4000-a000-000000000006',
-  'Q8. How is security typically enforced within Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
+  'Q8. In this topic, what does user interface refer to?',
+  'thread',
+  'permissions',
+  'user interface',
+  'scheduler',
   'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'user interface is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000009',
   '00000000-0000-4000-a000-000000000006',
-  'Q9. Which metric is critical for measuring the performance of Operating Systems Concepts?',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is permissions?',
+  'kernel',
+  'permissions',
+  'process state',
+  'user interface',
+  'B',
+  'permissions is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000010',
   '00000000-0000-4000-a000-000000000006',
-  'Q10. What is the role of versioning in Operating Systems Concepts?',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with virtual memory?',
+  'virtual memory',
+  'user interface',
+  'file system',
+  'storage',
+  'A',
+  'virtual memory is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000011',
   '00000000-0000-4000-a000-000000000006',
-  'Q11. In what scenario is Operating Systems Concepts most effectively applied?',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes multitasking?',
+  'multitasking',
+  'device driver',
+  'resource management',
+  'system call',
+  'A',
+  'multitasking is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000012',
   '00000000-0000-4000-a000-000000000006',
-  'Q12. Which tool or interface is standard for interacting with Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does boot refer to?',
+  'networking',
+  'boot',
+  'system call',
+  'storage',
+  'B',
+  'boot is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000013',
   '00000000-0000-4000-a000-000000000006',
-  'Q13. What is the initial phase when developing with Operating Systems Concepts?',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
+  'Q13. What is interrupt?',
+  'permissions',
+  'virtual memory',
+  'resource management',
+  'interrupt',
   'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'interrupt is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000014',
   '00000000-0000-4000-a000-000000000006',
-  'Q14. Which debugging technique is recommended for Operating Systems Concepts?',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with resource management?',
+  'resource management',
+  'deadlock',
+  'device driver',
+  'multitasking',
+  'A',
+  'resource management is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000006000015',
   '00000000-0000-4000-a000-000000000006',
-  'Q15. What is the overall goal of mastering Operating Systems Concepts?',
-  'Bypassing standard security checks and protocols in Operating Systems Concepts.',
-  'Legacy manual processing for Operating Systems Concepts.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Operating Systems Concepts.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes system call?',
+  'system call',
+  'networking',
+  'device driver',
+  'resource management',
+  'A',
+  'system call is a key concept in Operating Systems.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 7: Computer Networks
+-- Quick Learn 07: Computer Networks
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000007',
@@ -1266,12 +1264,15 @@ VALUES (
   10,
   'Master Computer Networks fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Computer Networks is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+A computer network connects devices so they can exchange data. Networks use protocols, addressing and routing to move information between devices and services.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Computer Networks.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **network**
+- **LAN**
+- **WAN**
+- **router**
+- **switch**
+- **IP address**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -1279,203 +1280,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000007000001',
   '00000000-0000-4000-a000-000000000007',
-  'Q1. What is the primary definition of Computer Networks?',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'A core technology or standard designed for managing and executing Computer Networks processes.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Computer Networks processes.'
-);
+  'Q1. What is network?',
+  'network',
+  'LAN',
+  'firewall',
+  'latency',
+  'A',
+  'network is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000002',
   '00000000-0000-4000-a000-000000000007',
-  'Q2. Which key benefit is provided by Computer Networks?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with LAN?',
+  'DNS',
+  'port',
+  'LAN',
+  'switch',
+  'C',
+  'LAN is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000003',
   '00000000-0000-4000-a000-000000000007',
-  'Q3. What is a fundamental requirement when implementing Computer Networks?',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes WAN?',
+  'gateway',
+  'WAN',
+  'topology',
+  'routing',
+  'B',
+  'WAN is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000004',
   '00000000-0000-4000-a000-000000000007',
-  'Q4. How does Computer Networks handle data and execution states?',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does router refer to?',
+  'bandwidth',
+  'topology',
+  'router',
+  'port',
+  'C',
+  'router is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000005',
   '00000000-0000-4000-a000-000000000007',
-  'Q5. What is a recommended best practice when deploying Computer Networks?',
-  'Legacy manual processing for Computer Networks.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
+  'Q5. What is switch?',
+  'port',
+  'switch',
+  'UDP',
+  'router',
   'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'switch is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000006',
   '00000000-0000-4000-a000-000000000007',
-  'Q6. Which layer or component plays a vital role in Computer Networks?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with IP address?',
+  'latency',
+  'WAN',
+  'IP address',
+  'TCP',
+  'C',
+  'IP address is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000007',
   '00000000-0000-4000-a000-000000000007',
-  'Q7. What is a common bottleneck or challenge in Computer Networks?',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Managing system state synchronization and resource contention under heavy load.',
+  'Q7. Which statement best describes MAC address?',
+  'WAN',
+  'firewall',
+  'topology',
+  'MAC address',
   'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'MAC address is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000008',
   '00000000-0000-4000-a000-000000000007',
-  'Q8. How is security typically enforced within Computer Networks?',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Through strong authentication, access control permissions, and data encryption.',
+  'Q8. In this topic, what does protocol refer to?',
+  'WAN',
+  'IP address',
+  'MAC address',
+  'protocol',
   'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'protocol is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000009',
   '00000000-0000-4000-a000-000000000007',
-  'Q9. Which metric is critical for measuring the performance of Computer Networks?',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is packet?',
+  'IP address',
+  'DNS',
+  'WAN',
+  'packet',
+  'D',
+  'packet is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000010',
   '00000000-0000-4000-a000-000000000007',
-  'Q10. What is the role of versioning in Computer Networks?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with routing?',
+  'packet',
+  'protocol',
+  'routing',
+  'firewall',
+  'C',
+  'routing is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000011',
   '00000000-0000-4000-a000-000000000007',
-  'Q11. In what scenario is Computer Networks most effectively applied?',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes DNS?',
+  'LAN',
+  'DNS',
+  'gateway',
+  'WAN',
+  'B',
+  'DNS is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000012',
   '00000000-0000-4000-a000-000000000007',
-  'Q12. Which tool or interface is standard for interacting with Computer Networks?',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does DHCP refer to?',
+  'topology',
+  'DHCP',
+  'routing',
+  'TCP',
+  'B',
+  'DHCP is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000013',
   '00000000-0000-4000-a000-000000000007',
-  'Q13. What is the initial phase when developing with Computer Networks?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Computer Networks.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
+  'Q13. What is TCP?',
+  'TCP',
+  'firewall',
+  'UDP',
+  'DHCP',
   'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'TCP is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000014',
   '00000000-0000-4000-a000-000000000007',
-  'Q14. Which debugging technique is recommended for Computer Networks?',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Legacy manual processing for Computer Networks.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Computer Networks.',
+  'Q14. Which option is most directly associated with UDP?',
+  'WAN',
+  'LAN',
+  'UDP',
+  'gateway',
   'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'UDP is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000007000015',
   '00000000-0000-4000-a000-000000000007',
-  'Q15. What is the overall goal of mastering Computer Networks?',
-  'Legacy manual processing for Computer Networks.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Computer Networks.',
-  'Hardcoding static binary files without backup in Computer Networks.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes port?',
+  'switch',
+  'IP address',
+  'port',
+  'router',
+  'C',
+  'port is a key concept in Computer Networks.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 8: Internet & Web Technology
+-- Quick Learn 08: Internet & Web
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000008',
-  'Internet & Web Technology',
-  'internet-web-technology',
+  'Internet & Web',
+  'internet-web',
   'CSE',
   'Web Dev',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Internet & Web Technology fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Internet & Web fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Internet & Web Technology is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+The internet is a global network of interconnected networks. The World Wide Web is a service running on the internet that uses technologies such as HTTP, URLs, browsers and web servers.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Internet & Web Technology.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **internet**
+- **web**
+- **browser**
+- **server**
+- **URL**
+- **HTTP**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -1483,203 +1487,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000008000001',
   '00000000-0000-4000-a000-000000000008',
-  'Q1. What is the primary definition of Internet & Web Technology?',
-  'Legacy manual processing for Internet & Web Technology.',
-  'A core technology or standard designed for managing and executing Internet & Web Technology processes.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Internet & Web Technology processes.'
-);
+  'Q1. What is internet?',
+  'response',
+  'domain',
+  'internet',
+  'server',
+  'C',
+  'internet is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000002',
   '00000000-0000-4000-a000-000000000008',
-  'Q2. Which key benefit is provided by Internet & Web Technology?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with web?',
+  'IP address',
+  'URL',
+  'web',
+  'browser',
+  'C',
+  'web is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000003',
   '00000000-0000-4000-a000-000000000008',
-  'Q3. What is a fundamental requirement when implementing Internet & Web Technology?',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes browser?',
+  'CSS',
+  'server',
+  'HTTPS',
+  'browser',
+  'D',
+  'browser is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000004',
   '00000000-0000-4000-a000-000000000008',
-  'Q4. How does Internet & Web Technology handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does server refer to?',
+  'response',
+  'server',
+  'web server',
+  'CSS',
+  'B',
+  'server is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000005',
   '00000000-0000-4000-a000-000000000008',
-  'Q5. What is a recommended best practice when deploying Internet & Web Technology?',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is URL?',
+  'client',
+  'web',
+  'URL',
+  'web server',
+  'C',
+  'URL is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000006',
   '00000000-0000-4000-a000-000000000008',
-  'Q6. Which layer or component plays a vital role in Internet & Web Technology?',
-  'Legacy manual processing for Internet & Web Technology.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with HTTP?',
+  'URL',
+  'response',
+  'server',
+  'HTTP',
+  'D',
+  'HTTP is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000007',
   '00000000-0000-4000-a000-000000000008',
-  'Q7. What is a common bottleneck or challenge in Internet & Web Technology?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes DNS?',
+  'internet',
+  'response',
+  'DNS',
+  'server',
+  'C',
+  'DNS is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000008',
   '00000000-0000-4000-a000-000000000008',
-  'Q8. How is security typically enforced within Internet & Web Technology?',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Through strong authentication, access control permissions, and data encryption.',
+  'Q8. In this topic, what does HTML refer to?',
+  'server',
+  'cookie',
+  'cache',
+  'HTML',
   'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'HTML is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000009',
   '00000000-0000-4000-a000-000000000008',
-  'Q9. Which metric is critical for measuring the performance of Internet & Web Technology?',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is CSS?',
+  'CSS',
+  'cookie',
+  'web server',
+  'request',
+  'A',
+  'CSS is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000010',
   '00000000-0000-4000-a000-000000000008',
-  'Q10. What is the role of versioning in Internet & Web Technology?',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with JavaScript?',
+  'URL',
+  'internet',
+  'HTTP',
+  'JavaScript',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'JavaScript is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000011',
   '00000000-0000-4000-a000-000000000008',
-  'Q11. In what scenario is Internet & Web Technology most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes client?',
+  'cache',
+  'client',
+  'cookie',
+  'domain',
+  'B',
+  'client is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000012',
   '00000000-0000-4000-a000-000000000008',
-  'Q12. Which tool or interface is standard for interacting with Internet & Web Technology?',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does request refer to?',
+  'response',
+  'HTML',
+  'request',
+  'browser',
+  'C',
+  'request is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000013',
   '00000000-0000-4000-a000-000000000008',
-  'Q13. What is the initial phase when developing with Internet & Web Technology?',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is response?',
+  'HTTPS',
+  'response',
+  'DNS',
+  'URL',
+  'B',
+  'response is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000014',
   '00000000-0000-4000-a000-000000000008',
-  'Q14. Which debugging technique is recommended for Internet & Web Technology?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Internet & Web Technology.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with domain?',
+  'HTML',
+  'domain',
+  'request',
+  'internet',
+  'B',
+  'domain is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000008000015',
   '00000000-0000-4000-a000-000000000008',
-  'Q15. What is the overall goal of mastering Internet & Web Technology?',
-  'Legacy manual processing for Internet & Web Technology.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Internet & Web Technology.',
-  'Hardcoding static binary files without backup in Internet & Web Technology.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes IP address?',
+  'internet',
+  'web',
+  'IP address',
+  'DNS',
+  'C',
+  'IP address is a key concept in Internet & Web.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 9: HTML & CSS Essentials
+-- Quick Learn 09: HTML & CSS
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000009',
-  'HTML & CSS Essentials',
-  'html-css-essentials',
+  'HTML & CSS',
+  'html-css',
   'CSE',
   'Web Dev',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master HTML & CSS Essentials fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master HTML & CSS fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-HTML & CSS Essentials is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+HTML structures web pages using elements such as headings, paragraphs, links and forms. CSS controls presentation including colors, spacing, typography and layout.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of HTML & CSS Essentials.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **HTML**
+- **element**
+- **tag**
+- **attribute**
+- **heading**
+- **paragraph**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -1687,203 +1694,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000009000001',
   '00000000-0000-4000-a000-000000000009',
-  'Q1. What is the primary definition of HTML & CSS Essentials?',
-  'A core technology or standard designed for managing and executing HTML & CSS Essentials processes.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing HTML & CSS Essentials processes.'
-);
+  'Q1. What is HTML?',
+  'link',
+  'property',
+  'HTML',
+  'value',
+  'C',
+  'HTML is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000002',
   '00000000-0000-4000-a000-000000000009',
-  'Q2. Which key benefit is provided by HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with element?',
+  'CSS',
+  'tag',
+  'element',
+  'attribute',
+  'C',
+  'element is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000003',
   '00000000-0000-4000-a000-000000000009',
-  'Q3. What is a fundamental requirement when implementing HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
+  'Q3. Which statement best describes tag?',
+  'HTML',
+  'tag',
+  'property',
+  'selector',
   'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'tag is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000004',
   '00000000-0000-4000-a000-000000000009',
-  'Q4. How does HTML & CSS Essentials handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
+  'Q4. In this topic, what does attribute refer to?',
+  'attribute',
+  'selector',
+  'CSS',
+  'class',
   'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'attribute is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000005',
   '00000000-0000-4000-a000-000000000009',
-  'Q5. What is a recommended best practice when deploying HTML & CSS Essentials?',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is heading?',
+  'form',
+  'heading',
+  'attribute',
+  'element',
+  'B',
+  'heading is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000006',
   '00000000-0000-4000-a000-000000000009',
-  'Q6. Which layer or component plays a vital role in HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
+  'Q6. Which option is most directly associated with paragraph?',
+  'responsive design',
+  'paragraph',
+  'id',
+  'attribute',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'paragraph is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000007',
   '00000000-0000-4000-a000-000000000009',
-  'Q7. What is a common bottleneck or challenge in HTML & CSS Essentials?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes link?',
+  'selector',
+  'link',
+  'form',
+  'id',
+  'B',
+  'link is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000008',
   '00000000-0000-4000-a000-000000000009',
-  'Q8. How is security typically enforced within HTML & CSS Essentials?',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does image refer to?',
+  'padding',
+  'CSS',
+  'image',
+  'paragraph',
+  'C',
+  'image is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000009',
   '00000000-0000-4000-a000-000000000009',
-  'Q9. Which metric is critical for measuring the performance of HTML & CSS Essentials?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
+  'Q9. What is form?',
+  'form',
+  'link',
+  'padding',
+  'margin',
   'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'form is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000010',
   '00000000-0000-4000-a000-000000000009',
-  'Q10. What is the role of versioning in HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'B',
-  'Option B is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with CSS?',
+  'paragraph',
+  'id',
+  'link',
+  'CSS',
+  'D',
+  'CSS is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000011',
   '00000000-0000-4000-a000-000000000009',
-  'Q11. In what scenario is HTML & CSS Essentials most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes selector?',
+  'responsive design',
+  'selector',
+  'value',
+  'margin',
+  'B',
+  'selector is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000012',
   '00000000-0000-4000-a000-000000000009',
-  'Q12. Which tool or interface is standard for interacting with HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does property refer to?',
+  'id',
+  'paragraph',
+  'selector',
+  'property',
+  'D',
+  'property is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000013',
   '00000000-0000-4000-a000-000000000009',
-  'Q13. What is the initial phase when developing with HTML & CSS Essentials?',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is value?',
+  'class',
+  'property',
+  'margin',
+  'value',
+  'D',
+  'value is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000014',
   '00000000-0000-4000-a000-000000000009',
-  'Q14. Which debugging technique is recommended for HTML & CSS Essentials?',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with class?',
+  'class',
+  'box model',
+  'attribute',
+  'id',
+  'A',
+  'class is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000009000015',
   '00000000-0000-4000-a000-000000000009',
-  'Q15. What is the overall goal of mastering HTML & CSS Essentials?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for HTML & CSS Essentials.',
-  'Bypassing standard security checks and protocols in HTML & CSS Essentials.',
-  'Hardcoding static binary files without backup in HTML & CSS Essentials.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes id?',
+  'property',
+  'id',
+  'margin',
+  'attribute',
+  'B',
+  'id is a key concept in HTML & CSS.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 10: JavaScript Fundamentals
+-- Quick Learn 10: JavaScript Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000010',
-  'JavaScript Fundamentals',
-  'javascript-fundamentals',
+  'JavaScript Basics',
+  'javascript-basics',
   'CSE',
   'Programming',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master JavaScript Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master JavaScript Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-JavaScript Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+JavaScript is a programming language widely used to add behavior and interactivity to web applications. It supports variables, functions, objects, arrays, events and asynchronous programming.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of JavaScript Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **JavaScript**
+- **variable**
+- **function**
+- **array**
+- **object**
+- **string**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -1891,182 +1901,182 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000010000001',
   '00000000-0000-4000-a000-000000000010',
-  'Q1. What is the primary definition of JavaScript Fundamentals?',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'A core technology or standard designed for managing and executing JavaScript Fundamentals processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing JavaScript Fundamentals processes.'
-);
+  'Q1. What is JavaScript?',
+  'loop',
+  'number',
+  'JavaScript',
+  'promise',
+  'C',
+  'JavaScript is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000002',
   '00000000-0000-4000-a000-000000000010',
-  'Q2. Which key benefit is provided by JavaScript Fundamentals?',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
+  'Q2. Which option is most directly associated with variable?',
+  'callback',
+  'boolean',
+  'event',
+  'variable',
   'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'variable is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000003',
   '00000000-0000-4000-a000-000000000010',
-  'Q3. What is a fundamental requirement when implementing JavaScript Fundamentals?',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Proper system configuration, security protocols, and integration standards.',
+  'Q3. Which statement best describes function?',
+  'loop',
+  'number',
+  'operator',
+  'function',
   'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'function is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000004',
   '00000000-0000-4000-a000-000000000010',
-  'Q4. How does JavaScript Fundamentals handle data and execution states?',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does array refer to?',
+  'object',
+  'boolean',
+  'await',
+  'array',
+  'D',
+  'array is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000005',
   '00000000-0000-4000-a000-000000000010',
-  'Q5. What is a recommended best practice when deploying JavaScript Fundamentals?',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is object?',
+  'conditional',
+  'scope',
+  'object',
+  'promise',
+  'C',
+  'object is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000006',
   '00000000-0000-4000-a000-000000000010',
-  'Q6. Which layer or component plays a vital role in JavaScript Fundamentals?',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
+  'Q6. Which option is most directly associated with string?',
+  'loop',
+  'string',
+  'scope',
+  'operator',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'string is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000007',
   '00000000-0000-4000-a000-000000000010',
-  'Q7. What is a common bottleneck or challenge in JavaScript Fundamentals?',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
+  'Q7. Which statement best describes number?',
+  'loop',
+  'JavaScript',
+  'number',
+  'module',
   'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'number is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000008',
   '00000000-0000-4000-a000-000000000010',
-  'Q8. How is security typically enforced within JavaScript Fundamentals?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does boolean refer to?',
+  'scope',
+  'function',
+  'variable',
+  'boolean',
+  'D',
+  'boolean is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000009',
   '00000000-0000-4000-a000-000000000010',
-  'Q9. Which metric is critical for measuring the performance of JavaScript Fundamentals?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is event?',
+  'scope',
+  'function',
+  'variable',
+  'event',
+  'D',
+  'event is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000010',
   '00000000-0000-4000-a000-000000000010',
-  'Q10. What is the role of versioning in JavaScript Fundamentals?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
+  'Q10. Which option is most directly associated with DOM?',
+  'DOM',
+  'scope',
+  'async',
+  'module',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'DOM is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000011',
   '00000000-0000-4000-a000-000000000010',
-  'Q11. In what scenario is JavaScript Fundamentals most effectively applied?',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes scope?',
+  'operator',
+  'scope',
+  'loop',
+  'promise',
+  'B',
+  'scope is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000012',
   '00000000-0000-4000-a000-000000000010',
-  'Q12. Which tool or interface is standard for interacting with JavaScript Fundamentals?',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'A',
-  'Option A is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does promise refer to?',
+  'function',
+  'promise',
+  'callback',
+  'DOM',
+  'B',
+  'promise is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000013',
   '00000000-0000-4000-a000-000000000010',
-  'Q13. What is the initial phase when developing with JavaScript Fundamentals?',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
+  'Q13. What is async?',
+  'conditional',
+  'object',
+  'async',
+  'number',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'async is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000014',
   '00000000-0000-4000-a000-000000000010',
-  'Q14. Which debugging technique is recommended for JavaScript Fundamentals?',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with await?',
+  'await',
+  'event',
+  'async',
+  'string',
+  'A',
+  'await is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000010000015',
   '00000000-0000-4000-a000-000000000010',
-  'Q15. What is the overall goal of mastering JavaScript Fundamentals?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for JavaScript Fundamentals.',
-  'Bypassing standard security checks and protocols in JavaScript Fundamentals.',
-  'Hardcoding static binary files without backup in JavaScript Fundamentals.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes callback?',
+  'DOM',
+  'loop',
+  'conditional',
+  'callback',
+  'D',
+  'callback is a key concept in JavaScript Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
 -- Quick Learn 11: Python Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
@@ -2082,12 +2092,15 @@ VALUES (
   10,
   'Master Python Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Python Basics is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Python is a high-level, general-purpose programming language known for readable syntax. It is widely used in automation, web development, data analysis, scripting and education.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Python Basics.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **Python**
+- **variable**
+- **function**
+- **list**
+- **tuple**
+- **dictionary**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -2095,203 +2108,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000011000001',
   '00000000-0000-4000-a000-000000000011',
-  'Q1. What is the primary definition of Python Basics?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'A core technology or standard designed for managing and executing Python Basics processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Python Basics processes.'
-);
+  'Q1. What is Python?',
+  'exception',
+  'module',
+  'Python',
+  'loop',
+  'C',
+  'Python is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000002',
   '00000000-0000-4000-a000-000000000011',
-  'Q2. Which key benefit is provided by Python Basics?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with variable?',
+  'class',
+  'indentation',
+  'Python',
+  'variable',
+  'D',
+  'variable is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000003',
   '00000000-0000-4000-a000-000000000011',
-  'Q3. What is a fundamental requirement when implementing Python Basics?',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Python Basics.',
+  'Q3. Which statement best describes function?',
+  'class',
+  'exception',
+  'function',
+  'library',
   'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'function is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000004',
   '00000000-0000-4000-a000-000000000011',
-  'Q4. How does Python Basics handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Hardcoding static binary files without backup in Python Basics.',
+  'Q4. In this topic, what does list refer to?',
+  'list',
+  'Python',
+  'conditional',
+  'pip',
   'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'list is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000005',
   '00000000-0000-4000-a000-000000000011',
-  'Q5. What is a recommended best practice when deploying Python Basics?',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is tuple?',
+  'tuple',
+  'class',
+  'function',
+  'conditional',
+  'A',
+  'tuple is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000006',
   '00000000-0000-4000-a000-000000000011',
-  'Q6. Which layer or component plays a vital role in Python Basics?',
-  'Legacy manual processing for Python Basics.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Hardcoding static binary files without backup in Python Basics.',
+  'Q6. Which option is most directly associated with dictionary?',
+  'exception',
+  'dictionary',
+  'library',
+  'Python',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'dictionary is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000007',
   '00000000-0000-4000-a000-000000000011',
-  'Q7. What is a common bottleneck or challenge in Python Basics?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes set?',
+  'variable',
+  'set',
+  'module',
+  'string',
+  'B',
+  'set is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000008',
   '00000000-0000-4000-a000-000000000011',
-  'Q8. How is security typically enforced within Python Basics?',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does string refer to?',
+  'list',
+  'string',
+  'conditional',
+  'object',
+  'B',
+  'string is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000009',
   '00000000-0000-4000-a000-000000000011',
-  'Q9. Which metric is critical for measuring the performance of Python Basics?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is loop?',
+  'file',
+  'tuple',
+  'loop',
+  'Python',
+  'C',
+  'loop is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000010',
   '00000000-0000-4000-a000-000000000011',
-  'Q10. What is the role of versioning in Python Basics?',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with conditional?',
+  'Python',
+  'pip',
+  'module',
+  'conditional',
+  'D',
+  'conditional is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000011',
   '00000000-0000-4000-a000-000000000011',
-  'Q11. In what scenario is Python Basics most effectively applied?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
+  'Q11. Which statement best describes module?',
+  'interpreter',
+  'variable',
+  'conditional',
+  'module',
   'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'module is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000012',
   '00000000-0000-4000-a000-000000000011',
-  'Q12. Which tool or interface is standard for interacting with Python Basics?',
-  'Legacy manual processing for Python Basics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does package refer to?',
+  'Python',
+  'dictionary',
+  'set',
+  'package',
+  'D',
+  'package is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000013',
   '00000000-0000-4000-a000-000000000011',
-  'Q13. What is the initial phase when developing with Python Basics?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
+  'Q13. What is exception?',
+  'object',
+  'loop',
+  'Python',
+  'exception',
   'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'exception is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000014',
   '00000000-0000-4000-a000-000000000011',
-  'Q14. Which debugging technique is recommended for Python Basics?',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with indentation?',
+  'string',
+  'indentation',
+  'interpreter',
+  'pip',
+  'B',
+  'indentation is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000011000015',
   '00000000-0000-4000-a000-000000000011',
-  'Q15. What is the overall goal of mastering Python Basics?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Python Basics.',
-  'Bypassing standard security checks and protocols in Python Basics.',
-  'Hardcoding static binary files without backup in Python Basics.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes class?',
+  'variable',
+  'class',
+  'interpreter',
+  'conditional',
+  'B',
+  'class is a key concept in Python Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 12: C Programming Fundamentals
+-- Quick Learn 12: C Programming
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000012',
-  'C Programming Fundamentals',
-  'c-programming-fundamentals',
+  'C Programming',
+  'c-programming',
   'CSE',
   'Programming',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master C Programming Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master C Programming fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-C Programming Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+C is a compiled, procedural programming language widely used in systems programming and embedded development. It provides variables, functions, arrays, pointers, structures and direct memory-related capabilities.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of C Programming Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **C**
+- **compiler**
+- **function**
+- **variable**
+- **array**
+- **pointer**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -2299,203 +2315,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000012000001',
   '00000000-0000-4000-a000-000000000012',
-  'Q1. What is the primary definition of C Programming Fundamentals?',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'A core technology or standard designed for managing and executing C Programming Fundamentals processes.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing C Programming Fundamentals processes.'
-);
+  'Q1. What is C?',
+  'C',
+  'stack',
+  'structure',
+  'printf',
+  'A',
+  'C is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000002',
   '00000000-0000-4000-a000-000000000012',
-  'Q2. Which key benefit is provided by C Programming Fundamentals?',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
+  'Q2. Which option is most directly associated with compiler?',
+  'string',
+  'variable',
+  'compiler',
+  'memory',
   'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'compiler is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000003',
   '00000000-0000-4000-a000-000000000012',
-  'Q3. What is a fundamental requirement when implementing C Programming Fundamentals?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes function?',
+  'structure',
+  'C',
+  'function',
+  'pointer',
+  'C',
+  'function is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000004',
   '00000000-0000-4000-a000-000000000012',
-  'Q4. How does C Programming Fundamentals handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does variable refer to?',
+  'stack',
+  'C',
+  'function',
+  'variable',
+  'D',
+  'variable is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000005',
   '00000000-0000-4000-a000-000000000012',
-  'Q5. What is a recommended best practice when deploying C Programming Fundamentals?',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is array?',
+  'printf',
+  'array',
+  'loop',
+  'structure',
+  'B',
+  'array is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000006',
   '00000000-0000-4000-a000-000000000012',
-  'Q6. Which layer or component plays a vital role in C Programming Fundamentals?',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with pointer?',
+  'source file',
+  'address',
+  'printf',
+  'pointer',
+  'D',
+  'pointer is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000007',
   '00000000-0000-4000-a000-000000000012',
-  'Q7. What is a common bottleneck or challenge in C Programming Fundamentals?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
+  'Q7. Which statement best describes structure?',
+  'structure',
+  'header',
+  'compiler',
+  'loop',
   'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'structure is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000008',
   '00000000-0000-4000-a000-000000000012',
-  'Q8. How is security typically enforced within C Programming Fundamentals?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does header refer to?',
+  'condition',
+  'loop',
+  'scanf',
+  'header',
+  'D',
+  'header is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000009',
   '00000000-0000-4000-a000-000000000012',
-  'Q9. Which metric is critical for measuring the performance of C Programming Fundamentals?',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is source file?',
+  'header',
+  'source file',
+  'memory',
+  'printf',
+  'B',
+  'source file is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000010',
   '00000000-0000-4000-a000-000000000012',
-  'Q10. What is the role of versioning in C Programming Fundamentals?',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with main?',
+  'address',
+  'function',
+  'loop',
+  'main',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'main is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000011',
   '00000000-0000-4000-a000-000000000012',
-  'Q11. In what scenario is C Programming Fundamentals most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
+  'Q11. Which statement best describes printf?',
+  'printf',
+  'array',
+  'address',
+  'compiler',
   'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'printf is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000012',
   '00000000-0000-4000-a000-000000000012',
-  'Q12. Which tool or interface is standard for interacting with C Programming Fundamentals?',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does scanf refer to?',
+  'scanf',
+  'main',
+  'heap',
+  'structure',
+  'A',
+  'scanf is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000013',
   '00000000-0000-4000-a000-000000000012',
-  'Q13. What is the initial phase when developing with C Programming Fundamentals?',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is memory?',
+  'function',
+  'memory',
+  'scanf',
+  'dereference',
+  'B',
+  'memory is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000014',
   '00000000-0000-4000-a000-000000000012',
-  'Q14. Which debugging technique is recommended for C Programming Fundamentals?',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with address?',
+  'array',
+  'address',
+  'printf',
+  'variable',
+  'B',
+  'address is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000012000015',
   '00000000-0000-4000-a000-000000000012',
-  'Q15. What is the overall goal of mastering C Programming Fundamentals?',
-  'Legacy manual processing for C Programming Fundamentals.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in C Programming Fundamentals.',
-  'Hardcoding static binary files without backup in C Programming Fundamentals.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes dereference?',
+  'dereference',
+  'heap',
+  'compiler',
+  'scanf',
+  'A',
+  'dereference is a key concept in C Programming.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 13: Java Programming Core
+-- Quick Learn 13: Java Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000013',
-  'Java Programming Core',
-  'java-programming-core',
+  'Java Basics',
+  'java-basics',
   'CSE',
   'Programming',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Java Programming Core fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Java Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Java Programming Core is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Java is a general-purpose, object-oriented programming language designed around the Java platform and JVM. Java programs can run on systems that provide a compatible Java runtime.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Java Programming Core.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **Java**
+- **JVM**
+- **class**
+- **object**
+- **method**
+- **inheritance**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -2503,203 +2522,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000013000001',
   '00000000-0000-4000-a000-000000000013',
-  'Q1. What is the primary definition of Java Programming Core?',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'A core technology or standard designed for managing and executing Java Programming Core processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Java Programming Core processes.'
-);
+  'Q1. What is Java?',
+  'compiler',
+  'Java',
+  'static',
+  'class',
+  'B',
+  'Java is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000002',
   '00000000-0000-4000-a000-000000000013',
-  'Q2. Which key benefit is provided by Java Programming Core?',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with JVM?',
+  'JVM',
+  'static',
+  'array',
+  'String',
+  'A',
+  'JVM is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000003',
   '00000000-0000-4000-a000-000000000013',
-  'Q3. What is a fundamental requirement when implementing Java Programming Core?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes class?',
+  'bytecode',
+  'constructor',
+  'class',
+  'exception',
+  'C',
+  'class is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000004',
   '00000000-0000-4000-a000-000000000013',
-  'Q4. How does Java Programming Core handle data and execution states?',
-  'Legacy manual processing for Java Programming Core.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does object refer to?',
+  'object',
+  'class',
+  'constructor',
+  'polymorphism',
+  'A',
+  'object is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000005',
   '00000000-0000-4000-a000-000000000013',
-  'Q5. What is a recommended best practice when deploying Java Programming Core?',
-  'Legacy manual processing for Java Programming Core.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is method?',
+  'method',
+  'Java',
+  'encapsulation',
+  'inheritance',
+  'A',
+  'method is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000006',
   '00000000-0000-4000-a000-000000000013',
-  'Q6. Which layer or component plays a vital role in Java Programming Core?',
-  'Legacy manual processing for Java Programming Core.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with inheritance?',
+  'inheritance',
+  'final',
+  'JVM',
+  'encapsulation',
+  'A',
+  'inheritance is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000007',
   '00000000-0000-4000-a000-000000000013',
-  'Q7. What is a common bottleneck or challenge in Java Programming Core?',
-  'Legacy manual processing for Java Programming Core.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes encapsulation?',
+  'encapsulation',
+  'interface',
+  'String',
+  'method',
+  'A',
+  'encapsulation is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000008',
   '00000000-0000-4000-a000-000000000013',
-  'Q8. How is security typically enforced within Java Programming Core?',
-  'Legacy manual processing for Java Programming Core.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
+  'Q8. In this topic, what does polymorphism refer to?',
+  'final',
+  'polymorphism',
+  'object',
+  'String',
   'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'polymorphism is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000009',
   '00000000-0000-4000-a000-000000000013',
-  'Q9. Which metric is critical for measuring the performance of Java Programming Core?',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is interface?',
+  'encapsulation',
+  'interface',
+  'String',
+  'static',
+  'B',
+  'interface is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000010',
   '00000000-0000-4000-a000-000000000013',
-  'Q10. What is the role of versioning in Java Programming Core?',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with package?',
+  'constructor',
+  'inheritance',
+  'array',
+  'package',
+  'D',
+  'package is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000011',
   '00000000-0000-4000-a000-000000000013',
-  'Q11. In what scenario is Java Programming Core most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes exception?',
+  'array',
+  'exception',
+  'object',
+  'JVM',
+  'B',
+  'exception is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000012',
   '00000000-0000-4000-a000-000000000013',
-  'Q12. Which tool or interface is standard for interacting with Java Programming Core?',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
+  'Q12. In this topic, what does bytecode refer to?',
+  'constructor',
+  'method',
+  'bytecode',
+  'JDK',
   'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'bytecode is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000013',
   '00000000-0000-4000-a000-000000000013',
-  'Q13. What is the initial phase when developing with Java Programming Core?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is compiler?',
+  'JDK',
+  'encapsulation',
+  'compiler',
+  'JVM',
+  'C',
+  'compiler is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000014',
   '00000000-0000-4000-a000-000000000013',
-  'Q14. Which debugging technique is recommended for Java Programming Core?',
-  'Legacy manual processing for Java Programming Core.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with garbage collection?',
+  'garbage collection',
+  'compiler',
+  'package',
+  'class',
+  'A',
+  'garbage collection is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000013000015',
   '00000000-0000-4000-a000-000000000013',
-  'Q15. What is the overall goal of mastering Java Programming Core?',
-  'Hardcoding static binary files without backup in Java Programming Core.',
-  'Legacy manual processing for Java Programming Core.',
-  'Bypassing standard security checks and protocols in Java Programming Core.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes constructor?',
+  'final',
+  'JDK',
+  'constructor',
+  'encapsulation',
+  'C',
+  'constructor is a key concept in Java Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 14: SQL & Database Systems
+-- Quick Learn 14: SQL & Databases
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000014',
-  'SQL & Database Systems',
-  'sql-database-systems',
+  'SQL & Databases',
+  'sql-databases',
   'CSE',
   'Databases',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master SQL & Database Systems fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master SQL & Databases fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-SQL & Database Systems is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+SQL is used to work with relational databases. Common operations include SELECT, INSERT, UPDATE and DELETE. Relational databases organize information into tables with rows and columns.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of SQL & Database Systems.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **database**
+- **table**
+- **row**
+- **column**
+- **primary key**
+- **foreign key**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -2707,182 +2729,182 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000014000001',
   '00000000-0000-4000-a000-000000000014',
-  'Q1. What is the primary definition of SQL & Database Systems?',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'A core technology or standard designed for managing and executing SQL & Database Systems processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing SQL & Database Systems processes.'
-);
+  'Q1. What is database?',
+  'database',
+  'row',
+  'SELECT',
+  'relational',
+  'A',
+  'database is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000002',
   '00000000-0000-4000-a000-000000000014',
-  'Q2. Which key benefit is provided by SQL & Database Systems?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with table?',
+  'ORDER BY',
+  'table',
+  'row',
+  'relational',
+  'B',
+  'table is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000003',
   '00000000-0000-4000-a000-000000000014',
-  'Q3. What is a fundamental requirement when implementing SQL & Database Systems?',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes row?',
+  'primary key',
+  'index',
+  'row',
+  'table',
+  'C',
+  'row is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000004',
   '00000000-0000-4000-a000-000000000014',
-  'Q4. How does SQL & Database Systems handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does column refer to?',
+  'GROUP BY',
+  'DELETE',
+  'column',
+  'primary key',
+  'C',
+  'column is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000005',
   '00000000-0000-4000-a000-000000000014',
-  'Q5. What is a recommended best practice when deploying SQL & Database Systems?',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is primary key?',
+  'UPDATE',
+  'DELETE',
+  'primary key',
+  'SQL',
+  'C',
+  'primary key is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000006',
   '00000000-0000-4000-a000-000000000014',
-  'Q6. Which layer or component plays a vital role in SQL & Database Systems?',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with foreign key?',
+  'table',
+  'row',
+  'SQL',
+  'foreign key',
+  'D',
+  'foreign key is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000007',
   '00000000-0000-4000-a000-000000000014',
-  'Q7. What is a common bottleneck or challenge in SQL & Database Systems?',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes SELECT?',
+  'DELETE',
+  'row',
+  'SELECT',
+  'foreign key',
+  'C',
+  'SELECT is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000008',
   '00000000-0000-4000-a000-000000000014',
-  'Q8. How is security typically enforced within SQL & Database Systems?',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does INSERT refer to?',
+  'WHERE',
+  'SQL',
+  'schema',
+  'INSERT',
+  'D',
+  'INSERT is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000009',
   '00000000-0000-4000-a000-000000000014',
-  'Q9. Which metric is critical for measuring the performance of SQL & Database Systems?',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is UPDATE?',
+  'database',
+  'UPDATE',
+  'transaction',
+  'ORDER BY',
+  'B',
+  'UPDATE is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000010',
   '00000000-0000-4000-a000-000000000014',
-  'Q10. What is the role of versioning in SQL & Database Systems?',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with DELETE?',
+  'schema',
+  'SELECT',
+  'SQL',
+  'DELETE',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'DELETE is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000011',
   '00000000-0000-4000-a000-000000000014',
-  'Q11. In what scenario is SQL & Database Systems most effectively applied?',
-  'Legacy manual processing for SQL & Database Systems.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes WHERE?',
+  'index',
+  'relational',
+  'primary key',
+  'WHERE',
+  'D',
+  'WHERE is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000012',
   '00000000-0000-4000-a000-000000000014',
-  'Q12. Which tool or interface is standard for interacting with SQL & Database Systems?',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
+  'Q12. In this topic, what does JOIN refer to?',
+  'schema',
+  'JOIN',
+  'INSERT',
+  'UPDATE',
   'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'JOIN is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000013',
   '00000000-0000-4000-a000-000000000014',
-  'Q13. What is the initial phase when developing with SQL & Database Systems?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
+  'Q13. What is GROUP BY?',
+  'GROUP BY',
+  'table',
+  'JOIN',
+  'index',
   'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'GROUP BY is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000014',
   '00000000-0000-4000-a000-000000000014',
-  'Q14. Which debugging technique is recommended for SQL & Database Systems?',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'Legacy manual processing for SQL & Database Systems.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with ORDER BY?',
+  'relational',
+  'foreign key',
+  'ORDER BY',
+  'GROUP BY',
+  'C',
+  'ORDER BY is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000014000015',
   '00000000-0000-4000-a000-000000000014',
-  'Q15. What is the overall goal of mastering SQL & Database Systems?',
-  'Legacy manual processing for SQL & Database Systems.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in SQL & Database Systems.',
-  'Hardcoding static binary files without backup in SQL & Database Systems.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes index?',
+  'index',
+  'INSERT',
+  'DELETE',
+  'constraint',
+  'A',
+  'index is a key concept in SQL & Databases.'
+) ON CONFLICT (id) DO NOTHING;
 
 -- Quick Learn 15: Git vs GitHub
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
@@ -2898,12 +2920,15 @@ VALUES (
   10,
   'Master Git vs GitHub fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Git vs GitHub is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Git is the version-control tool installed on a developer''s computer or environment. GitHub is a hosted platform that provides remote repositories and collaboration features around Git.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Git vs GitHub.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **Git**
+- **GitHub**
+- **local repository**
+- **remote repository**
+- **commit**
+- **push**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -2911,203 +2936,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000015000001',
   '00000000-0000-4000-a000-000000000015',
-  'Q1. What is the primary definition of Git vs GitHub?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'A core technology or standard designed for managing and executing Git vs GitHub processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Git vs GitHub processes.'
-);
+  'Q1. What is Git?',
+  'merge',
+  'clone',
+  'Git',
+  'remote repository',
+  'C',
+  'Git is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000002',
   '00000000-0000-4000-a000-000000000015',
-  'Q2. Which key benefit is provided by Git vs GitHub?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with GitHub?',
+  'diff',
+  'GitHub',
+  'merge',
+  'branch',
+  'B',
+  'GitHub is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000003',
   '00000000-0000-4000-a000-000000000015',
-  'Q3. What is a fundamental requirement when implementing Git vs GitHub?',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes local repository?',
+  'repository',
+  'local repository',
+  'remote repository',
+  'issue',
+  'B',
+  'local repository is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000004',
   '00000000-0000-4000-a000-000000000015',
-  'Q4. How does Git vs GitHub handle data and execution states?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does remote repository refer to?',
+  'fork',
+  'remote repository',
+  'version control',
+  'branch',
+  'B',
+  'remote repository is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000005',
   '00000000-0000-4000-a000-000000000015',
-  'Q5. What is a recommended best practice when deploying Git vs GitHub?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is commit?',
+  'push',
+  'commit',
+  'branch',
+  'hosting',
+  'B',
+  'commit is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000006',
   '00000000-0000-4000-a000-000000000015',
-  'Q6. Which layer or component plays a vital role in Git vs GitHub?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with push?',
+  'push',
+  'merge',
+  'Git',
+  'version control',
+  'A',
+  'push is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000007',
   '00000000-0000-4000-a000-000000000015',
-  'Q7. What is a common bottleneck or challenge in Git vs GitHub?',
-  'Legacy manual processing for Git vs GitHub.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes pull?',
+  'pull',
+  'staging',
+  'commit',
+  'hosting',
+  'A',
+  'pull is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000008',
   '00000000-0000-4000-a000-000000000015',
-  'Q8. How is security typically enforced within Git vs GitHub?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does clone refer to?',
+  'clone',
+  'Git',
+  'GitHub',
+  'collaboration',
+  'A',
+  'clone is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000009',
   '00000000-0000-4000-a000-000000000015',
-  'Q9. Which metric is critical for measuring the performance of Git vs GitHub?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
+  'Q9. What is branch?',
+  'branch',
+  'commit',
+  'issue',
+  'pull',
   'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'branch is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000010',
   '00000000-0000-4000-a000-000000000015',
-  'Q10. What is the role of versioning in Git vs GitHub?',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with merge?',
+  'merge',
+  'issue',
+  'Actions',
+  'remote repository',
+  'A',
+  'merge is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000011',
   '00000000-0000-4000-a000-000000000015',
-  'Q11. In what scenario is Git vs GitHub most effectively applied?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes pull request?',
+  'pull request',
+  'GitHub',
+  'clone',
+  'branch',
+  'A',
+  'pull request is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000012',
   '00000000-0000-4000-a000-000000000015',
-  'Q12. Which tool or interface is standard for interacting with Git vs GitHub?',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
+  'Q12. In this topic, what does fork refer to?',
+  'repository',
+  'collaboration',
+  'fork',
+  'version control',
   'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'fork is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000013',
   '00000000-0000-4000-a000-000000000015',
-  'Q13. What is the initial phase when developing with Git vs GitHub?',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
+  'Q13. What is repository?',
+  'GitHub',
+  'staging',
+  'pull request',
+  'repository',
   'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'repository is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000014',
   '00000000-0000-4000-a000-000000000015',
-  'Q14. Which debugging technique is recommended for Git vs GitHub?',
-  'Legacy manual processing for Git vs GitHub.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
+  'Q14. Which option is most directly associated with version control?',
+  'hosting',
+  'version control',
+  'Actions',
+  'branch',
   'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'version control is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000015000015',
   '00000000-0000-4000-a000-000000000015',
-  'Q15. What is the overall goal of mastering Git vs GitHub?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Git vs GitHub.',
-  'Bypassing standard security checks and protocols in Git vs GitHub.',
-  'Hardcoding static binary files without backup in Git vs GitHub.',
+  'Q15. Which statement best describes hosting?',
+  'hosting',
+  'remote repository',
+  'fork',
+  'pull',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'hosting is a key concept in Git vs GitHub.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 16: HTTP & HTTPS Protocols
+-- Quick Learn 16: HTTP & HTTPS
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000016',
-  'HTTP & HTTPS Protocols',
-  'http-https-protocols',
+  'HTTP & HTTPS',
+  'http-https',
   'CSE',
   'Networking',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master HTTP & HTTPS Protocols fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master HTTP & HTTPS fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-HTTP & HTTPS Protocols is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+HTTP is an application-layer protocol used for web communication. HTTPS is HTTP protected by TLS, providing encrypted communication and helping protect data from interception or tampering.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of HTTP & HTTPS Protocols.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **HTTP**
+- **HTTPS**
+- **TLS**
+- **request**
+- **response**
+- **GET**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -3115,182 +3143,182 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000016000001',
   '00000000-0000-4000-a000-000000000016',
-  'Q1. What is the primary definition of HTTP & HTTPS Protocols?',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'A core technology or standard designed for managing and executing HTTP & HTTPS Protocols processes.',
+  'Q1. What is HTTP?',
+  'POST',
+  'GET',
+  'port 443',
+  'HTTP',
   'D',
-  'Option D is correct. A core technology or standard designed for managing and executing HTTP & HTTPS Protocols processes.'
-);
+  'HTTP is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000002',
   '00000000-0000-4000-a000-000000000016',
-  'Q2. Which key benefit is provided by HTTP & HTTPS Protocols?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with HTTPS?',
+  'status code',
+  'method',
+  'cache',
+  'HTTPS',
+  'D',
+  'HTTPS is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000003',
   '00000000-0000-4000-a000-000000000016',
-  'Q3. What is a fundamental requirement when implementing HTTP & HTTPS Protocols?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
+  'Q3. Which statement best describes TLS?',
+  'TLS',
+  'POST',
+  'URL',
+  'response',
   'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'TLS is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000004',
   '00000000-0000-4000-a000-000000000016',
-  'Q4. How does HTTP & HTTPS Protocols handle data and execution states?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
+  'Q4. In this topic, what does request refer to?',
+  'URL',
+  'response',
+  'request',
+  'header',
   'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'request is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000005',
   '00000000-0000-4000-a000-000000000016',
-  'Q5. What is a recommended best practice when deploying HTTP & HTTPS Protocols?',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is response?',
+  'redirect',
+  'POST',
+  'response',
+  'port 80',
+  'C',
+  'response is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000006',
   '00000000-0000-4000-a000-000000000016',
-  'Q6. Which layer or component plays a vital role in HTTP & HTTPS Protocols?',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with GET?',
+  'cookie',
+  'TLS',
+  'GET',
+  'request',
+  'C',
+  'GET is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000007',
   '00000000-0000-4000-a000-000000000016',
-  'Q7. What is a common bottleneck or challenge in HTTP & HTTPS Protocols?',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes POST?',
+  'POST',
+  'HTTP',
+  'certificate',
+  'port 443',
+  'A',
+  'POST is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000008',
   '00000000-0000-4000-a000-000000000016',
-  'Q8. How is security typically enforced within HTTP & HTTPS Protocols?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does status code refer to?',
+  'method',
+  'status code',
+  'HTTPS',
+  'response',
+  'B',
+  'status code is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000009',
   '00000000-0000-4000-a000-000000000016',
-  'Q9. Which metric is critical for measuring the performance of HTTP & HTTPS Protocols?',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'B',
-  'Option B is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is header?',
+  'request',
+  'method',
+  'header',
+  'cache',
+  'C',
+  'header is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000010',
   '00000000-0000-4000-a000-000000000016',
-  'Q10. What is the role of versioning in HTTP & HTTPS Protocols?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
+  'Q10. Which option is most directly associated with URL?',
+  'status code',
+  'cookie',
+  'URL',
+  'port 80',
   'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'URL is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000011',
   '00000000-0000-4000-a000-000000000016',
-  'Q11. In what scenario is HTTP & HTTPS Protocols most effectively applied?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes client?',
+  'cache',
+  'client',
+  'POST',
+  'TLS',
+  'B',
+  'client is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000012',
   '00000000-0000-4000-a000-000000000016',
-  'Q12. Which tool or interface is standard for interacting with HTTP & HTTPS Protocols?',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
+  'Q12. In this topic, what does server refer to?',
+  'GET',
+  'client',
+  'URL',
+  'server',
   'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'server is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000013',
   '00000000-0000-4000-a000-000000000016',
-  'Q13. What is the initial phase when developing with HTTP & HTTPS Protocols?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is encryption?',
+  'status code',
+  'encryption',
+  'certificate',
+  'URL',
+  'B',
+  'encryption is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000014',
   '00000000-0000-4000-a000-000000000016',
-  'Q14. Which debugging technique is recommended for HTTP & HTTPS Protocols?',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with certificate?',
+  'port 80',
+  'certificate',
+  'port 443',
+  'redirect',
+  'B',
+  'certificate is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000016000015',
   '00000000-0000-4000-a000-000000000016',
-  'Q15. What is the overall goal of mastering HTTP & HTTPS Protocols?',
-  'Bypassing standard security checks and protocols in HTTP & HTTPS Protocols.',
-  'Legacy manual processing for HTTP & HTTPS Protocols.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in HTTP & HTTPS Protocols.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes port 80?',
+  'response',
+  'port 443',
+  'URL',
+  'port 80',
+  'D',
+  'port 80 is a key concept in HTTP & HTTPS.'
+) ON CONFLICT (id) DO NOTHING;
 
 -- Quick Learn 17: DNS Explained
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
@@ -3306,12 +3334,15 @@ VALUES (
   10,
   'Master DNS Explained fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-DNS Explained is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+DNS translates domain names such as example.com into IP addresses and other records. It allows people to use memorable names instead of remembering numerical network addresses.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of DNS Explained.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **DNS**
+- **domain name**
+- **IP address**
+- **resolver**
+- **record**
+- **A record**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -3319,203 +3350,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000017000001',
   '00000000-0000-4000-a000-000000000017',
-  'Q1. What is the primary definition of DNS Explained?',
-  'Legacy manual processing for DNS Explained.',
-  'A core technology or standard designed for managing and executing DNS Explained processes.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing DNS Explained processes.'
-);
+  'Q1. What is DNS?',
+  'hostname',
+  'AAAA record',
+  'DNS',
+  'port 53',
+  'C',
+  'DNS is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000002',
   '00000000-0000-4000-a000-000000000017',
-  'Q2. Which key benefit is provided by DNS Explained?',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with domain name?',
+  'domain name',
+  'hostname',
+  'resolution',
+  'resolver',
+  'A',
+  'domain name is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000003',
   '00000000-0000-4000-a000-000000000017',
-  'Q3. What is a fundamental requirement when implementing DNS Explained?',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes IP address?',
+  'IP address',
+  'AAAA record',
+  'hostname',
+  'UDP',
+  'A',
+  'IP address is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000004',
   '00000000-0000-4000-a000-000000000017',
-  'Q4. How does DNS Explained handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does resolver refer to?',
+  'domain name',
+  'IP address',
+  'CNAME',
+  'resolver',
+  'D',
+  'resolver is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000005',
   '00000000-0000-4000-a000-000000000017',
-  'Q5. What is a recommended best practice when deploying DNS Explained?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
+  'Q5. What is record?',
+  'record',
+  'UDP',
+  'recursive query',
+  'AAAA record',
   'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'record is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000006',
   '00000000-0000-4000-a000-000000000017',
-  'Q6. Which layer or component plays a vital role in DNS Explained?',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'The central execution handler and protocol controller.',
+  'Q6. Which option is most directly associated with A record?',
+  'IP address',
+  'recursive query',
+  'record',
+  'A record',
   'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'A record is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000007',
   '00000000-0000-4000-a000-000000000017',
-  'Q7. What is a common bottleneck or challenge in DNS Explained?',
-  'Legacy manual processing for DNS Explained.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
+  'Q7. Which statement best describes AAAA record?',
+  'authoritative server',
+  'AAAA record',
+  'cache',
+  'resolution',
   'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'AAAA record is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000008',
   '00000000-0000-4000-a000-000000000017',
-  'Q8. How is security typically enforced within DNS Explained?',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does CNAME refer to?',
+  'hostname',
+  'DNS',
+  'CNAME',
+  'IP address',
+  'C',
+  'CNAME is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000009',
   '00000000-0000-4000-a000-000000000017',
-  'Q9. Which metric is critical for measuring the performance of DNS Explained?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
+  'Q9. What is MX?',
+  'MX',
+  'DNSSEC',
+  'IP address',
+  'domain',
   'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'MX is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000010',
   '00000000-0000-4000-a000-000000000017',
-  'Q10. What is the role of versioning in DNS Explained?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
+  'Q10. Which option is most directly associated with nameserver?',
+  'nameserver',
+  'resolver',
+  'record',
+  'DNSSEC',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'nameserver is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000011',
   '00000000-0000-4000-a000-000000000017',
-  'Q11. In what scenario is DNS Explained most effectively applied?',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes cache?',
+  'domain name',
+  'DNS',
+  'port 53',
+  'cache',
+  'D',
+  'cache is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000012',
   '00000000-0000-4000-a000-000000000017',
-  'Q12. Which tool or interface is standard for interacting with DNS Explained?',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does TTL refer to?',
+  'MX',
+  'TTL',
+  'UDP',
+  'DNS',
+  'B',
+  'TTL is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000013',
   '00000000-0000-4000-a000-000000000017',
-  'Q13. What is the initial phase when developing with DNS Explained?',
-  'Legacy manual processing for DNS Explained.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is recursive query?',
+  'resolution',
+  'nameserver',
+  'recursive query',
+  'A record',
+  'C',
+  'recursive query is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000014',
   '00000000-0000-4000-a000-000000000017',
-  'Q14. Which debugging technique is recommended for DNS Explained?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for DNS Explained.',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with authoritative server?',
+  'TTL',
+  'A record',
+  'domain name',
+  'authoritative server',
+  'D',
+  'authoritative server is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000017000015',
   '00000000-0000-4000-a000-000000000017',
-  'Q15. What is the overall goal of mastering DNS Explained?',
-  'Bypassing standard security checks and protocols in DNS Explained.',
-  'Legacy manual processing for DNS Explained.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in DNS Explained.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes DNSSEC?',
+  'CNAME',
+  'DNSSEC',
+  'nameserver',
+  'AAAA record',
+  'B',
+  'DNSSEC is a key concept in DNS Explained.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 18: Responsive Web Design
+-- Quick Learn 18: IP Addresses
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000018',
-  'Responsive Web Design',
-  'responsive-web-design',
+  'IP Addresses',
+  'ip-addresses',
   'CSE',
   'Web Dev',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Responsive Web Design fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master IP Addresses fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Responsive Web Design is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+An IP address identifies a network interface using an address format defined by IP. IPv4 commonly uses 32-bit addresses, while IPv6 uses 128-bit addresses.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Responsive Web Design.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **IP address**
+- **IPv4**
+- **IPv6**
+- **32-bit**
+- **128-bit**
+- **private address**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -3523,203 +3557,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000018000001',
   '00000000-0000-4000-a000-000000000018',
-  'Q1. What is the primary definition of Responsive Web Design?',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'A core technology or standard designed for managing and executing Responsive Web Design processes.',
+  'Q1. What is IP address?',
+  'subnet',
+  'router',
+  'IPv6',
+  'IP address',
   'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Responsive Web Design processes.'
-);
+  'IP address is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000002',
   '00000000-0000-4000-a000-000000000018',
-  'Q2. Which key benefit is provided by Responsive Web Design?',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
+  'Q2. Which option is most directly associated with IPv4?',
+  'public address',
+  'DHCP',
+  'broadcast',
+  'IPv4',
   'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'IPv4 is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000003',
   '00000000-0000-4000-a000-000000000018',
-  'Q3. What is a fundamental requirement when implementing Responsive Web Design?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
+  'Q3. Which statement best describes IPv6?',
+  'IPv6',
+  'broadcast',
+  'router',
+  'CIDR',
   'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'IPv6 is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000004',
   '00000000-0000-4000-a000-000000000018',
-  'Q4. How does Responsive Web Design handle data and execution states?',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
+  'Q4. In this topic, what does 32-bit refer to?',
+  'IPv4',
+  'DHCP',
+  '32-bit',
+  'NAT',
   'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  '32-bit is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000005',
   '00000000-0000-4000-a000-000000000018',
-  'Q5. What is a recommended best practice when deploying Responsive Web Design?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
+  'Q5. What is 128-bit?',
+  '128-bit',
+  'gateway',
+  'loopback',
+  'IPv4',
   'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  '128-bit is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000006',
   '00000000-0000-4000-a000-000000000018',
-  'Q6. Which layer or component plays a vital role in Responsive Web Design?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with private address?',
+  '32-bit',
+  '128-bit',
+  'private address',
+  'CIDR',
+  'C',
+  'private address is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000007',
   '00000000-0000-4000-a000-000000000018',
-  'Q7. What is a common bottleneck or challenge in Responsive Web Design?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes public address?',
+  'network',
+  'public address',
+  'private address',
+  'IPv6',
+  'B',
+  'public address is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000008',
   '00000000-0000-4000-a000-000000000018',
-  'Q8. How is security typically enforced within Responsive Web Design?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does subnet refer to?',
+  'IPv4',
+  'subnet',
+  'router',
+  '32-bit',
+  'B',
+  'subnet is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000009',
   '00000000-0000-4000-a000-000000000018',
-  'Q9. Which metric is critical for measuring the performance of Responsive Web Design?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is router?',
+  '128-bit',
+  'NAT',
+  'private address',
+  'router',
+  'D',
+  'router is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000010',
   '00000000-0000-4000-a000-000000000018',
-  'Q10. What is the role of versioning in Responsive Web Design?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with host?',
+  'network',
+  'host',
+  'IPv6',
+  'static address',
+  'B',
+  'host is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000011',
   '00000000-0000-4000-a000-000000000018',
-  'Q11. In what scenario is Responsive Web Design most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
+  'Q11. Which statement best describes network?',
+  'network',
+  'addressing',
+  'static address',
+  'loopback',
   'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'network is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000012',
   '00000000-0000-4000-a000-000000000018',
-  'Q12. Which tool or interface is standard for interacting with Responsive Web Design?',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does loopback refer to?',
+  '128-bit',
+  'CIDR',
+  'loopback',
+  'gateway',
+  'C',
+  'loopback is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000013',
   '00000000-0000-4000-a000-000000000018',
-  'Q13. What is the initial phase when developing with Responsive Web Design?',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
+  'Q13. What is NAT?',
+  'router',
+  'IPv4',
+  'CIDR',
+  'NAT',
   'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'NAT is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000014',
   '00000000-0000-4000-a000-000000000018',
-  'Q14. Which debugging technique is recommended for Responsive Web Design?',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with DHCP?',
+  'static address',
+  'router',
+  'DHCP',
+  'loopback',
+  'C',
+  'DHCP is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000018000015',
   '00000000-0000-4000-a000-000000000018',
-  'Q15. What is the overall goal of mastering Responsive Web Design?',
-  'Bypassing standard security checks and protocols in Responsive Web Design.',
-  'Legacy manual processing for Responsive Web Design.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Responsive Web Design.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes static address?',
+  'gateway',
+  'loopback',
+  'IPv6',
+  'static address',
+  'D',
+  'static address is a key concept in IP Addresses.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 19: React Native & Mobile App Dev
+-- Quick Learn 19: TCP vs UDP
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000019',
-  'React Native & Mobile App Dev',
-  'react-native-mobile-app-dev',
+  'TCP vs UDP',
+  'tcp-vs-udp',
   'CSE',
   'Mobile Dev',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master React Native & Mobile App Dev fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master TCP vs UDP fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-React Native & Mobile App Dev is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+TCP provides reliable, ordered delivery using connections and acknowledgements. UDP is connectionless and does not provide the same built-in delivery guarantees, making it useful where low overhead is important.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of React Native & Mobile App Dev.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **TCP**
+- **UDP**
+- **connection**
+- **reliability**
+- **ordering**
+- **acknowledgement**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -3727,203 +3764,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000019000001',
   '00000000-0000-4000-a000-000000000019',
-  'Q1. What is the primary definition of React Native & Mobile App Dev?',
-  'A core technology or standard designed for managing and executing React Native & Mobile App Dev processes.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
+  'Q1. What is TCP?',
+  'TCP',
+  'UDP',
+  'reliability',
+  'packet',
   'A',
-  'Option A is correct. A core technology or standard designed for managing and executing React Native & Mobile App Dev processes.'
-);
+  'TCP is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000002',
   '00000000-0000-4000-a000-000000000019',
-  'Q2. Which key benefit is provided by React Native & Mobile App Dev?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with UDP?',
+  'handshake',
+  'congestion control',
+  'real-time traffic',
+  'UDP',
+  'D',
+  'UDP is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000003',
   '00000000-0000-4000-a000-000000000019',
-  'Q3. What is a fundamental requirement when implementing React Native & Mobile App Dev?',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
+  'Q3. Which statement best describes connection?',
+  'TCP',
+  'web',
+  'connection',
+  'ordering',
   'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'connection is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000004',
   '00000000-0000-4000-a000-000000000019',
-  'Q4. How does React Native & Mobile App Dev handle data and execution states?',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
+  'Q4. In this topic, what does reliability refer to?',
+  'connection',
+  'handshake',
+  'low overhead',
+  'reliability',
   'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'reliability is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000005',
   '00000000-0000-4000-a000-000000000019',
-  'Q5. What is a recommended best practice when deploying React Native & Mobile App Dev?',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is ordering?',
+  'handshake',
+  'retransmission',
+  'ordering',
+  'packet',
+  'C',
+  'ordering is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000006',
   '00000000-0000-4000-a000-000000000019',
-  'Q6. Which layer or component plays a vital role in React Native & Mobile App Dev?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with acknowledgement?',
+  'flow control',
+  'web',
+  'video',
+  'acknowledgement',
+  'D',
+  'acknowledgement is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000007',
   '00000000-0000-4000-a000-000000000019',
-  'Q7. What is a common bottleneck or challenge in React Native & Mobile App Dev?',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes retransmission?',
+  'low overhead',
+  'datagram',
+  'packet',
+  'retransmission',
+  'D',
+  'retransmission is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000008',
   '00000000-0000-4000-a000-000000000019',
-  'Q8. How is security typically enforced within React Native & Mobile App Dev?',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does flow control refer to?',
+  'packet',
+  'stream',
+  'connection',
+  'flow control',
+  'D',
+  'flow control is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000009',
   '00000000-0000-4000-a000-000000000019',
-  'Q9. Which metric is critical for measuring the performance of React Native & Mobile App Dev?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is congestion control?',
+  'flow control',
+  'ordering',
+  'congestion control',
+  'retransmission',
+  'C',
+  'congestion control is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000010',
   '00000000-0000-4000-a000-000000000019',
-  'Q10. What is the role of versioning in React Native & Mobile App Dev?',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with datagram?',
+  'acknowledgement',
+  'port',
+  'congestion control',
+  'datagram',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'datagram is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000011',
   '00000000-0000-4000-a000-000000000019',
-  'Q11. In what scenario is React Native & Mobile App Dev most effectively applied?',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes low overhead?',
+  'low overhead',
+  'socket',
+  'congestion control',
+  'real-time traffic',
+  'A',
+  'low overhead is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000012',
   '00000000-0000-4000-a000-000000000019',
-  'Q12. Which tool or interface is standard for interacting with React Native & Mobile App Dev?',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does port refer to?',
+  'web',
+  'port',
+  'acknowledgement',
+  'DNS',
+  'B',
+  'port is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000013',
   '00000000-0000-4000-a000-000000000019',
-  'Q13. What is the initial phase when developing with React Native & Mobile App Dev?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is socket?',
+  'ordering',
+  'port',
+  'socket',
+  'retransmission',
+  'C',
+  'socket is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000014',
   '00000000-0000-4000-a000-000000000019',
-  'Q14. Which debugging technique is recommended for React Native & Mobile App Dev?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with stream?',
+  'acknowledgement',
+  'stream',
+  'real-time traffic',
+  'TCP',
+  'B',
+  'stream is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000019000015',
   '00000000-0000-4000-a000-000000000019',
-  'Q15. What is the overall goal of mastering React Native & Mobile App Dev?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for React Native & Mobile App Dev.',
-  'Bypassing standard security checks and protocols in React Native & Mobile App Dev.',
-  'Hardcoding static binary files without backup in React Native & Mobile App Dev.',
+  'Q15. Which statement best describes packet?',
+  'packet',
+  'congestion control',
+  'DNS',
+  'ordering',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'packet is a key concept in TCP vs UDP.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 20: Node.js & Server Fundamentals
+-- Quick Learn 20: Frontend vs Backend
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000020',
-  'Node.js & Server Fundamentals',
-  'node-js-server-fundamentals',
+  'Frontend vs Backend',
+  'frontend-vs-backend',
   'CSE',
   'Backend',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Node.js & Server Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Frontend vs Backend fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Node.js & Server Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Frontend code runs in the user''s interface and handles presentation and interaction. Backend systems handle server-side logic, data access, authentication and other services.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Node.js & Server Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **frontend**
+- **backend**
+- **client**
+- **server**
+- **UI**
+- **API**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -3931,203 +3971,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000020000001',
   '00000000-0000-4000-a000-000000000020',
-  'Q1. What is the primary definition of Node.js & Server Fundamentals?',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'A core technology or standard designed for managing and executing Node.js & Server Fundamentals processes.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Node.js & Server Fundamentals processes.'
-);
+  'Q1. What is frontend?',
+  'API',
+  'HTML',
+  'CSS',
+  'frontend',
+  'D',
+  'frontend is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000002',
   '00000000-0000-4000-a000-000000000020',
-  'Q2. Which key benefit is provided by Node.js & Server Fundamentals?',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with backend?',
+  'HTML',
+  'response',
+  'backend',
+  'request',
+  'C',
+  'backend is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000003',
   '00000000-0000-4000-a000-000000000020',
-  'Q3. What is a fundamental requirement when implementing Node.js & Server Fundamentals?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes client?',
+  'request',
+  'client',
+  'response',
+  'business logic',
+  'B',
+  'client is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000004',
   '00000000-0000-4000-a000-000000000020',
-  'Q4. How does Node.js & Server Fundamentals handle data and execution states?',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does server refer to?',
+  'database',
+  'frontend',
+  'authentication',
+  'server',
+  'D',
+  'server is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000005',
   '00000000-0000-4000-a000-000000000020',
-  'Q5. What is a recommended best practice when deploying Node.js & Server Fundamentals?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is UI?',
+  'request',
+  'API',
+  'frontend',
+  'UI',
+  'D',
+  'UI is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000006',
   '00000000-0000-4000-a000-000000000020',
-  'Q6. Which layer or component plays a vital role in Node.js & Server Fundamentals?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with API?',
+  'validation',
+  'HTML',
+  'API',
+  'deployment',
+  'C',
+  'API is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000007',
   '00000000-0000-4000-a000-000000000020',
-  'Q7. What is a common bottleneck or challenge in Node.js & Server Fundamentals?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
+  'Q7. Which statement best describes database?',
+  'database',
+  'frontend',
+  'request',
+  'validation',
   'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'database is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000008',
   '00000000-0000-4000-a000-000000000020',
-  'Q8. How is security typically enforced within Node.js & Server Fundamentals?',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does authentication refer to?',
+  'response',
+  'JavaScript',
+  'API',
+  'authentication',
+  'D',
+  'authentication is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000009',
   '00000000-0000-4000-a000-000000000020',
-  'Q9. Which metric is critical for measuring the performance of Node.js & Server Fundamentals?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is business logic?',
+  'client',
+  'business logic',
+  'authentication',
+  'backend',
+  'B',
+  'business logic is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000010',
   '00000000-0000-4000-a000-000000000020',
-  'Q10. What is the role of versioning in Node.js & Server Fundamentals?',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
+  'Q10. Which option is most directly associated with browser?',
+  'response',
+  'browser',
+  'mobile app',
+  'authentication',
   'B',
-  'Option B is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'browser is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000011',
   '00000000-0000-4000-a000-000000000020',
-  'Q11. In what scenario is Node.js & Server Fundamentals most effectively applied?',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes mobile app?',
+  'authentication',
+  'request',
+  'response',
+  'mobile app',
+  'D',
+  'mobile app is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000012',
   '00000000-0000-4000-a000-000000000020',
-  'Q12. Which tool or interface is standard for interacting with Node.js & Server Fundamentals?',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
+  'Q12. In this topic, what does request refer to?',
+  'deployment',
+  'JavaScript',
+  'browser',
+  'request',
   'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'request is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000013',
   '00000000-0000-4000-a000-000000000020',
-  'Q13. What is the initial phase when developing with Node.js & Server Fundamentals?',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is response?',
+  'JavaScript',
+  'authentication',
+  'response',
+  'API',
+  'C',
+  'response is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000014',
   '00000000-0000-4000-a000-000000000020',
-  'Q14. Which debugging technique is recommended for Node.js & Server Fundamentals?',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with HTML?',
+  'frontend',
+  'deployment',
+  'HTML',
+  'database',
+  'C',
+  'HTML is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000020000015',
   '00000000-0000-4000-a000-000000000020',
-  'Q15. What is the overall goal of mastering Node.js & Server Fundamentals?',
-  'Bypassing standard security checks and protocols in Node.js & Server Fundamentals.',
-  'Legacy manual processing for Node.js & Server Fundamentals.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Node.js & Server Fundamentals.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes CSS?',
+  'CSS',
+  'frontend',
+  'request',
+  'client',
+  'A',
+  'CSS is a key concept in Frontend vs Backend.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 21: RESTful Web Services
+-- Quick Learn 21: REST APIs
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000021',
-  'RESTful Web Services',
-  'restful-web-services',
+  'REST APIs',
+  'rest-apis',
   'CSE',
   'Backend',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master RESTful Web Services fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master REST APIs fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-RESTful Web Services is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+REST is an architectural style commonly used for web APIs. RESTful APIs often use HTTP methods such as GET, POST, PUT/PATCH and DELETE and represent resources through URLs.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of RESTful Web Services.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **REST**
+- **resource**
+- **URL**
+- **GET**
+- **POST**
+- **PUT**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -4135,203 +4178,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000021000001',
   '00000000-0000-4000-a000-000000000021',
-  'Q1. What is the primary definition of RESTful Web Services?',
-  'A core technology or standard designed for managing and executing RESTful Web Services processes.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing RESTful Web Services processes.'
-);
+  'Q1. What is REST?',
+  'stateless',
+  'JSON',
+  'resource',
+  'REST',
+  'D',
+  'REST is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000002',
   '00000000-0000-4000-a000-000000000021',
-  'Q2. Which key benefit is provided by RESTful Web Services?',
-  'Legacy manual processing for RESTful Web Services.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
+  'Q2. Which option is most directly associated with resource?',
+  'header',
+  'resource',
+  'URL',
+  'HTTP',
   'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'resource is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000003',
   '00000000-0000-4000-a000-000000000021',
-  'Q3. What is a fundamental requirement when implementing RESTful Web Services?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes URL?',
+  'REST',
+  'server',
+  'URL',
+  'GET',
+  'C',
+  'URL is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000004',
   '00000000-0000-4000-a000-000000000021',
-  'Q4. How does RESTful Web Services handle data and execution states?',
-  'Legacy manual processing for RESTful Web Services.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
+  'Q4. In this topic, what does GET refer to?',
+  'stateless',
+  'GET',
+  'server',
+  'resource',
   'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'GET is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000005',
   '00000000-0000-4000-a000-000000000021',
-  'Q5. What is a recommended best practice when deploying RESTful Web Services?',
-  'Legacy manual processing for RESTful Web Services.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is POST?',
+  'POST',
+  'REST',
+  'GET',
+  'DELETE',
+  'A',
+  'POST is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000006',
   '00000000-0000-4000-a000-000000000021',
-  'Q6. Which layer or component plays a vital role in RESTful Web Services?',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with PUT?',
+  'PUT',
+  'idempotent',
+  'endpoint',
+  'resource',
+  'A',
+  'PUT is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000007',
   '00000000-0000-4000-a000-000000000021',
-  'Q7. What is a common bottleneck or challenge in RESTful Web Services?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes PATCH?',
+  'server',
+  'HTTP',
+  'PATCH',
+  'PUT',
+  'C',
+  'PATCH is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000008',
   '00000000-0000-4000-a000-000000000021',
-  'Q8. How is security typically enforced within RESTful Web Services?',
-  'Legacy manual processing for RESTful Web Services.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does DELETE refer to?',
+  'query parameter',
+  'CRUD',
+  'DELETE',
+  'status code',
+  'C',
+  'DELETE is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000009',
   '00000000-0000-4000-a000-000000000021',
-  'Q9. Which metric is critical for measuring the performance of RESTful Web Services?',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is HTTP?',
+  'status code',
+  'idempotent',
+  'client',
+  'HTTP',
+  'D',
+  'HTTP is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000010',
   '00000000-0000-4000-a000-000000000021',
-  'Q10. What is the role of versioning in RESTful Web Services?',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with stateless?',
+  'HTTP',
+  'stateless',
+  'REST',
+  'CRUD',
+  'B',
+  'stateless is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000011',
   '00000000-0000-4000-a000-000000000021',
-  'Q11. In what scenario is RESTful Web Services most effectively applied?',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes JSON?',
+  'JSON',
+  'server',
+  'REST',
+  'URL',
+  'A',
+  'JSON is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000012',
   '00000000-0000-4000-a000-000000000021',
-  'Q12. Which tool or interface is standard for interacting with RESTful Web Services?',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does status code refer to?',
+  'header',
+  'DELETE',
+  'status code',
+  'PUT',
+  'C',
+  'status code is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000013',
   '00000000-0000-4000-a000-000000000021',
-  'Q13. What is the initial phase when developing with RESTful Web Services?',
-  'Legacy manual processing for RESTful Web Services.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is endpoint?',
+  'JSON',
+  'API',
+  'PATCH',
+  'endpoint',
+  'D',
+  'endpoint is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000014',
   '00000000-0000-4000-a000-000000000021',
-  'Q14. Which debugging technique is recommended for RESTful Web Services?',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with client?',
+  'server',
+  'client',
+  'JSON',
+  'CRUD',
+  'B',
+  'client is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000021000015',
   '00000000-0000-4000-a000-000000000021',
-  'Q15. What is the overall goal of mastering RESTful Web Services?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for RESTful Web Services.',
-  'Bypassing standard security checks and protocols in RESTful Web Services.',
-  'Hardcoding static binary files without backup in RESTful Web Services.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes server?',
+  'CRUD',
+  'server',
+  'API',
+  'HTTP',
+  'B',
+  'server is a key concept in REST APIs.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 22: Docker & Containerization
+-- Quick Learn 22: JSON & XML
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000022',
-  'Docker & Containerization',
-  'docker-containerization',
+  'JSON & XML',
+  'json-xml',
   'CSE',
   'DevOps',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Docker & Containerization fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master JSON & XML fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Docker & Containerization is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+JSON and XML are data formats used to represent and exchange structured information. JSON is lightweight and commonly used in modern web APIs, while XML uses tags and supports extensive document-oriented structures.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Docker & Containerization.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **JSON**
+- **XML**
+- **object**
+- **array**
+- **key**
+- **value**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -4339,203 +4385,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000022000001',
   '00000000-0000-4000-a000-000000000022',
-  'Q1. What is the primary definition of Docker & Containerization?',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'A core technology or standard designed for managing and executing Docker & Containerization processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Docker & Containerization processes.'
-);
+  'Q1. What is JSON?',
+  'XML',
+  'JSON',
+  'nested data',
+  'API',
+  'B',
+  'JSON is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000002',
   '00000000-0000-4000-a000-000000000022',
-  'Q2. Which key benefit is provided by Docker & Containerization?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with XML?',
+  'nested data',
+  'JSON',
+  'XML',
+  'schema',
+  'C',
+  'XML is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000003',
   '00000000-0000-4000-a000-000000000022',
-  'Q3. What is a fundamental requirement when implementing Docker & Containerization?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes object?',
+  'API',
+  'XML',
+  'object',
+  'string',
+  'C',
+  'object is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000004',
   '00000000-0000-4000-a000-000000000022',
-  'Q4. How does Docker & Containerization handle data and execution states?',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does array refer to?',
+  'array',
+  'serialization',
+  'namespace',
+  'number',
+  'A',
+  'array is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000005',
   '00000000-0000-4000-a000-000000000022',
-  'Q5. What is a recommended best practice when deploying Docker & Containerization?',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is key?',
+  'API',
+  'XML',
+  'key',
+  'array',
+  'C',
+  'key is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000006',
   '00000000-0000-4000-a000-000000000022',
-  'Q6. Which layer or component plays a vital role in Docker & Containerization?',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with value?',
+  'value',
+  'boolean',
+  'nested data',
+  'object',
+  'A',
+  'value is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000007',
   '00000000-0000-4000-a000-000000000022',
-  'Q7. What is a common bottleneck or challenge in Docker & Containerization?',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes tag?',
+  'tag',
+  'namespace',
+  'JSON',
+  'key',
+  'A',
+  'tag is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000008',
   '00000000-0000-4000-a000-000000000022',
-  'Q8. How is security typically enforced within Docker & Containerization?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does attribute refer to?',
+  'string',
+  'attribute',
+  'number',
+  'JSON',
+  'B',
+  'attribute is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000009',
   '00000000-0000-4000-a000-000000000022',
-  'Q9. Which metric is critical for measuring the performance of Docker & Containerization?',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is document?',
+  'serialization',
+  'document',
+  'data exchange',
+  'key',
+  'B',
+  'document is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000010',
   '00000000-0000-4000-a000-000000000022',
-  'Q10. What is the role of versioning in Docker & Containerization?',
-  'Legacy manual processing for Docker & Containerization.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'B',
-  'Option B is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with parser?',
+  'namespace',
+  'nested data',
+  'array',
+  'parser',
+  'D',
+  'parser is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000011',
   '00000000-0000-4000-a000-000000000022',
-  'Q11. In what scenario is Docker & Containerization most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes serialization?',
+  'validation',
+  'value',
+  'schema',
+  'serialization',
+  'D',
+  'serialization is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000012',
   '00000000-0000-4000-a000-000000000022',
-  'Q12. Which tool or interface is standard for interacting with Docker & Containerization?',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
+  'Q12. In this topic, what does data exchange refer to?',
+  'XML',
+  'serialization',
+  'data exchange',
+  'value',
   'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'data exchange is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000013',
   '00000000-0000-4000-a000-000000000022',
-  'Q13. What is the initial phase when developing with Docker & Containerization?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is API?',
+  'schema',
+  'API',
+  'namespace',
+  'attribute',
+  'B',
+  'API is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000014',
   '00000000-0000-4000-a000-000000000022',
-  'Q14. Which debugging technique is recommended for Docker & Containerization?',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with schema?',
+  'validation',
+  'schema',
+  'namespace',
+  'object',
+  'B',
+  'schema is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000022000015',
   '00000000-0000-4000-a000-000000000022',
-  'Q15. What is the overall goal of mastering Docker & Containerization?',
-  'Bypassing standard security checks and protocols in Docker & Containerization.',
-  'Legacy manual processing for Docker & Containerization.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Docker & Containerization.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes nested data?',
+  'array',
+  'string',
+  'XML',
+  'nested data',
+  'D',
+  'nested data is a key concept in JSON & XML.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 23: Kubernetes & Orchestration
+-- Quick Learn 23: Authentication & Authorization
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000023',
-  'Kubernetes & Orchestration',
-  'kubernetes-orchestration',
+  'Authentication & Authorization',
+  'authentication-authorization',
   'CSE',
   'DevOps',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master Kubernetes & Orchestration fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Authentication & Authorization fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Kubernetes & Orchestration is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Authentication answers who a user is. Authorization determines what that authenticated user is allowed to access or do.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Kubernetes & Orchestration.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **authentication**
+- **authorization**
+- **identity**
+- **permission**
+- **role**
+- **session**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -4543,203 +4592,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000023000001',
   '00000000-0000-4000-a000-000000000023',
-  'Q1. What is the primary definition of Kubernetes & Orchestration?',
-  'A core technology or standard designed for managing and executing Kubernetes & Orchestration processes.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Kubernetes & Orchestration processes.'
-);
+  'Q1. What is authentication?',
+  'password',
+  'identity',
+  'authentication',
+  'permission',
+  'C',
+  'authentication is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000002',
   '00000000-0000-4000-a000-000000000023',
-  'Q2. Which key benefit is provided by Kubernetes & Orchestration?',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with authorization?',
+  'credential',
+  'login',
+  'password',
+  'authorization',
+  'D',
+  'authorization is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000003',
   '00000000-0000-4000-a000-000000000023',
-  'Q3. What is a fundamental requirement when implementing Kubernetes & Orchestration?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes identity?',
+  'password',
+  'session',
+  'logout',
+  'identity',
+  'D',
+  'identity is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000004',
   '00000000-0000-4000-a000-000000000023',
-  'Q4. How does Kubernetes & Orchestration handle data and execution states?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does permission refer to?',
+  'role',
+  'permission',
+  'RBAC',
+  'session',
+  'B',
+  'permission is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000005',
   '00000000-0000-4000-a000-000000000023',
-  'Q5. What is a recommended best practice when deploying Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
+  'Q5. What is role?',
+  'credential',
+  'security',
+  'refresh token',
+  'role',
   'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'role is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000006',
   '00000000-0000-4000-a000-000000000023',
-  'Q6. Which layer or component plays a vital role in Kubernetes & Orchestration?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with session?',
+  'authorization',
+  'credential',
+  'session',
+  'token',
+  'C',
+  'session is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000007',
   '00000000-0000-4000-a000-000000000023',
-  'Q7. What is a common bottleneck or challenge in Kubernetes & Orchestration?',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes token?',
+  'RBAC',
+  'least privilege',
+  'token',
+  'authentication',
+  'C',
+  'token is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000008',
   '00000000-0000-4000-a000-000000000023',
-  'Q8. How is security typically enforced within Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does password refer to?',
+  'refresh token',
+  'password',
+  'token',
+  'authorization',
+  'B',
+  'password is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000009',
   '00000000-0000-4000-a000-000000000023',
-  'Q9. Which metric is critical for measuring the performance of Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is MFA?',
+  'logout',
+  'login',
+  'MFA',
+  'permission',
+  'C',
+  'MFA is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000010',
   '00000000-0000-4000-a000-000000000023',
-  'Q10. What is the role of versioning in Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with OAuth?',
+  'logout',
+  'password',
+  'OAuth',
+  'login',
+  'C',
+  'OAuth is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000011',
   '00000000-0000-4000-a000-000000000023',
-  'Q11. In what scenario is Kubernetes & Orchestration most effectively applied?',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes access control?',
+  'refresh token',
+  'authorization',
+  'role',
+  'access control',
+  'D',
+  'access control is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000012',
   '00000000-0000-4000-a000-000000000023',
-  'Q12. Which tool or interface is standard for interacting with Kubernetes & Orchestration?',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does least privilege refer to?',
+  'MFA',
+  'security',
+  'permission',
+  'least privilege',
+  'D',
+  'least privilege is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000013',
   '00000000-0000-4000-a000-000000000023',
-  'Q13. What is the initial phase when developing with Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is login?',
+  'identity provider',
+  'logout',
+  'login',
+  'token',
+  'C',
+  'login is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000014',
   '00000000-0000-4000-a000-000000000023',
-  'Q14. Which debugging technique is recommended for Kubernetes & Orchestration?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with credential?',
+  'logout',
+  'access control',
+  'credential',
+  'security',
+  'C',
+  'credential is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000023000015',
   '00000000-0000-4000-a000-000000000023',
-  'Q15. What is the overall goal of mastering Kubernetes & Orchestration?',
-  'Hardcoding static binary files without backup in Kubernetes & Orchestration.',
-  'Legacy manual processing for Kubernetes & Orchestration.',
-  'Bypassing standard security checks and protocols in Kubernetes & Orchestration.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes RBAC?',
+  'RBAC',
+  'access control',
+  'MFA',
+  'identity provider',
+  'A',
+  'RBAC is a key concept in Authentication & Authorization.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 24: Data Structures - Arrays & Lists
+-- Quick Learn 24: Encryption & Hashing
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000024',
-  'Data Structures - Arrays & Lists',
-  'data-structures-arrays-lists',
+  'Encryption & Hashing',
+  'encryption-hashing',
   'CSE',
   'DSA',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Data Structures - Arrays & Lists fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Encryption & Hashing fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Data Structures - Arrays & Lists is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Encryption transforms data so it can be recovered with the appropriate key. Hashing produces a fixed-size digest and is designed to be one-way in normal use; password systems should use dedicated password-hashing algorithms.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Data Structures - Arrays & Lists.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **encryption**
+- **decryption**
+- **key**
+- **plaintext**
+- **ciphertext**
+- **hash**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -4747,203 +4799,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000024000001',
   '00000000-0000-4000-a000-000000000024',
-  'Q1. What is the primary definition of Data Structures - Arrays & Lists?',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'A core technology or standard designed for managing and executing Data Structures - Arrays & Lists processes.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Data Structures - Arrays & Lists processes.'
-);
+  'Q1. What is encryption?',
+  'cryptography',
+  'asymmetric',
+  'digital signature',
+  'encryption',
+  'D',
+  'encryption is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000002',
   '00000000-0000-4000-a000-000000000024',
-  'Q2. Which key benefit is provided by Data Structures - Arrays & Lists?',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
+  'Q2. Which option is most directly associated with decryption?',
+  'key',
+  'decryption',
+  'private key',
+  'encryption',
   'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'decryption is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000003',
   '00000000-0000-4000-a000-000000000024',
-  'Q3. What is a fundamental requirement when implementing Data Structures - Arrays & Lists?',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes key?',
+  'encryption',
+  'key',
+  'plaintext',
+  'ciphertext',
+  'B',
+  'key is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000004',
   '00000000-0000-4000-a000-000000000024',
-  'Q4. How does Data Structures - Arrays & Lists handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does plaintext refer to?',
+  'TLS',
+  'plaintext',
+  'password hashing',
+  'key',
+  'B',
+  'plaintext is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000005',
   '00000000-0000-4000-a000-000000000024',
-  'Q5. What is a recommended best practice when deploying Data Structures - Arrays & Lists?',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is ciphertext?',
+  'encryption',
+  'plaintext',
+  'ciphertext',
+  'digest',
+  'C',
+  'ciphertext is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000006',
   '00000000-0000-4000-a000-000000000024',
-  'Q6. Which layer or component plays a vital role in Data Structures - Arrays & Lists?',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
+  'Q6. Which option is most directly associated with hash?',
+  'plaintext',
+  'hash',
+  'encryption',
+  'RSA',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'hash is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000007',
   '00000000-0000-4000-a000-000000000024',
-  'Q7. What is a common bottleneck or challenge in Data Structures - Arrays & Lists?',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes digest?',
+  'key',
+  'digest',
+  'confidentiality',
+  'AES',
+  'B',
+  'digest is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000008',
   '00000000-0000-4000-a000-000000000024',
-  'Q8. How is security typically enforced within Data Structures - Arrays & Lists?',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does salt refer to?',
+  'salt',
+  'symmetric',
+  'plaintext',
+  'cryptography',
+  'A',
+  'salt is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000009',
   '00000000-0000-4000-a000-000000000024',
-  'Q9. Which metric is critical for measuring the performance of Data Structures - Arrays & Lists?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is symmetric?',
+  'TLS',
+  'symmetric',
+  'confidentiality',
+  'digest',
+  'B',
+  'symmetric is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000010',
   '00000000-0000-4000-a000-000000000024',
-  'Q10. What is the role of versioning in Data Structures - Arrays & Lists?',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with asymmetric?',
+  'key',
+  'asymmetric',
+  'digest',
+  'private key',
+  'B',
+  'asymmetric is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000011',
   '00000000-0000-4000-a000-000000000024',
-  'Q11. In what scenario is Data Structures - Arrays & Lists most effectively applied?',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes AES?',
+  'cryptography',
+  'confidentiality',
+  'AES',
+  'public key',
+  'C',
+  'AES is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000012',
   '00000000-0000-4000-a000-000000000024',
-  'Q12. Which tool or interface is standard for interacting with Data Structures - Arrays & Lists?',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does RSA refer to?',
+  'digest',
+  'decryption',
+  'RSA',
+  'hash',
+  'C',
+  'RSA is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000013',
   '00000000-0000-4000-a000-000000000024',
-  'Q13. What is the initial phase when developing with Data Structures - Arrays & Lists?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
+  'Q13. What is TLS?',
+  'TLS',
+  'password hashing',
+  'symmetric',
+  'integrity',
   'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'TLS is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000014',
   '00000000-0000-4000-a000-000000000024',
-  'Q14. Which debugging technique is recommended for Data Structures - Arrays & Lists?',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with password hashing?',
+  'integrity',
+  'plaintext',
+  'password hashing',
+  'key',
+  'C',
+  'password hashing is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000024000015',
   '00000000-0000-4000-a000-000000000024',
-  'Q15. What is the overall goal of mastering Data Structures - Arrays & Lists?',
-  'Legacy manual processing for Data Structures - Arrays & Lists.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Data Structures - Arrays & Lists.',
-  'Hardcoding static binary files without backup in Data Structures - Arrays & Lists.',
+  'Q15. Which statement best describes integrity?',
+  'hash',
+  'integrity',
+  'decryption',
+  'salt',
   'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'integrity is a key concept in Encryption & Hashing.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 25: Data Structures - Stacks & Queues
+-- Quick Learn 25: Password Security
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000025',
-  'Data Structures - Stacks & Queues',
-  'data-structures-stacks-queues',
+  'Password Security',
+  'password-security',
   'CSE',
   'DSA',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Data Structures - Stacks & Queues fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Password Security fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Data Structures - Stacks & Queues is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Strong password security includes long unique passwords, password managers, multi-factor authentication and protection against reuse. Services should store passwords using secure password-hashing methods rather than plaintext.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Data Structures - Stacks & Queues.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **password**
+- **passphrase**
+- **unique**
+- **length**
+- **password manager**
+- **MFA**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -4951,203 +5006,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000025000001',
   '00000000-0000-4000-a000-000000000025',
-  'Q1. What is the primary definition of Data Structures - Stacks & Queues?',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'A core technology or standard designed for managing and executing Data Structures - Stacks & Queues processes.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q1. What is password?',
+  'length',
+  'password',
+  'password manager',
+  'authentication',
   'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Data Structures - Stacks & Queues processes.'
-);
+  'password is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000002',
   '00000000-0000-4000-a000-000000000025',
-  'Q2. Which key benefit is provided by Data Structures - Stacks & Queues?',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q2. Which option is most directly associated with passphrase?',
+  'salt',
+  'MFA',
+  'passphrase',
+  'phishing',
   'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'passphrase is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000003',
   '00000000-0000-4000-a000-000000000025',
-  'Q3. What is a fundamental requirement when implementing Data Structures - Stacks & Queues?',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes unique?',
+  'unique',
+  'secret',
+  'MFA',
+  'authentication',
+  'A',
+  'unique is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000004',
   '00000000-0000-4000-a000-000000000025',
-  'Q4. How does Data Structures - Stacks & Queues handle data and execution states?',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q4. In this topic, what does length refer to?',
+  'security',
+  'credential stuffing',
+  'length',
+  'reuse',
   'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'length is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000005',
   '00000000-0000-4000-a000-000000000025',
-  'Q5. What is a recommended best practice when deploying Data Structures - Stacks & Queues?',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is password manager?',
+  'breach',
+  'password manager',
+  'device',
+  'secret',
+  'B',
+  'password manager is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000006',
   '00000000-0000-4000-a000-000000000025',
-  'Q6. Which layer or component plays a vital role in Data Structures - Stacks & Queues?',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q6. Which option is most directly associated with MFA?',
+  'password',
+  'MFA',
+  'unique',
+  'length',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'MFA is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000007',
   '00000000-0000-4000-a000-000000000025',
-  'Q7. What is a common bottleneck or challenge in Data Structures - Stacks & Queues?',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes reuse?',
+  'reuse',
+  'salt',
+  'reset',
+  'authentication',
+  'A',
+  'reuse is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000008',
   '00000000-0000-4000-a000-000000000025',
-  'Q8. How is security typically enforced within Data Structures - Stacks & Queues?',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does breach refer to?',
+  'reset',
+  'breach',
+  'authentication',
+  'salt',
+  'B',
+  'breach is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000009',
   '00000000-0000-4000-a000-000000000025',
-  'Q9. Which metric is critical for measuring the performance of Data Structures - Stacks & Queues?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q9. What is hashing?',
+  'hashing',
+  'credential stuffing',
+  'lockout',
+  'reuse',
   'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'hashing is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000010',
   '00000000-0000-4000-a000-000000000025',
-  'Q10. What is the role of versioning in Data Structures - Stacks & Queues?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
+  'Q10. Which option is most directly associated with salt?',
+  'salt',
+  'security',
+  'rate limiting',
+  'password manager',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'salt is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000011',
   '00000000-0000-4000-a000-000000000025',
-  'Q11. In what scenario is Data Structures - Stacks & Queues most effectively applied?',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
+  'Q11. Which statement best describes rate limiting?',
+  'phishing',
+  'reset',
+  'secret',
+  'rate limiting',
   'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'rate limiting is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000012',
   '00000000-0000-4000-a000-000000000025',
-  'Q12. Which tool or interface is standard for interacting with Data Structures - Stacks & Queues?',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does lockout refer to?',
+  'salt',
+  'MFA',
+  'security',
+  'lockout',
+  'D',
+  'lockout is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000013',
   '00000000-0000-4000-a000-000000000025',
-  'Q13. What is the initial phase when developing with Data Structures - Stacks & Queues?',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is credential stuffing?',
+  'security',
+  'MFA',
+  'credential stuffing',
+  'reset',
+  'C',
+  'credential stuffing is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000014',
   '00000000-0000-4000-a000-000000000025',
-  'Q14. Which debugging technique is recommended for Data Structures - Stacks & Queues?',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with phishing?',
+  'length',
+  'authentication',
+  'phishing',
+  'recovery',
+  'C',
+  'phishing is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000025000015',
   '00000000-0000-4000-a000-000000000025',
-  'Q15. What is the overall goal of mastering Data Structures - Stacks & Queues?',
-  'Bypassing standard security checks and protocols in Data Structures - Stacks & Queues.',
-  'Legacy manual processing for Data Structures - Stacks & Queues.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Data Structures - Stacks & Queues.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes reset?',
+  'reset',
+  'unique',
+  'passphrase',
+  'MFA',
+  'A',
+  'reset is a key concept in Password Security.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 26: Algorithms - Sorting & Searching
+-- Quick Learn 26: Phishing & Social Engineering
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000026',
-  'Algorithms - Sorting & Searching',
-  'algorithms-sorting-searching',
+  'Phishing & Social Engineering',
+  'phishing-social-engineering',
   'CSE',
   'DSA',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Algorithms - Sorting & Searching fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Phishing & Social Engineering fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Algorithms - Sorting & Searching is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Phishing is a form of social engineering that tries to trick people into revealing information or taking unsafe actions. Warning signs can include urgency, suspicious links, unexpected attachments and requests for secrets.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Algorithms - Sorting & Searching.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **phishing**
+- **social engineering**
+- **spear phishing**
+- **smishing**
+- **vishing**
+- **link**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -5155,203 +5213,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000026000001',
   '00000000-0000-4000-a000-000000000026',
-  'Q1. What is the primary definition of Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'A core technology or standard designed for managing and executing Algorithms - Sorting & Searching processes.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
+  'Q1. What is phishing?',
+  'credential',
+  'sender',
+  'phishing',
+  'baiting',
   'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Algorithms - Sorting & Searching processes.'
-);
+  'phishing is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000002',
   '00000000-0000-4000-a000-000000000026',
-  'Q2. Which key benefit is provided by Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with social engineering?',
+  'report',
+  'sender',
+  'credential',
+  'social engineering',
+  'D',
+  'social engineering is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000003',
   '00000000-0000-4000-a000-000000000026',
-  'Q3. What is a fundamental requirement when implementing Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
+  'Q3. Which statement best describes spear phishing?',
+  'urgency',
+  'sender',
+  'spear phishing',
+  'awareness',
   'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'spear phishing is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000004',
   '00000000-0000-4000-a000-000000000026',
-  'Q4. How does Algorithms - Sorting & Searching handle data and execution states?',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does smishing refer to?',
+  'urgency',
+  'social engineering',
+  'malware',
+  'smishing',
+  'D',
+  'smishing is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000005',
   '00000000-0000-4000-a000-000000000026',
-  'Q5. What is a recommended best practice when deploying Algorithms - Sorting & Searching?',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is vishing?',
+  'vishing',
+  'awareness',
+  'credential',
+  'sender',
+  'A',
+  'vishing is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000006',
   '00000000-0000-4000-a000-000000000026',
-  'Q6. Which layer or component plays a vital role in Algorithms - Sorting & Searching?',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with link?',
+  'spoofing',
+  'link',
+  'social engineering',
+  'report',
+  'B',
+  'link is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000007',
   '00000000-0000-4000-a000-000000000026',
-  'Q7. What is a common bottleneck or challenge in Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes attachment?',
+  'attachment',
+  'awareness',
+  'domain',
+  'link',
+  'A',
+  'attachment is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000008',
   '00000000-0000-4000-a000-000000000026',
-  'Q8. How is security typically enforced within Algorithms - Sorting & Searching?',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does urgency refer to?',
+  'social engineering',
+  'link',
+  'verification',
+  'urgency',
+  'D',
+  'urgency is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000009',
   '00000000-0000-4000-a000-000000000026',
-  'Q9. Which metric is critical for measuring the performance of Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is impersonation?',
+  'pretexting',
+  'impersonation',
+  'malware',
+  'smishing',
+  'B',
+  'impersonation is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000010',
   '00000000-0000-4000-a000-000000000026',
-  'Q10. What is the role of versioning in Algorithms - Sorting & Searching?',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with credential?',
+  'verification',
+  'urgency',
+  'spoofing',
+  'credential',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'credential is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000011',
   '00000000-0000-4000-a000-000000000026',
-  'Q11. In what scenario is Algorithms - Sorting & Searching most effectively applied?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes MFA?',
+  'MFA',
+  'sender',
+  'social engineering',
+  'baiting',
+  'A',
+  'MFA is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000012',
   '00000000-0000-4000-a000-000000000026',
-  'Q12. Which tool or interface is standard for interacting with Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does verification refer to?',
+  'pretexting',
+  'report',
+  'malware',
+  'verification',
+  'D',
+  'verification is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000013',
   '00000000-0000-4000-a000-000000000026',
-  'Q13. What is the initial phase when developing with Algorithms - Sorting & Searching?',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is sender?',
+  'sender',
+  'report',
+  'attachment',
+  'social engineering',
+  'A',
+  'sender is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000014',
   '00000000-0000-4000-a000-000000000026',
-  'Q14. Which debugging technique is recommended for Algorithms - Sorting & Searching?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with domain?',
+  'awareness',
+  'domain',
+  'baiting',
+  'credential',
+  'B',
+  'domain is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000026000015',
   '00000000-0000-4000-a000-000000000026',
-  'Q15. What is the overall goal of mastering Algorithms - Sorting & Searching?',
-  'Legacy manual processing for Algorithms - Sorting & Searching.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Algorithms - Sorting & Searching.',
-  'Hardcoding static binary files without backup in Algorithms - Sorting & Searching.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes spoofing?',
+  'domain',
+  'vishing',
+  'MFA',
+  'spoofing',
+  'D',
+  'spoofing is a key concept in Phishing & Social Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 27: Object-Oriented Programming (OOP)
+-- Quick Learn 27: Firewalls
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000027',
-  'Object-Oriented Programming (OOP)',
-  'object-oriented-programming-oop',
+  'Firewalls',
+  'firewalls',
   'CSE',
   'Programming',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Object-Oriented Programming (OOP) fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Firewalls fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Object-Oriented Programming (OOP) is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+A firewall controls network traffic according to configured rules. It can help restrict unwanted connections between networks or systems.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Object-Oriented Programming (OOP).
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **firewall**
+- **traffic**
+- **rule**
+- **packet**
+- **stateful**
+- **stateless**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -5359,203 +5420,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000027000001',
   '00000000-0000-4000-a000-000000000027',
-  'Q1. What is the primary definition of Object-Oriented Programming (OOP)?',
-  'A core technology or standard designed for managing and executing Object-Oriented Programming (OOP) processes.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Object-Oriented Programming (OOP) processes.'
-);
+  'Q1. What is firewall?',
+  'IP',
+  'stateful',
+  'DMZ',
+  'firewall',
+  'D',
+  'firewall is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000002',
   '00000000-0000-4000-a000-000000000027',
-  'Q2. Which key benefit is provided by Object-Oriented Programming (OOP)?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with traffic?',
+  'port',
+  'network',
+  'traffic',
+  'security',
+  'C',
+  'traffic is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000003',
   '00000000-0000-4000-a000-000000000027',
-  'Q3. What is a fundamental requirement when implementing Object-Oriented Programming (OOP)?',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes rule?',
+  'allow',
+  'DMZ',
+  'rule',
+  'security',
+  'C',
+  'rule is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000004',
   '00000000-0000-4000-a000-000000000027',
-  'Q4. How does Object-Oriented Programming (OOP) handle data and execution states?',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does packet refer to?',
+  'packet',
+  'security',
+  'stateful',
+  'host firewall',
+  'A',
+  'packet is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000005',
   '00000000-0000-4000-a000-000000000027',
-  'Q5. What is a recommended best practice when deploying Object-Oriented Programming (OOP)?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is stateful?',
+  'network',
+  'stateful',
+  'stateless',
+  'DMZ',
+  'B',
+  'stateful is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000006',
   '00000000-0000-4000-a000-000000000027',
-  'Q6. Which layer or component plays a vital role in Object-Oriented Programming (OOP)?',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with stateless?',
+  'stateless',
+  'stateful',
+  'host firewall',
+  'ACL',
+  'A',
+  'stateless is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000007',
   '00000000-0000-4000-a000-000000000027',
-  'Q7. What is a common bottleneck or challenge in Object-Oriented Programming (OOP)?',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Managing system state synchronization and resource contention under heavy load.',
+  'Q7. Which statement best describes inbound?',
+  'ACL',
+  'deny',
+  'logging',
+  'inbound',
   'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'inbound is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000008',
   '00000000-0000-4000-a000-000000000027',
-  'Q8. How is security typically enforced within Object-Oriented Programming (OOP)?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does outbound refer to?',
+  'deny',
+  'outbound',
+  'ACL',
+  'proxy',
+  'B',
+  'outbound is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000009',
   '00000000-0000-4000-a000-000000000027',
-  'Q9. Which metric is critical for measuring the performance of Object-Oriented Programming (OOP)?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is port?',
+  'inbound',
+  'network',
+  'port',
+  'rule',
+  'C',
+  'port is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000010',
   '00000000-0000-4000-a000-000000000027',
-  'Q10. What is the role of versioning in Object-Oriented Programming (OOP)?',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'B',
-  'Option B is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with IP?',
+  'rule',
+  'inbound',
+  'IP',
+  'logging',
+  'C',
+  'IP is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000011',
   '00000000-0000-4000-a000-000000000027',
-  'Q11. In what scenario is Object-Oriented Programming (OOP) most effectively applied?',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes allow?',
+  'allow',
+  'outbound',
+  'traffic',
+  'ACL',
+  'A',
+  'allow is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000012',
   '00000000-0000-4000-a000-000000000027',
-  'Q12. Which tool or interface is standard for interacting with Object-Oriented Programming (OOP)?',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
+  'Q12. In this topic, what does deny refer to?',
+  'deny',
+  'traffic',
+  'stateless',
+  'network',
   'A',
-  'Option A is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'deny is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000013',
   '00000000-0000-4000-a000-000000000027',
-  'Q13. What is the initial phase when developing with Object-Oriented Programming (OOP)?',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
+  'Q13. What is network?',
+  'firewall',
+  'security',
+  'network',
+  'host firewall',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'network is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000014',
   '00000000-0000-4000-a000-000000000027',
-  'Q14. Which debugging technique is recommended for Object-Oriented Programming (OOP)?',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with host firewall?',
+  'stateless',
+  'filter',
+  'host firewall',
+  'deny',
+  'C',
+  'host firewall is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000027000015',
   '00000000-0000-4000-a000-000000000027',
-  'Q15. What is the overall goal of mastering Object-Oriented Programming (OOP)?',
-  'Bypassing standard security checks and protocols in Object-Oriented Programming (OOP).',
-  'Legacy manual processing for Object-Oriented Programming (OOP).',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Object-Oriented Programming (OOP).',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes proxy?',
+  'inbound',
+  'proxy',
+  'stateful',
+  'network',
+  'B',
+  'proxy is a key concept in Firewalls.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 28: Software Engineering Principles
+-- Quick Learn 28: VPNs
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000028',
-  'Software Engineering Principles',
-  'software-engineering-principles',
+  'VPNs',
+  'vpns',
   'CSE',
   'Software Eng',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Software Engineering Principles fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master VPNs fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Software Engineering Principles is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+A VPN creates an encrypted tunnel between a device and a VPN endpoint. It can protect traffic across untrusted networks, but it does not make a user completely anonymous or secure from every threat.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Software Engineering Principles.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **VPN**
+- **encrypted tunnel**
+- **VPN server**
+- **client**
+- **IP address**
+- **public Wi-Fi**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -5563,203 +5627,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000028000001',
   '00000000-0000-4000-a000-000000000028',
-  'Q1. What is the primary definition of Software Engineering Principles?',
-  'Legacy manual processing for Software Engineering Principles.',
-  'A core technology or standard designed for managing and executing Software Engineering Principles processes.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Software Engineering Principles processes.'
-);
+  'Q1. What is VPN?',
+  'client',
+  'security',
+  'privacy',
+  'VPN',
+  'D',
+  'VPN is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000002',
   '00000000-0000-4000-a000-000000000028',
-  'Q2. Which key benefit is provided by Software Engineering Principles?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
+  'Q2. Which option is most directly associated with encrypted tunnel?',
+  'encrypted tunnel',
+  'authentication',
+  'remote access',
+  'routing',
   'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'encrypted tunnel is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000003',
   '00000000-0000-4000-a000-000000000028',
-  'Q3. What is a fundamental requirement when implementing Software Engineering Principles?',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes VPN server?',
+  'DNS',
+  'split tunneling',
+  'VPN server',
+  'security',
+  'C',
+  'VPN server is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000004',
   '00000000-0000-4000-a000-000000000028',
-  'Q4. How does Software Engineering Principles handle data and execution states?',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does client refer to?',
+  'VPN',
+  'security',
+  'DNS',
+  'client',
+  'D',
+  'client is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000005',
   '00000000-0000-4000-a000-000000000028',
-  'Q5. What is a recommended best practice when deploying Software Engineering Principles?',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
+  'Q5. What is IP address?',
+  'remote access',
+  'ISP',
+  'security',
+  'IP address',
   'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'IP address is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000006',
   '00000000-0000-4000-a000-000000000028',
-  'Q6. Which layer or component plays a vital role in Software Engineering Principles?',
-  'Legacy manual processing for Software Engineering Principles.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
+  'Q6. Which option is most directly associated with public Wi-Fi?',
+  'DNS',
+  'public Wi-Fi',
+  'ISP',
+  'endpoint',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'public Wi-Fi is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000007',
   '00000000-0000-4000-a000-000000000028',
-  'Q7. What is a common bottleneck or challenge in Software Engineering Principles?',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes encryption?',
+  'routing',
+  'encryption',
+  'limitations',
+  'site-to-site',
+  'B',
+  'encryption is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000008',
   '00000000-0000-4000-a000-000000000028',
-  'Q8. How is security typically enforced within Software Engineering Principles?',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
+  'Q8. In this topic, what does privacy refer to?',
+  'public Wi-Fi',
+  'privacy',
+  'VPN server',
+  'routing',
   'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'privacy is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000009',
   '00000000-0000-4000-a000-000000000028',
-  'Q9. Which metric is critical for measuring the performance of Software Engineering Principles?',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is routing?',
+  'routing',
+  'IP address',
+  'split tunneling',
+  'limitations',
+  'A',
+  'routing is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000010',
   '00000000-0000-4000-a000-000000000028',
-  'Q10. What is the role of versioning in Software Engineering Principles?',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
+  'Q10. Which option is most directly associated with endpoint?',
+  'ISP',
+  'IP address',
+  'remote access',
+  'endpoint',
   'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'endpoint is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000011',
   '00000000-0000-4000-a000-000000000028',
-  'Q11. In what scenario is Software Engineering Principles most effectively applied?',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
+  'Q11. Which statement best describes protocol?',
+  'IP address',
+  'split tunneling',
+  'remote access',
+  'protocol',
   'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'protocol is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000012',
   '00000000-0000-4000-a000-000000000028',
-  'Q12. Which tool or interface is standard for interacting with Software Engineering Principles?',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
+  'Q12. In this topic, what does remote access refer to?',
+  'ISP',
+  'remote access',
+  'client',
+  'encryption',
   'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'remote access is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000013',
   '00000000-0000-4000-a000-000000000028',
-  'Q13. What is the initial phase when developing with Software Engineering Principles?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is site-to-site?',
+  'client',
+  'routing',
+  'site-to-site',
+  'ISP',
+  'C',
+  'site-to-site is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000014',
   '00000000-0000-4000-a000-000000000028',
-  'Q14. Which debugging technique is recommended for Software Engineering Principles?',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with split tunneling?',
+  'authentication',
+  'split tunneling',
+  'public Wi-Fi',
+  'encryption',
+  'B',
+  'split tunneling is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000028000015',
   '00000000-0000-4000-a000-000000000028',
-  'Q15. What is the overall goal of mastering Software Engineering Principles?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Software Engineering Principles.',
-  'Bypassing standard security checks and protocols in Software Engineering Principles.',
-  'Hardcoding static binary files without backup in Software Engineering Principles.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes traffic?',
+  'encryption',
+  'traffic',
+  'ISP',
+  'public Wi-Fi',
+  'B',
+  'traffic is a key concept in VPNs.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 29: Microservices Architecture
+-- Quick Learn 29: Ethical Hacking Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000029',
-  'Microservices Architecture',
-  'microservices-architecture',
+  'Ethical Hacking Basics',
+  'ethical-hacking-basics',
   'CSE',
   'Backend',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master Microservices Architecture fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Ethical Hacking Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Microservices Architecture is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Ethical hacking is authorized security testing performed to identify weaknesses so they can be fixed. Permission, scope and responsible handling of findings are essential.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Microservices Architecture.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **ethical hacking**
+- **authorization**
+- **scope**
+- **vulnerability**
+- **penetration test**
+- **reconnaissance**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -5767,203 +5834,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000029000001',
   '00000000-0000-4000-a000-000000000029',
-  'Q1. What is the primary definition of Microservices Architecture?',
-  'A core technology or standard designed for managing and executing Microservices Architecture processes.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Microservices Architecture processes.'
-);
+  'Q1. What is ethical hacking?',
+  'evidence',
+  'ethical hacking',
+  'verification',
+  'scan',
+  'B',
+  'ethical hacking is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000002',
   '00000000-0000-4000-a000-000000000029',
-  'Q2. Which key benefit is provided by Microservices Architecture?',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with authorization?',
+  'authorization',
+  'responsible disclosure',
+  'permission',
+  'verification',
+  'A',
+  'authorization is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000003',
   '00000000-0000-4000-a000-000000000029',
-  'Q3. What is a fundamental requirement when implementing Microservices Architecture?',
-  'Legacy manual processing for Microservices Architecture.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes scope?',
+  'scope',
+  'vulnerability',
+  'risk',
+  'remediation',
+  'A',
+  'scope is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000004',
   '00000000-0000-4000-a000-000000000029',
-  'Q4. How does Microservices Architecture handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does vulnerability refer to?',
+  'authorization',
+  'vulnerability',
+  'report',
+  'risk',
+  'B',
+  'vulnerability is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000005',
   '00000000-0000-4000-a000-000000000029',
-  'Q5. What is a recommended best practice when deploying Microservices Architecture?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is penetration test?',
+  'vulnerability',
+  'responsible disclosure',
+  'penetration test',
+  'authorization',
+  'C',
+  'penetration test is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000006',
   '00000000-0000-4000-a000-000000000029',
-  'Q6. Which layer or component plays a vital role in Microservices Architecture?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
+  'Q6. Which option is most directly associated with reconnaissance?',
+  'reconnaissance',
+  'responsible disclosure',
+  'vulnerability',
+  'rules of engagement',
   'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'reconnaissance is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000007',
   '00000000-0000-4000-a000-000000000029',
-  'Q7. What is a common bottleneck or challenge in Microservices Architecture?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
+  'Q7. Which statement best describes scan?',
+  'scan',
+  'responsible disclosure',
+  'rules of engagement',
+  'ethical hacking',
   'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'scan is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000008',
   '00000000-0000-4000-a000-000000000029',
-  'Q8. How is security typically enforced within Microservices Architecture?',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does exploit refer to?',
+  'reconnaissance',
+  'vulnerability',
+  'asset',
+  'exploit',
+  'D',
+  'exploit is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000009',
   '00000000-0000-4000-a000-000000000029',
-  'Q9. Which metric is critical for measuring the performance of Microservices Architecture?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is evidence?',
+  'penetration test',
+  'verification',
+  'scope',
+  'evidence',
+  'D',
+  'evidence is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000010',
   '00000000-0000-4000-a000-000000000029',
-  'Q10. What is the role of versioning in Microservices Architecture?',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Legacy manual processing for Microservices Architecture.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
+  'Q10. Which option is most directly associated with report?',
+  'authorization',
+  'evidence',
+  'report',
+  'risk',
   'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'report is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000011',
   '00000000-0000-4000-a000-000000000029',
-  'Q11. In what scenario is Microservices Architecture most effectively applied?',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes remediation?',
+  'remediation',
+  'asset',
+  'security tester',
+  'severity',
+  'A',
+  'remediation is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000012',
   '00000000-0000-4000-a000-000000000029',
-  'Q12. Which tool or interface is standard for interacting with Microservices Architecture?',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does responsible disclosure refer to?',
+  'scope',
+  'security tester',
+  'report',
+  'responsible disclosure',
+  'D',
+  'responsible disclosure is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000013',
   '00000000-0000-4000-a000-000000000029',
-  'Q13. What is the initial phase when developing with Microservices Architecture?',
-  'Legacy manual processing for Microservices Architecture.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is rules of engagement?',
+  'responsible disclosure',
+  'vulnerability',
+  'rules of engagement',
+  'asset',
+  'C',
+  'rules of engagement is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000014',
   '00000000-0000-4000-a000-000000000029',
-  'Q14. Which debugging technique is recommended for Microservices Architecture?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with asset?',
+  'remediation',
+  'reconnaissance',
+  'asset',
+  'security tester',
+  'C',
+  'asset is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000029000015',
   '00000000-0000-4000-a000-000000000029',
-  'Q15. What is the overall goal of mastering Microservices Architecture?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Microservices Architecture.',
-  'Bypassing standard security checks and protocols in Microservices Architecture.',
-  'Hardcoding static binary files without backup in Microservices Architecture.',
+  'Q15. Which statement best describes risk?',
+  'risk',
+  'report',
+  'severity',
+  'evidence',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'risk is a key concept in Ethical Hacking Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 30: GraphQL vs REST
+-- Quick Learn 30: DevOps Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000030',
-  'GraphQL vs REST',
-  'graphql-vs-rest',
+  'DevOps Basics',
+  'devops-basics',
   'CSE',
   'Backend',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master GraphQL vs REST fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master DevOps Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-GraphQL vs REST is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+DevOps combines development and operations practices to improve collaboration, automation, testing, deployment and monitoring across the software lifecycle.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of GraphQL vs REST.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **DevOps**
+- **development**
+- **operations**
+- **automation**
+- **CI**
+- **CD**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -5971,203 +6041,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000030000001',
   '00000000-0000-4000-a000-000000000030',
-  'Q1. What is the primary definition of GraphQL vs REST?',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'A core technology or standard designed for managing and executing GraphQL vs REST processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing GraphQL vs REST processes.'
-);
+  'Q1. What is DevOps?',
+  'release',
+  'feedback',
+  'DevOps',
+  'infrastructure',
+  'C',
+  'DevOps is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000002',
   '00000000-0000-4000-a000-000000000030',
-  'Q2. Which key benefit is provided by GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with development?',
+  'monitoring',
+  'version control',
+  'CD',
+  'development',
+  'D',
+  'development is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000003',
   '00000000-0000-4000-a000-000000000030',
-  'Q3. What is a fundamental requirement when implementing GraphQL vs REST?',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Proper system configuration, security protocols, and integration standards.',
+  'Q3. Which statement best describes operations?',
+  'version control',
+  'DevOps',
+  'culture',
+  'operations',
   'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'operations is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000004',
   '00000000-0000-4000-a000-000000000030',
-  'Q4. How does GraphQL vs REST handle data and execution states?',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
+  'Q4. In this topic, what does automation refer to?',
+  'operations',
+  'release',
+  'version control',
+  'automation',
   'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'automation is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000005',
   '00000000-0000-4000-a000-000000000030',
-  'Q5. What is a recommended best practice when deploying GraphQL vs REST?',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
+  'Q5. What is CI?',
+  'configuration',
+  'feedback',
+  'CI',
+  'release',
   'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'CI is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000006',
   '00000000-0000-4000-a000-000000000030',
-  'Q6. Which layer or component plays a vital role in GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with CD?',
+  'configuration',
+  'development',
+  'CD',
+  'testing',
+  'C',
+  'CD is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000007',
   '00000000-0000-4000-a000-000000000030',
-  'Q7. What is a common bottleneck or challenge in GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
+  'Q7. Which statement best describes deployment?',
+  'infrastructure',
+  'deployment',
+  'containers',
+  'monitoring',
   'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'deployment is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000008',
   '00000000-0000-4000-a000-000000000030',
-  'Q8. How is security typically enforced within GraphQL vs REST?',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does monitoring refer to?',
+  'monitoring',
+  'CD',
+  'deployment',
+  'pipeline',
+  'A',
+  'monitoring is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000009',
   '00000000-0000-4000-a000-000000000030',
-  'Q9. Which metric is critical for measuring the performance of GraphQL vs REST?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is collaboration?',
+  'feedback',
+  'collaboration',
+  'pipeline',
+  'reliability',
+  'B',
+  'collaboration is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000010',
   '00000000-0000-4000-a000-000000000030',
-  'Q10. What is the role of versioning in GraphQL vs REST?',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with version control?',
+  'observability',
+  'version control',
+  'CD',
+  'collaboration',
+  'B',
+  'version control is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000011',
   '00000000-0000-4000-a000-000000000030',
-  'Q11. In what scenario is GraphQL vs REST most effectively applied?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes infrastructure?',
+  'observability',
+  'automation',
+  'infrastructure',
+  'testing',
+  'C',
+  'infrastructure is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000012',
   '00000000-0000-4000-a000-000000000030',
-  'Q12. Which tool or interface is standard for interacting with GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does testing refer to?',
+  'monitoring',
+  'operations',
+  'version control',
+  'testing',
+  'D',
+  'testing is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000013',
   '00000000-0000-4000-a000-000000000030',
-  'Q13. What is the initial phase when developing with GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
+  'Q13. What is pipeline?',
+  'monitoring',
+  'pipeline',
+  'deployment',
+  'automation',
   'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'pipeline is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000014',
   '00000000-0000-4000-a000-000000000030',
-  'Q14. Which debugging technique is recommended for GraphQL vs REST?',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
-  'Legacy manual processing for GraphQL vs REST.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with feedback?',
+  'observability',
+  'feedback',
+  'collaboration',
+  'reliability',
+  'B',
+  'feedback is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000030000015',
   '00000000-0000-4000-a000-000000000030',
-  'Q15. What is the overall goal of mastering GraphQL vs REST?',
-  'Legacy manual processing for GraphQL vs REST.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in GraphQL vs REST.',
-  'Hardcoding static binary files without backup in GraphQL vs REST.',
+  'Q15. Which statement best describes release?',
+  'collaboration',
+  'release',
+  'version control',
+  'CD',
   'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'release is a key concept in DevOps Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 31: System Design Basics
+-- Quick Learn 31: CI/CD
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000031',
-  'System Design Basics',
-  'system-design-basics',
+  'CI/CD',
+  'cicd',
   'CSE',
   'Architecture',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master System Design Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master CI/CD fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-System Design Basics is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Continuous integration frequently integrates and tests code changes. Continuous delivery or deployment automates later stages so software can be released more reliably.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of System Design Basics.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **continuous integration**
+- **continuous delivery**
+- **continuous deployment**
+- **pipeline**
+- **build**
+- **test**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -6175,203 +6248,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000031000001',
   '00000000-0000-4000-a000-000000000031',
-  'Q1. What is the primary definition of System Design Basics?',
-  'Legacy manual processing for System Design Basics.',
-  'A core technology or standard designed for managing and executing System Design Basics processes.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing System Design Basics processes.'
-);
+  'Q1. What is continuous integration?',
+  'continuous integration',
+  'integration test',
+  'repository',
+  'artifact',
+  'A',
+  'continuous integration is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000002',
   '00000000-0000-4000-a000-000000000031',
-  'Q2. Which key benefit is provided by System Design Basics?',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with continuous delivery?',
+  'merge',
+  'continuous delivery',
+  'production',
+  'automation',
+  'B',
+  'continuous delivery is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000003',
   '00000000-0000-4000-a000-000000000031',
-  'Q3. What is a fundamental requirement when implementing System Design Basics?',
-  'Legacy manual processing for System Design Basics.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
+  'Q3. Which statement best describes continuous deployment?',
+  'continuous integration',
+  'continuous deployment',
+  'repository',
+  'quality gate',
   'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'continuous deployment is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000004',
   '00000000-0000-4000-a000-000000000031',
-  'Q4. How does System Design Basics handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does pipeline refer to?',
+  'commit',
+  'pipeline',
+  'integration test',
+  'feedback',
+  'B',
+  'pipeline is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000005',
   '00000000-0000-4000-a000-000000000031',
-  'Q5. What is a recommended best practice when deploying System Design Basics?',
-  'Legacy manual processing for System Design Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is build?',
+  'artifact',
+  'integration test',
+  'build',
+  'quality gate',
+  'C',
+  'build is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000006',
   '00000000-0000-4000-a000-000000000031',
-  'Q6. Which layer or component plays a vital role in System Design Basics?',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with test?',
+  'quality gate',
+  'test',
+  'deploy',
+  'release',
+  'B',
+  'test is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000007',
   '00000000-0000-4000-a000-000000000031',
-  'Q7. What is a common bottleneck or challenge in System Design Basics?',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes deploy?',
+  'quality gate',
+  'build',
+  'deploy',
+  'test',
+  'C',
+  'deploy is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000008',
   '00000000-0000-4000-a000-000000000031',
-  'Q8. How is security typically enforced within System Design Basics?',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does automation refer to?',
+  'automation',
+  'production',
+  'continuous delivery',
+  'deploy',
+  'A',
+  'automation is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000009',
   '00000000-0000-4000-a000-000000000031',
-  'Q9. Which metric is critical for measuring the performance of System Design Basics?',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is commit?',
+  'continuous integration',
+  'commit',
+  'deploy',
+  'unit test',
+  'B',
+  'commit is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000010',
   '00000000-0000-4000-a000-000000000031',
-  'Q10. What is the role of versioning in System Design Basics?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
+  'Q10. Which option is most directly associated with merge?',
+  'merge',
+  'feedback',
+  'continuous integration',
+  'unit test',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'merge is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000011',
   '00000000-0000-4000-a000-000000000031',
-  'Q11. In what scenario is System Design Basics most effectively applied?',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes artifact?',
+  'merge',
+  'artifact',
+  'commit',
+  'repository',
+  'B',
+  'artifact is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000012',
   '00000000-0000-4000-a000-000000000031',
-  'Q12. Which tool or interface is standard for interacting with System Design Basics?',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'A',
-  'Option A is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does staging refer to?',
+  'continuous deployment',
+  'automation',
+  'staging',
+  'unit test',
+  'C',
+  'staging is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000013',
   '00000000-0000-4000-a000-000000000031',
-  'Q13. What is the initial phase when developing with System Design Basics?',
-  'Legacy manual processing for System Design Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is production?',
+  'production',
+  'deploy',
+  'unit test',
+  'repository',
+  'A',
+  'production is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000014',
   '00000000-0000-4000-a000-000000000031',
-  'Q14. Which debugging technique is recommended for System Design Basics?',
-  'Legacy manual processing for System Design Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'Hardcoding static binary files without backup in System Design Basics.',
+  'Q14. Which option is most directly associated with rollback?',
+  'staging',
+  'rollback',
+  'feedback',
+  'continuous integration',
   'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'rollback is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000031000015',
   '00000000-0000-4000-a000-000000000031',
-  'Q15. What is the overall goal of mastering System Design Basics?',
-  'Hardcoding static binary files without backup in System Design Basics.',
-  'Legacy manual processing for System Design Basics.',
-  'Bypassing standard security checks and protocols in System Design Basics.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes quality gate?',
+  'build',
+  'staging',
+  'quality gate',
+  'rollback',
+  'C',
+  'quality gate is a key concept in CI/CD.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 32: DevOps & CI/CD Pipelines
+-- Quick Learn 32: Docker Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000032',
-  'DevOps & CI/CD Pipelines',
-  'devops-ci-cd-pipelines',
+  'Docker Basics',
+  'docker-basics',
   'CSE',
   'DevOps',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master DevOps & CI/CD Pipelines fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Docker Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-DevOps & CI/CD Pipelines is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Docker packages applications and their dependencies into containers. Containers share the host kernel but isolate application processes and filesystem environments.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of DevOps & CI/CD Pipelines.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **Docker**
+- **container**
+- **image**
+- **Dockerfile**
+- **registry**
+- **container runtime**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -6379,203 +6455,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000032000001',
   '00000000-0000-4000-a000-000000000032',
-  'Q1. What is the primary definition of DevOps & CI/CD Pipelines?',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'A core technology or standard designed for managing and executing DevOps & CI/CD Pipelines processes.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing DevOps & CI/CD Pipelines processes.'
-);
+  'Q1. What is Docker?',
+  'build',
+  'run',
+  'volume',
+  'Docker',
+  'D',
+  'Docker is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000002',
   '00000000-0000-4000-a000-000000000032',
-  'Q2. Which key benefit is provided by DevOps & CI/CD Pipelines?',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with container?',
+  'container',
+  'tag',
+  'Compose',
+  'build',
+  'A',
+  'container is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000003',
   '00000000-0000-4000-a000-000000000032',
-  'Q3. What is a fundamental requirement when implementing DevOps & CI/CD Pipelines?',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes image?',
+  'volume',
+  'dependency',
+  'image',
+  'push',
+  'C',
+  'image is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000004',
   '00000000-0000-4000-a000-000000000032',
-  'Q4. How does DevOps & CI/CD Pipelines handle data and execution states?',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does Dockerfile refer to?',
+  'Dockerfile',
+  'network',
+  'Docker',
+  'image',
+  'A',
+  'Dockerfile is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000005',
   '00000000-0000-4000-a000-000000000032',
-  'Q5. What is a recommended best practice when deploying DevOps & CI/CD Pipelines?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
+  'Q5. What is registry?',
+  'registry',
+  'container runtime',
+  'port mapping',
+  'layer',
   'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'registry is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000006',
   '00000000-0000-4000-a000-000000000032',
-  'Q6. Which layer or component plays a vital role in DevOps & CI/CD Pipelines?',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with container runtime?',
+  'Compose',
+  'Dockerfile',
+  'build',
+  'container runtime',
+  'D',
+  'container runtime is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000007',
   '00000000-0000-4000-a000-000000000032',
-  'Q7. What is a common bottleneck or challenge in DevOps & CI/CD Pipelines?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes port mapping?',
+  'container',
+  'isolation',
+  'port mapping',
+  'push',
+  'C',
+  'port mapping is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000008',
   '00000000-0000-4000-a000-000000000032',
-  'Q8. How is security typically enforced within DevOps & CI/CD Pipelines?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does volume refer to?',
+  'push',
+  'port mapping',
+  'network',
+  'volume',
+  'D',
+  'volume is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000009',
   '00000000-0000-4000-a000-000000000032',
-  'Q9. Which metric is critical for measuring the performance of DevOps & CI/CD Pipelines?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is network?',
+  'image',
+  'host kernel',
+  'network',
+  'tag',
+  'C',
+  'network is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000010',
   '00000000-0000-4000-a000-000000000032',
-  'Q10. What is the role of versioning in DevOps & CI/CD Pipelines?',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with layer?',
+  'layer',
+  'tag',
+  'Dockerfile',
+  'containerization',
+  'A',
+  'layer is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000011',
   '00000000-0000-4000-a000-000000000032',
-  'Q11. In what scenario is DevOps & CI/CD Pipelines most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes build?',
+  'volume',
+  'tag',
+  'build',
+  'port mapping',
+  'C',
+  'build is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000012',
   '00000000-0000-4000-a000-000000000032',
-  'Q12. Which tool or interface is standard for interacting with DevOps & CI/CD Pipelines?',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does run refer to?',
+  'run',
+  'image',
+  'port mapping',
+  'layer',
+  'A',
+  'run is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000013',
   '00000000-0000-4000-a000-000000000032',
-  'Q13. What is the initial phase when developing with DevOps & CI/CD Pipelines?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is pull?',
+  'Compose',
+  'pull',
+  'Dockerfile',
+  'build',
+  'B',
+  'pull is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000014',
   '00000000-0000-4000-a000-000000000032',
-  'Q14. Which debugging technique is recommended for DevOps & CI/CD Pipelines?',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with push?',
+  'push',
+  'build',
+  'isolation',
+  'port mapping',
+  'A',
+  'push is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000032000015',
   '00000000-0000-4000-a000-000000000032',
-  'Q15. What is the overall goal of mastering DevOps & CI/CD Pipelines?',
-  'Bypassing standard security checks and protocols in DevOps & CI/CD Pipelines.',
-  'Legacy manual processing for DevOps & CI/CD Pipelines.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in DevOps & CI/CD Pipelines.',
+  'Q15. Which statement best describes tag?',
+  'port mapping',
+  'run',
+  'tag',
+  'registry',
   'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'tag is a key concept in Docker Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 33: Artificial Intelligence Basics
+-- Quick Learn 33: Software Development Life Cycle
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000033',
-  'Artificial Intelligence Basics',
-  'artificial-intelligence-basics',
+  'Software Development Life Cycle',
+  'software-development-life-cycle',
   'AI & ML',
   'AI',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Artificial Intelligence Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Software Development Life Cycle fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Artificial Intelligence Basics is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+The SDLC describes stages used to plan, build, test, deploy and maintain software. Common stages include requirements, design, development, testing, deployment and maintenance.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Artificial Intelligence Basics.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **requirements**
+- **planning**
+- **design**
+- **development**
+- **testing**
+- **deployment**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -6583,203 +6662,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000033000001',
   '00000000-0000-4000-a000-000000000033',
-  'Q1. What is the primary definition of Artificial Intelligence Basics?',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'A core technology or standard designed for managing and executing Artificial Intelligence Basics processes.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Artificial Intelligence Basics processes.'
-);
+  'Q1. What is requirements?',
+  'feedback',
+  'testing',
+  'requirements',
+  'lifecycle',
+  'C',
+  'requirements is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000002',
   '00000000-0000-4000-a000-000000000033',
-  'Q2. Which key benefit is provided by Artificial Intelligence Basics?',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
+  'Q2. Which option is most directly associated with planning?',
+  'requirements',
+  'maintenance',
+  'lifecycle',
+  'planning',
   'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'planning is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000003',
   '00000000-0000-4000-a000-000000000033',
-  'Q3. What is a fundamental requirement when implementing Artificial Intelligence Basics?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes design?',
+  'SDLC',
+  'lifecycle',
+  'design',
+  'architecture',
+  'C',
+  'design is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000004',
   '00000000-0000-4000-a000-000000000033',
-  'Q4. How does Artificial Intelligence Basics handle data and execution states?',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
+  'Q4. In this topic, what does development refer to?',
+  'stakeholder',
+  'release',
+  'iteration',
+  'development',
   'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'development is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000005',
   '00000000-0000-4000-a000-000000000033',
-  'Q5. What is a recommended best practice when deploying Artificial Intelligence Basics?',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is testing?',
+  'lifecycle',
+  'release',
+  'testing',
+  'documentation',
+  'C',
+  'testing is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000006',
   '00000000-0000-4000-a000-000000000033',
-  'Q6. Which layer or component plays a vital role in Artificial Intelligence Basics?',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with deployment?',
+  'architecture',
+  'requirements',
+  'waterfall',
+  'deployment',
+  'D',
+  'deployment is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000007',
   '00000000-0000-4000-a000-000000000033',
-  'Q7. What is a common bottleneck or challenge in Artificial Intelligence Basics?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes maintenance?',
+  'lifecycle',
+  'agile',
+  'feedback',
+  'maintenance',
+  'D',
+  'maintenance is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000008',
   '00000000-0000-4000-a000-000000000033',
-  'Q8. How is security typically enforced within Artificial Intelligence Basics?',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does SDLC refer to?',
+  'SDLC',
+  'requirements',
+  'quality',
+  'design',
+  'A',
+  'SDLC is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000009',
   '00000000-0000-4000-a000-000000000033',
-  'Q9. Which metric is critical for measuring the performance of Artificial Intelligence Basics?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is stakeholder?',
+  'waterfall',
+  'quality',
+  'agile',
+  'stakeholder',
+  'D',
+  'stakeholder is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000010',
   '00000000-0000-4000-a000-000000000033',
-  'Q10. What is the role of versioning in Artificial Intelligence Basics?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with prototype?',
+  'requirements',
+  'documentation',
+  'prototype',
+  'architecture',
+  'C',
+  'prototype is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000011',
   '00000000-0000-4000-a000-000000000033',
-  'Q11. In what scenario is Artificial Intelligence Basics most effectively applied?',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes architecture?',
+  'architecture',
+  'release',
+  'lifecycle',
+  'development',
+  'A',
+  'architecture is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000012',
   '00000000-0000-4000-a000-000000000033',
-  'Q12. Which tool or interface is standard for interacting with Artificial Intelligence Basics?',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does bug refer to?',
+  'prototype',
+  'bug',
+  'feedback',
+  'agile',
+  'B',
+  'bug is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000013',
   '00000000-0000-4000-a000-000000000033',
-  'Q13. What is the initial phase when developing with Artificial Intelligence Basics?',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
+  'Q13. What is release?',
+  'waterfall',
+  'architecture',
+  'release',
+  'iteration',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'release is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000014',
   '00000000-0000-4000-a000-000000000033',
-  'Q14. Which debugging technique is recommended for Artificial Intelligence Basics?',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with documentation?',
+  'documentation',
+  'prototype',
+  'iteration',
+  'requirements',
+  'A',
+  'documentation is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000033000015',
   '00000000-0000-4000-a000-000000000033',
-  'Q15. What is the overall goal of mastering Artificial Intelligence Basics?',
-  'Bypassing standard security checks and protocols in Artificial Intelligence Basics.',
-  'Legacy manual processing for Artificial Intelligence Basics.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Artificial Intelligence Basics.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes iteration?',
+  'bug',
+  'iteration',
+  'prototype',
+  'feedback',
+  'B',
+  'iteration is a key concept in Software Development Life Cycle.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 34: Machine Learning Fundamentals
+-- Quick Learn 34: Debugging & Error Handling
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000034',
-  'Machine Learning Fundamentals',
-  'machine-learning-fundamentals',
+  'Debugging & Error Handling',
+  'debugging-error-handling',
   'AI & ML',
   'ML',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Machine Learning Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Debugging & Error Handling fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Machine Learning Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Debugging is the process of finding and fixing software defects. Error handling lets programs respond to expected failures without crashing or producing unsafe behavior.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Machine Learning Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **debugging**
+- **bug**
+- **error**
+- **exception**
+- **log**
+- **stack trace**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -6787,203 +6869,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000034000001',
   '00000000-0000-4000-a000-000000000034',
-  'Q1. What is the primary definition of Machine Learning Fundamentals?',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'A core technology or standard designed for managing and executing Machine Learning Fundamentals processes.',
+  'Q1. What is debugging?',
+  'monitoring',
+  'regression',
+  'failure',
+  'debugging',
   'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Machine Learning Fundamentals processes.'
-);
+  'debugging is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000002',
   '00000000-0000-4000-a000-000000000034',
-  'Q2. Which key benefit is provided by Machine Learning Fundamentals?',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
+  'Q2. Which option is most directly associated with bug?',
+  'reproduce',
+  'bug',
+  'failure',
+  'regression',
   'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'bug is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000003',
   '00000000-0000-4000-a000-000000000034',
-  'Q3. What is a fundamental requirement when implementing Machine Learning Fundamentals?',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
+  'Q3. Which statement best describes error?',
+  'breakpoint',
+  'error',
+  'regression',
+  'debugging',
   'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'error is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000004',
   '00000000-0000-4000-a000-000000000034',
-  'Q4. How does Machine Learning Fundamentals handle data and execution states?',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does exception refer to?',
+  'exception',
+  'failure',
+  'try/catch',
+  'handling',
+  'A',
+  'exception is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000005',
   '00000000-0000-4000-a000-000000000034',
-  'Q5. What is a recommended best practice when deploying Machine Learning Fundamentals?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is log?',
+  'debugging',
+  'log',
+  'validation',
+  'try/catch',
+  'B',
+  'log is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000006',
   '00000000-0000-4000-a000-000000000034',
-  'Q6. Which layer or component plays a vital role in Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with stack trace?',
+  'stack trace',
+  'regression',
+  'handling',
+  'input',
+  'A',
+  'stack trace is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000007',
   '00000000-0000-4000-a000-000000000034',
-  'Q7. What is a common bottleneck or challenge in Machine Learning Fundamentals?',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Managing system state synchronization and resource contention under heavy load.',
+  'Q7. Which statement best describes breakpoint?',
+  'bug',
+  'log',
+  'exception',
+  'breakpoint',
   'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'breakpoint is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000008',
   '00000000-0000-4000-a000-000000000034',
-  'Q8. How is security typically enforced within Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does test refer to?',
+  'validation',
+  'test',
+  'input',
+  'error',
+  'B',
+  'test is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000009',
   '00000000-0000-4000-a000-000000000034',
-  'Q9. Which metric is critical for measuring the performance of Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
+  'Q9. What is reproduce?',
+  'verification',
+  'stack trace',
+  'reproduce',
+  'log',
   'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'reproduce is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000010',
   '00000000-0000-4000-a000-000000000034',
-  'Q10. What is the role of versioning in Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with root cause?',
+  'root cause',
+  'assertion',
+  'exception',
+  'reproduce',
+  'A',
+  'root cause is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000011',
   '00000000-0000-4000-a000-000000000034',
-  'Q11. In what scenario is Machine Learning Fundamentals most effectively applied?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
+  'Q11. Which statement best describes validation?',
+  'reproduce',
+  'fix',
+  'validation',
+  'error',
   'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'validation is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000012',
   '00000000-0000-4000-a000-000000000034',
-  'Q12. Which tool or interface is standard for interacting with Machine Learning Fundamentals?',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does try/catch refer to?',
+  'breakpoint',
+  'monitoring',
+  'try/catch',
+  'reproduce',
+  'C',
+  'try/catch is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000013',
   '00000000-0000-4000-a000-000000000034',
-  'Q13. What is the initial phase when developing with Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is input?',
+  'input',
+  'handling',
+  'log',
+  'bug',
+  'A',
+  'input is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000014',
   '00000000-0000-4000-a000-000000000034',
-  'Q14. Which debugging technique is recommended for Machine Learning Fundamentals?',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with failure?',
+  'failure',
+  'test',
+  'debugging',
+  'bug',
+  'A',
+  'failure is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000034000015',
   '00000000-0000-4000-a000-000000000034',
-  'Q15. What is the overall goal of mastering Machine Learning Fundamentals?',
-  'Legacy manual processing for Machine Learning Fundamentals.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Machine Learning Fundamentals.',
-  'Hardcoding static binary files without backup in Machine Learning Fundamentals.',
+  'Q15. Which statement best describes handling?',
+  'stack trace',
+  'handling',
+  'test',
+  'input',
   'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'handling is a key concept in Debugging & Error Handling.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 35: Deep Learning & Neural Networks
+-- Quick Learn 35: Data Structures
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000035',
-  'Deep Learning & Neural Networks',
-  'deep-learning-neural-networks',
+  'Data Structures',
+  'data-structures',
   'AI & ML',
   'AI',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master Deep Learning & Neural Networks fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Data Structures fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Deep Learning & Neural Networks is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Data structures organize data for efficient access and modification. Common examples include arrays, linked lists, stacks, queues, hash tables, trees and graphs.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Deep Learning & Neural Networks.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **array**
+- **linked list**
+- **stack**
+- **queue**
+- **hash table**
+- **tree**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -6991,203 +7076,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000035000001',
   '00000000-0000-4000-a000-000000000035',
-  'Q1. What is the primary definition of Deep Learning & Neural Networks?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'A core technology or standard designed for managing and executing Deep Learning & Neural Networks processes.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Deep Learning & Neural Networks processes.'
-);
+  'Q1. What is array?',
+  'tree',
+  'index',
+  'array',
+  'hash table',
+  'C',
+  'array is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000002',
   '00000000-0000-4000-a000-000000000035',
-  'Q2. Which key benefit is provided by Deep Learning & Neural Networks?',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
+  'Q2. Which option is most directly associated with linked list?',
+  'graph',
+  'traversal',
+  'linked list',
+  'stack',
   'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'linked list is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000003',
   '00000000-0000-4000-a000-000000000035',
-  'Q3. What is a fundamental requirement when implementing Deep Learning & Neural Networks?',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes stack?',
+  'complexity',
+  'stack',
+  'index',
+  'array',
+  'B',
+  'stack is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000004',
   '00000000-0000-4000-a000-000000000035',
-  'Q4. How does Deep Learning & Neural Networks handle data and execution states?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
+  'Q4. In this topic, what does queue refer to?',
+  'insert',
+  'queue',
+  'delete',
+  'linked list',
   'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'queue is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000005',
   '00000000-0000-4000-a000-000000000035',
-  'Q5. What is a recommended best practice when deploying Deep Learning & Neural Networks?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is hash table?',
+  'value',
+  'linked list',
+  'complexity',
+  'hash table',
+  'D',
+  'hash table is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000006',
   '00000000-0000-4000-a000-000000000035',
-  'Q6. Which layer or component plays a vital role in Deep Learning & Neural Networks?',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with tree?',
+  'heap',
+  'tree',
+  'LIFO',
+  'delete',
+  'B',
+  'tree is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000007',
   '00000000-0000-4000-a000-000000000035',
-  'Q7. What is a common bottleneck or challenge in Deep Learning & Neural Networks?',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes graph?',
+  'tree',
+  'hash table',
+  'graph',
+  'traversal',
+  'C',
+  'graph is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000008',
   '00000000-0000-4000-a000-000000000035',
-  'Q8. How is security typically enforced within Deep Learning & Neural Networks?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does heap refer to?',
+  'insert',
+  'complexity',
+  'hash table',
+  'heap',
+  'D',
+  'heap is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000009',
   '00000000-0000-4000-a000-000000000035',
-  'Q9. Which metric is critical for measuring the performance of Deep Learning & Neural Networks?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is node?',
+  'hash table',
+  'complexity',
+  'stack',
+  'node',
+  'D',
+  'node is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000010',
   '00000000-0000-4000-a000-000000000035',
-  'Q10. What is the role of versioning in Deep Learning & Neural Networks?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'B',
-  'Option B is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with index?',
+  'LIFO',
+  'search',
+  'heap',
+  'index',
+  'D',
+  'index is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000011',
   '00000000-0000-4000-a000-000000000035',
-  'Q11. In what scenario is Deep Learning & Neural Networks most effectively applied?',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes LIFO?',
+  'graph',
+  'LIFO',
+  'value',
+  'hash table',
+  'B',
+  'LIFO is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000012',
   '00000000-0000-4000-a000-000000000035',
-  'Q12. Which tool or interface is standard for interacting with Deep Learning & Neural Networks?',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
+  'Q12. In this topic, what does FIFO refer to?',
+  'queue',
+  'traversal',
+  'FIFO',
+  'linked list',
   'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'FIFO is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000013',
   '00000000-0000-4000-a000-000000000035',
-  'Q13. What is the initial phase when developing with Deep Learning & Neural Networks?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is key?',
+  'traversal',
+  'value',
+  'search',
+  'key',
+  'D',
+  'key is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000014',
   '00000000-0000-4000-a000-000000000035',
-  'Q14. Which debugging technique is recommended for Deep Learning & Neural Networks?',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with value?',
+  'delete',
+  'index',
+  'value',
+  'data structure',
+  'C',
+  'value is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000035000015',
   '00000000-0000-4000-a000-000000000035',
-  'Q15. What is the overall goal of mastering Deep Learning & Neural Networks?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Deep Learning & Neural Networks.',
-  'Bypassing standard security checks and protocols in Deep Learning & Neural Networks.',
-  'Hardcoding static binary files without backup in Deep Learning & Neural Networks.',
+  'Q15. Which statement best describes search?',
+  'search',
+  'index',
+  'queue',
+  'FIFO',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'search is a key concept in Data Structures.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 36: Web Security & OWASP Top 10
+-- Quick Learn 36: Algorithms Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000036',
-  'Web Security & OWASP Top 10',
-  'web-security-owasp-top-10',
+  'Algorithms Basics',
+  'algorithms-basics',
   'CSE',
   'Security',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master Web Security & OWASP Top 10 fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Algorithms Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Web Security & OWASP Top 10 is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+An algorithm is a defined procedure for solving a problem. Good algorithm design considers correctness, clarity, time complexity and space complexity.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Web Security & OWASP Top 10.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **algorithm**
+- **input**
+- **output**
+- **step**
+- **correctness**
+- **efficiency**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -7195,203 +7283,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000036000001',
   '00000000-0000-4000-a000-000000000036',
-  'Q1. What is the primary definition of Web Security & OWASP Top 10?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'A core technology or standard designed for managing and executing Web Security & OWASP Top 10 processes.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Web Security & OWASP Top 10 processes.'
-);
+  'Q1. What is algorithm?',
+  'time complexity',
+  'iteration',
+  'search',
+  'algorithm',
+  'D',
+  'algorithm is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000002',
   '00000000-0000-4000-a000-000000000036',
-  'Q2. Which key benefit is provided by Web Security & OWASP Top 10?',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with input?',
+  'space complexity',
+  'recursion',
+  'input',
+  'optimization',
+  'C',
+  'input is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000003',
   '00000000-0000-4000-a000-000000000036',
-  'Q3. What is a fundamental requirement when implementing Web Security & OWASP Top 10?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes output?',
+  'output',
+  'termination',
+  'recursion',
+  'greedy',
+  'A',
+  'output is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000004',
   '00000000-0000-4000-a000-000000000036',
-  'Q4. How does Web Security & OWASP Top 10 handle data and execution states?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does step refer to?',
+  'optimization',
+  'divide and conquer',
+  'pseudocode',
+  'step',
+  'D',
+  'step is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000005',
   '00000000-0000-4000-a000-000000000036',
-  'Q5. What is a recommended best practice when deploying Web Security & OWASP Top 10?',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is correctness?',
+  'output',
+  'correctness',
+  'time complexity',
+  'algorithm',
+  'B',
+  'correctness is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000006',
   '00000000-0000-4000-a000-000000000036',
-  'Q6. Which layer or component plays a vital role in Web Security & OWASP Top 10?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with efficiency?',
+  'divide and conquer',
+  'iteration',
+  'efficiency',
+  'pseudocode',
+  'C',
+  'efficiency is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000007',
   '00000000-0000-4000-a000-000000000036',
-  'Q7. What is a common bottleneck or challenge in Web Security & OWASP Top 10?',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
+  'Q7. Which statement best describes time complexity?',
+  'iteration',
+  'efficiency',
+  'time complexity',
+  'recursion',
   'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'time complexity is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000008',
   '00000000-0000-4000-a000-000000000036',
-  'Q8. How is security typically enforced within Web Security & OWASP Top 10?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does space complexity refer to?',
+  'correctness',
+  'recursion',
+  'Big O',
+  'space complexity',
+  'D',
+  'space complexity is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000009',
   '00000000-0000-4000-a000-000000000036',
-  'Q9. Which metric is critical for measuring the performance of Web Security & OWASP Top 10?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is Big O?',
+  'divide and conquer',
+  'termination',
+  'Big O',
+  'sort',
+  'C',
+  'Big O is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000010',
   '00000000-0000-4000-a000-000000000036',
-  'Q10. What is the role of versioning in Web Security & OWASP Top 10?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with search?',
+  'input',
+  'algorithm',
+  'termination',
+  'search',
+  'D',
+  'search is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000011',
   '00000000-0000-4000-a000-000000000036',
-  'Q11. In what scenario is Web Security & OWASP Top 10 most effectively applied?',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes sort?',
+  'divide and conquer',
+  'sort',
+  'algorithm',
+  'algorithm',
+  'B',
+  'sort is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000012',
   '00000000-0000-4000-a000-000000000036',
-  'Q12. Which tool or interface is standard for interacting with Web Security & OWASP Top 10?',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
+  'Q12. In this topic, what does recursion refer to?',
+  'search',
+  'efficiency',
+  'recursion',
+  'pseudocode',
   'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'recursion is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000013',
   '00000000-0000-4000-a000-000000000036',
-  'Q13. What is the initial phase when developing with Web Security & OWASP Top 10?',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is iteration?',
+  'iteration',
+  'search',
+  'time complexity',
+  'optimization',
+  'A',
+  'iteration is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000014',
   '00000000-0000-4000-a000-000000000036',
-  'Q14. Which debugging technique is recommended for Web Security & OWASP Top 10?',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with greedy?',
+  'greedy',
+  'algorithm',
+  'optimization',
+  'space complexity',
+  'A',
+  'greedy is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000036000015',
   '00000000-0000-4000-a000-000000000036',
-  'Q15. What is the overall goal of mastering Web Security & OWASP Top 10?',
-  'Hardcoding static binary files without backup in Web Security & OWASP Top 10.',
-  'Legacy manual processing for Web Security & OWASP Top 10.',
-  'Bypassing standard security checks and protocols in Web Security & OWASP Top 10.',
-  'To design, build, and maintain production-ready technology solutions.',
+  'Q15. Which statement best describes divide and conquer?',
+  'recursion',
+  'step',
+  'Big O',
+  'divide and conquer',
   'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'divide and conquer is a key concept in Algorithms Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 37: Information Security & Cryptography
+-- Quick Learn 37: Artificial Intelligence Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000037',
-  'Information Security & Cryptography',
-  'information-security-cryptography',
+  'Artificial Intelligence Basics',
+  'artificial-intelligence-basics',
   'CSE',
   'Security',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Information Security & Cryptography fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Artificial Intelligence Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Information Security & Cryptography is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Artificial intelligence refers to systems designed to perform tasks associated with human intelligence, such as pattern recognition, prediction, language processing and decision support.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Information Security & Cryptography.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **AI**
+- **model**
+- **data**
+- **prediction**
+- **classification**
+- **natural language**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -7399,203 +7490,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000037000001',
   '00000000-0000-4000-a000-000000000037',
-  'Q1. What is the primary definition of Information Security & Cryptography?',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'A core technology or standard designed for managing and executing Information Security & Cryptography processes.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
+  'Q1. What is AI?',
+  'computer vision',
+  'AI',
+  'bias',
+  'agent',
   'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Information Security & Cryptography processes.'
-);
+  'AI is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000002',
   '00000000-0000-4000-a000-000000000037',
-  'Q2. Which key benefit is provided by Information Security & Cryptography?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
+  'Q2. Which option is most directly associated with model?',
+  'model',
+  'pattern',
+  'bias',
+  'AI',
   'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'model is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000003',
   '00000000-0000-4000-a000-000000000037',
-  'Q3. What is a fundamental requirement when implementing Information Security & Cryptography?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes data?',
+  'pattern',
+  'data',
+  'computer vision',
+  'evaluation',
+  'B',
+  'data is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000004',
   '00000000-0000-4000-a000-000000000037',
-  'Q4. How does Information Security & Cryptography handle data and execution states?',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does prediction refer to?',
+  'prediction',
+  'neural network',
+  'training',
+  'speech',
+  'A',
+  'prediction is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000005',
   '00000000-0000-4000-a000-000000000037',
-  'Q5. What is a recommended best practice when deploying Information Security & Cryptography?',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is classification?',
+  'training',
+  'classification',
+  'pattern',
+  'natural language',
+  'B',
+  'classification is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000006',
   '00000000-0000-4000-a000-000000000037',
-  'Q6. Which layer or component plays a vital role in Information Security & Cryptography?',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
+  'Q6. Which option is most directly associated with natural language?',
+  'speech',
+  'agent',
+  'natural language',
+  'prediction',
   'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'natural language is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000007',
   '00000000-0000-4000-a000-000000000037',
-  'Q7. What is a common bottleneck or challenge in Information Security & Cryptography?',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
+  'Q7. Which statement best describes computer vision?',
+  'neural network',
+  'computer vision',
+  'machine learning',
+  'classification',
   'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'computer vision is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000008',
   '00000000-0000-4000-a000-000000000037',
-  'Q8. How is security typically enforced within Information Security & Cryptography?',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does pattern refer to?',
+  'reasoning',
+  'agent',
+  'machine learning',
+  'pattern',
+  'D',
+  'pattern is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000009',
   '00000000-0000-4000-a000-000000000037',
-  'Q9. Which metric is critical for measuring the performance of Information Security & Cryptography?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is training?',
+  'prediction',
+  'bias',
+  'AI',
+  'training',
+  'D',
+  'training is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000010',
   '00000000-0000-4000-a000-000000000037',
-  'Q10. What is the role of versioning in Information Security & Cryptography?',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with inference?',
+  'inference',
+  'prediction',
+  'neural network',
+  'agent',
+  'A',
+  'inference is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000011',
   '00000000-0000-4000-a000-000000000037',
-  'Q11. In what scenario is Information Security & Cryptography most effectively applied?',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes automation?',
+  'pattern',
+  'automation',
+  'model',
+  'natural language',
+  'B',
+  'automation is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000012',
   '00000000-0000-4000-a000-000000000037',
-  'Q12. Which tool or interface is standard for interacting with Information Security & Cryptography?',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does neural network refer to?',
+  'neural network',
+  'training',
+  'model',
+  'machine learning',
+  'A',
+  'neural network is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000013',
   '00000000-0000-4000-a000-000000000037',
-  'Q13. What is the initial phase when developing with Information Security & Cryptography?',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is machine learning?',
+  'machine learning',
+  'reasoning',
+  'AI',
+  'agent',
+  'A',
+  'machine learning is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000014',
   '00000000-0000-4000-a000-000000000037',
-  'Q14. Which debugging technique is recommended for Information Security & Cryptography?',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with agent?',
+  'agent',
+  'inference',
+  'bias',
+  'prediction',
+  'A',
+  'agent is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000037000015',
   '00000000-0000-4000-a000-000000000037',
-  'Q15. What is the overall goal of mastering Information Security & Cryptography?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Information Security & Cryptography.',
-  'Bypassing standard security checks and protocols in Information Security & Cryptography.',
-  'Hardcoding static binary files without backup in Information Security & Cryptography.',
+  'Q15. Which statement best describes recommendation?',
+  'recommendation',
+  'automation',
+  'AI system',
+  'neural network',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'recommendation is a key concept in Artificial Intelligence Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 38: ESP32 & IoT Hardware
+-- Quick Learn 38: Machine Learning Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000038',
-  'ESP32 & IoT Hardware',
-  'esp32-iot-hardware',
+  'Machine Learning Basics',
+  'machine-learning-basics',
   'ECE',
   'IoT',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master ESP32 & IoT Hardware fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Machine Learning Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-ESP32 & IoT Hardware is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Machine learning uses data and algorithms to learn patterns for prediction or decision-making. Common categories include supervised, unsupervised and reinforcement learning.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of ESP32 & IoT Hardware.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **machine learning**
+- **dataset**
+- **feature**
+- **label**
+- **training**
+- **validation**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -7603,203 +7697,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000038000001',
   '00000000-0000-4000-a000-000000000038',
-  'Q1. What is the primary definition of ESP32 & IoT Hardware?',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'A core technology or standard designed for managing and executing ESP32 & IoT Hardware processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing ESP32 & IoT Hardware processes.'
-);
+  'Q1. What is machine learning?',
+  'supervised',
+  'machine learning',
+  'feature',
+  'algorithm',
+  'B',
+  'machine learning is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000002',
   '00000000-0000-4000-a000-000000000038',
-  'Q2. Which key benefit is provided by ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
+  'Q2. Which option is most directly associated with dataset?',
+  'reinforcement',
+  'machine learning',
+  'dataset',
+  'validation',
   'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'dataset is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000003',
   '00000000-0000-4000-a000-000000000038',
-  'Q3. What is a fundamental requirement when implementing ESP32 & IoT Hardware?',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes feature?',
+  'feature',
+  'prediction',
+  'underfitting',
+  'clustering',
+  'A',
+  'feature is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000004',
   '00000000-0000-4000-a000-000000000038',
-  'Q4. How does ESP32 & IoT Hardware handle data and execution states?',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
+  'Q4. In this topic, what does label refer to?',
+  'validation',
+  'dataset',
+  'inference',
+  'label',
   'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'label is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000005',
   '00000000-0000-4000-a000-000000000038',
-  'Q5. What is a recommended best practice when deploying ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is training?',
+  'algorithm',
+  'training',
+  'label',
+  'accuracy',
+  'B',
+  'training is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000006',
   '00000000-0000-4000-a000-000000000038',
-  'Q6. Which layer or component plays a vital role in ESP32 & IoT Hardware?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with validation?',
+  'inference',
+  'validation',
+  'classification',
+  'machine learning',
+  'B',
+  'validation is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000007',
   '00000000-0000-4000-a000-000000000038',
-  'Q7. What is a common bottleneck or challenge in ESP32 & IoT Hardware?',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Managing system state synchronization and resource contention under heavy load.',
+  'Q7. Which statement best describes test?',
+  'classification',
+  'overfitting',
+  'inference',
+  'test',
   'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'test is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000008',
   '00000000-0000-4000-a000-000000000038',
-  'Q8. How is security typically enforced within ESP32 & IoT Hardware?',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does supervised refer to?',
+  'classification',
+  'label',
+  'supervised',
+  'underfitting',
+  'C',
+  'supervised is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000009',
   '00000000-0000-4000-a000-000000000038',
-  'Q9. Which metric is critical for measuring the performance of ESP32 & IoT Hardware?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is unsupervised?',
+  'algorithm',
+  'unsupervised',
+  'machine learning',
+  'test',
+  'B',
+  'unsupervised is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000010',
   '00000000-0000-4000-a000-000000000038',
-  'Q10. What is the role of versioning in ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with reinforcement?',
+  'reinforcement',
+  'unsupervised',
+  'algorithm',
+  'model',
+  'A',
+  'reinforcement is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000011',
   '00000000-0000-4000-a000-000000000038',
-  'Q11. In what scenario is ESP32 & IoT Hardware most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes classification?',
+  'unsupervised',
+  'machine learning',
+  'supervised',
+  'classification',
+  'D',
+  'classification is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000012',
   '00000000-0000-4000-a000-000000000038',
-  'Q12. Which tool or interface is standard for interacting with ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does regression refer to?',
+  'supervised',
+  'regression',
+  'inference',
+  'classification',
+  'B',
+  'regression is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000013',
   '00000000-0000-4000-a000-000000000038',
-  'Q13. What is the initial phase when developing with ESP32 & IoT Hardware?',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is clustering?',
+  'test',
+  'training',
+  'clustering',
+  'machine learning',
+  'C',
+  'clustering is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000014',
   '00000000-0000-4000-a000-000000000038',
-  'Q14. Which debugging technique is recommended for ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with model?',
+  'reinforcement',
+  'supervised',
+  'underfitting',
+  'model',
+  'D',
+  'model is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000038000015',
   '00000000-0000-4000-a000-000000000038',
-  'Q15. What is the overall goal of mastering ESP32 & IoT Hardware?',
-  'Bypassing standard security checks and protocols in ESP32 & IoT Hardware.',
-  'Legacy manual processing for ESP32 & IoT Hardware.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in ESP32 & IoT Hardware.',
-  'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes overfitting?',
+  'classification',
+  'overfitting',
+  'test',
+  'inference',
+  'B',
+  'overfitting is a key concept in Machine Learning Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 39: Embedded Systems & Microcontrollers
+-- Quick Learn 39: Generative AI
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000039',
-  'Embedded Systems & Microcontrollers',
-  'embedded-systems-microcontrollers',
+  'Generative AI',
+  'generative-ai',
   'ECE',
   'Electronics',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Embedded Systems & Microcontrollers fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Generative AI fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Embedded Systems & Microcontrollers is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Generative AI models create new content such as text, images, audio or code based on learned patterns. Outputs should be reviewed because models can produce incorrect or misleading results.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Embedded Systems & Microcontrollers.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **generative AI**
+- **model**
+- **prompt**
+- **text**
+- **image**
+- **audio**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -7807,203 +7904,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000039000001',
   '00000000-0000-4000-a000-000000000039',
-  'Q1. What is the primary definition of Embedded Systems & Microcontrollers?',
-  'A core technology or standard designed for managing and executing Embedded Systems & Microcontrollers processes.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Embedded Systems & Microcontrollers processes.'
-);
+  'Q1. What is generative AI?',
+  'fine-tuning',
+  'evaluation',
+  'context',
+  'generative AI',
+  'D',
+  'generative AI is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000002',
   '00000000-0000-4000-a000-000000000039',
-  'Q2. Which key benefit is provided by Embedded Systems & Microcontrollers?',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with model?',
+  'hallucination',
+  'inference',
+  'generative AI',
+  'model',
+  'D',
+  'model is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000003',
   '00000000-0000-4000-a000-000000000039',
-  'Q3. What is a fundamental requirement when implementing Embedded Systems & Microcontrollers?',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes prompt?',
+  'image',
+  'code',
+  'token',
+  'prompt',
+  'D',
+  'prompt is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000004',
   '00000000-0000-4000-a000-000000000039',
-  'Q4. How does Embedded Systems & Microcontrollers handle data and execution states?',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does text refer to?',
+  'text',
+  'context',
+  'generative AI',
+  'generation',
+  'A',
+  'text is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000005',
   '00000000-0000-4000-a000-000000000039',
-  'Q5. What is a recommended best practice when deploying Embedded Systems & Microcontrollers?',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
+  'Q5. What is image?',
+  'training data',
+  'inference',
+  'model',
+  'image',
   'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'image is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000006',
   '00000000-0000-4000-a000-000000000039',
-  'Q6. Which layer or component plays a vital role in Embedded Systems & Microcontrollers?',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
+  'Q6. Which option is most directly associated with audio?',
+  'text',
+  'audio',
+  'prompt',
+  'code',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'audio is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000007',
   '00000000-0000-4000-a000-000000000039',
-  'Q7. What is a common bottleneck or challenge in Embedded Systems & Microcontrollers?',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
+  'Q7. Which statement best describes code?',
+  'safety',
+  'code',
+  'output',
+  'generation',
   'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'code is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000008',
   '00000000-0000-4000-a000-000000000039',
-  'Q8. How is security typically enforced within Embedded Systems & Microcontrollers?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does training data refer to?',
+  'generative AI',
+  'output',
+  'training data',
+  'generation',
+  'C',
+  'training data is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000009',
   '00000000-0000-4000-a000-000000000039',
-  'Q9. Which metric is critical for measuring the performance of Embedded Systems & Microcontrollers?',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is inference?',
+  'inference',
+  'token',
+  'generative AI',
+  'text',
+  'A',
+  'inference is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000010',
   '00000000-0000-4000-a000-000000000039',
-  'Q10. What is the role of versioning in Embedded Systems & Microcontrollers?',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with token?',
+  'evaluation',
+  'transformer',
+  'text',
+  'token',
+  'D',
+  'token is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000011',
   '00000000-0000-4000-a000-000000000039',
-  'Q11. In what scenario is Embedded Systems & Microcontrollers most effectively applied?',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes hallucination?',
+  'training data',
+  'generative AI',
+  'multimodal',
+  'hallucination',
+  'D',
+  'hallucination is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000012',
   '00000000-0000-4000-a000-000000000039',
-  'Q12. Which tool or interface is standard for interacting with Embedded Systems & Microcontrollers?',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does context refer to?',
+  'context',
+  'code',
+  'fine-tuning',
+  'training data',
+  'A',
+  'context is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000013',
   '00000000-0000-4000-a000-000000000039',
-  'Q13. What is the initial phase when developing with Embedded Systems & Microcontrollers?',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'A',
-  'Option A is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is transformer?',
+  'output',
+  'hallucination',
+  'training data',
+  'transformer',
+  'D',
+  'transformer is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000014',
   '00000000-0000-4000-a000-000000000039',
-  'Q14. Which debugging technique is recommended for Embedded Systems & Microcontrollers?',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with output?',
+  'multimodal',
+  'output',
+  'prompt',
+  'context',
+  'B',
+  'output is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000039000015',
   '00000000-0000-4000-a000-000000000039',
-  'Q15. What is the overall goal of mastering Embedded Systems & Microcontrollers?',
-  'Bypassing standard security checks and protocols in Embedded Systems & Microcontrollers.',
-  'Legacy manual processing for Embedded Systems & Microcontrollers.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Embedded Systems & Microcontrollers.',
+  'Q15. Which statement best describes evaluation?',
+  'text',
+  'bias',
+  'evaluation',
+  'token',
   'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'evaluation is a key concept in Generative AI.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 40: Digital Electronics Fundamentals
+-- Quick Learn 40: Prompt Engineering
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000040',
-  'Digital Electronics Fundamentals',
-  'digital-electronics-fundamentals',
+  'Prompt Engineering',
+  'prompt-engineering',
   'ECE',
   'Electronics',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Digital Electronics Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Prompt Engineering fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Digital Electronics Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Prompt engineering involves designing clear instructions and context for AI systems. Useful prompts often specify the task, context, constraints, desired format and evaluation criteria.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Digital Electronics Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **prompt**
+- **instruction**
+- **context**
+- **constraint**
+- **role**
+- **format**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -8011,203 +8111,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000040000001',
   '00000000-0000-4000-a000-000000000040',
-  'Q1. What is the primary definition of Digital Electronics Fundamentals?',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'A core technology or standard designed for managing and executing Digital Electronics Fundamentals processes.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Digital Electronics Fundamentals processes.'
-);
+  'Q1. What is prompt?',
+  'evaluation',
+  'constraint',
+  'prompt',
+  'model',
+  'C',
+  'prompt is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000002',
   '00000000-0000-4000-a000-000000000040',
-  'Q2. Which key benefit is provided by Digital Electronics Fundamentals?',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with instruction?',
+  'output',
+  'system instruction',
+  'zero-shot',
+  'instruction',
+  'D',
+  'instruction is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000003',
   '00000000-0000-4000-a000-000000000040',
-  'Q3. What is a fundamental requirement when implementing Digital Electronics Fundamentals?',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes context?',
+  'context',
+  'grounding',
+  'prompt',
+  'model',
+  'A',
+  'context is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000004',
   '00000000-0000-4000-a000-000000000040',
-  'Q4. How does Digital Electronics Fundamentals handle data and execution states?',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does constraint refer to?',
+  'constraint',
+  'iteration',
+  'few-shot',
+  'instruction',
+  'A',
+  'constraint is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000005',
   '00000000-0000-4000-a000-000000000040',
-  'Q5. What is a recommended best practice when deploying Digital Electronics Fundamentals?',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is role?',
+  'prompt',
+  'clarity',
+  'role',
+  'zero-shot',
+  'C',
+  'role is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000006',
   '00000000-0000-4000-a000-000000000040',
-  'Q6. Which layer or component plays a vital role in Digital Electronics Fundamentals?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with format?',
+  'constraint',
+  'format',
+  'temperature',
+  'model',
+  'B',
+  'format is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000007',
   '00000000-0000-4000-a000-000000000040',
-  'Q7. What is a common bottleneck or challenge in Digital Electronics Fundamentals?',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes example?',
+  'example',
+  'output',
+  'prompt engineering',
+  'context',
+  'A',
+  'example is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000008',
   '00000000-0000-4000-a000-000000000040',
-  'Q8. How is security typically enforced within Digital Electronics Fundamentals?',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does few-shot refer to?',
+  'format',
+  'few-shot',
+  'clarity',
+  'delimiter',
+  'B',
+  'few-shot is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000009',
   '00000000-0000-4000-a000-000000000040',
-  'Q9. Which metric is critical for measuring the performance of Digital Electronics Fundamentals?',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
+  'Q9. What is zero-shot?',
+  'prompt',
+  'constraint',
+  'zero-shot',
+  'clarity',
   'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'zero-shot is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000010',
   '00000000-0000-4000-a000-000000000040',
-  'Q10. What is the role of versioning in Digital Electronics Fundamentals?',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with output?',
+  'example',
+  'instruction',
+  'temperature',
+  'output',
+  'D',
+  'output is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000011',
   '00000000-0000-4000-a000-000000000040',
-  'Q11. In what scenario is Digital Electronics Fundamentals most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes evaluation?',
+  'instruction',
+  'format',
+  'evaluation',
+  'role',
+  'C',
+  'evaluation is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000012',
   '00000000-0000-4000-a000-000000000040',
-  'Q12. Which tool or interface is standard for interacting with Digital Electronics Fundamentals?',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does iteration refer to?',
+  'zero-shot',
+  'prompt',
+  'delimiter',
+  'iteration',
+  'D',
+  'iteration is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000013',
   '00000000-0000-4000-a000-000000000040',
-  'Q13. What is the initial phase when developing with Digital Electronics Fundamentals?',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
+  'Q13. What is clarity?',
+  'specificity',
+  'example',
+  'clarity',
+  'format',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'clarity is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000014',
   '00000000-0000-4000-a000-000000000040',
-  'Q14. Which debugging technique is recommended for Digital Electronics Fundamentals?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with specificity?',
+  'clarity',
+  'constraint',
+  'zero-shot',
+  'specificity',
+  'D',
+  'specificity is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000040000015',
   '00000000-0000-4000-a000-000000000040',
-  'Q15. What is the overall goal of mastering Digital Electronics Fundamentals?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Digital Electronics Fundamentals.',
-  'Bypassing standard security checks and protocols in Digital Electronics Fundamentals.',
-  'Hardcoding static binary files without backup in Digital Electronics Fundamentals.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes grounding?',
+  'format',
+  'clarity',
+  'example',
+  'grounding',
+  'D',
+  'grounding is a key concept in Prompt Engineering.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 41: Signal Processing & Communication
+-- Quick Learn 41: Internet of Things
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000041',
-  'Signal Processing & Communication',
-  'signal-processing-communication',
+  'Internet of Things',
+  'internet-of-things',
   'ECE',
   'Telecom',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Signal Processing & Communication fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Internet of Things fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Signal Processing & Communication is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+IoT connects physical devices and sensors to networks so they can collect, exchange or act on data. IoT systems often include devices, connectivity, processing and applications.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Signal Processing & Communication.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **IoT**
+- **sensor**
+- **device**
+- **network**
+- **gateway**
+- **cloud**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -8215,203 +8318,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000041000001',
   '00000000-0000-4000-a000-000000000041',
-  'Q1. What is the primary definition of Signal Processing & Communication?',
-  'A core technology or standard designed for managing and executing Signal Processing & Communication processes.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Signal Processing & Communication processes.'
-);
+  'Q1. What is IoT?',
+  'network',
+  'IoT',
+  'actuator',
+  'connectivity',
+  'B',
+  'IoT is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000002',
   '00000000-0000-4000-a000-000000000041',
-  'Q2. Which key benefit is provided by Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
+  'Q2. Which option is most directly associated with sensor?',
+  'firmware',
+  'sensor',
+  'gateway',
+  'data',
   'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'sensor is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000003',
   '00000000-0000-4000-a000-000000000041',
-  'Q3. What is a fundamental requirement when implementing Signal Processing & Communication?',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes device?',
+  'application',
+  'IoT',
+  'monitoring',
+  'device',
+  'D',
+  'device is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000004',
   '00000000-0000-4000-a000-000000000041',
-  'Q4. How does Signal Processing & Communication handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does network refer to?',
+  'device',
+  'IoT',
+  'edge',
+  'network',
+  'D',
+  'network is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000005',
   '00000000-0000-4000-a000-000000000041',
-  'Q5. What is a recommended best practice when deploying Signal Processing & Communication?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is gateway?',
+  'embedded',
+  'device',
+  'monitoring',
+  'gateway',
+  'D',
+  'gateway is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000006',
   '00000000-0000-4000-a000-000000000041',
-  'Q6. Which layer or component plays a vital role in Signal Processing & Communication?',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with cloud?',
+  'cloud',
+  'network',
+  'edge',
+  'monitoring',
+  'A',
+  'cloud is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000007',
   '00000000-0000-4000-a000-000000000041',
-  'Q7. What is a common bottleneck or challenge in Signal Processing & Communication?',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes edge?',
+  'firmware',
+  'monitoring',
+  'MQTT',
+  'edge',
+  'D',
+  'edge is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000008',
   '00000000-0000-4000-a000-000000000041',
-  'Q8. How is security typically enforced within Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does data refer to?',
+  'actuator',
+  'monitoring',
+  'firmware',
+  'data',
+  'D',
+  'data is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000009',
   '00000000-0000-4000-a000-000000000041',
-  'Q9. Which metric is critical for measuring the performance of Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'B',
-  'Option B is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is actuator?',
+  'actuator',
+  'telemetry',
+  'application',
+  'gateway',
+  'A',
+  'actuator is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000010',
   '00000000-0000-4000-a000-000000000041',
-  'Q10. What is the role of versioning in Signal Processing & Communication?',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with telemetry?',
+  'IoT',
+  'telemetry',
+  'automation',
+  'firmware',
+  'B',
+  'telemetry is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000011',
   '00000000-0000-4000-a000-000000000041',
-  'Q11. In what scenario is Signal Processing & Communication most effectively applied?',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes protocol?',
+  'connectivity',
+  'sensor',
+  'protocol',
+  'automation',
+  'C',
+  'protocol is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000012',
   '00000000-0000-4000-a000-000000000041',
-  'Q12. Which tool or interface is standard for interacting with Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
+  'Q12. In this topic, what does MQTT refer to?',
+  'IoT',
+  'MQTT',
+  'protocol',
+  'network',
   'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'MQTT is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000013',
   '00000000-0000-4000-a000-000000000041',
-  'Q13. What is the initial phase when developing with Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
+  'Q13. What is embedded?',
+  'actuator',
+  'embedded',
+  'sensor',
+  'IoT',
   'B',
-  'Option B is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'embedded is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000014',
   '00000000-0000-4000-a000-000000000041',
-  'Q14. Which debugging technique is recommended for Signal Processing & Communication?',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with automation?',
+  'automation',
+  'firmware',
+  'embedded',
+  'device',
+  'A',
+  'automation is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000041000015',
   '00000000-0000-4000-a000-000000000041',
-  'Q15. What is the overall goal of mastering Signal Processing & Communication?',
-  'Legacy manual processing for Signal Processing & Communication.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Bypassing standard security checks and protocols in Signal Processing & Communication.',
-  'Hardcoding static binary files without backup in Signal Processing & Communication.',
-  'B',
-  'Option B is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes monitoring?',
+  'gateway',
+  'sensor',
+  'connectivity',
+  'monitoring',
+  'D',
+  'monitoring is a key concept in Internet of Things.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 42: Electrical Machines & Drives
+-- Quick Learn 42: Blockchain Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000042',
-  'Electrical Machines & Drives',
-  'electrical-machines-drives',
+  'Blockchain Basics',
+  'blockchain-basics',
   'EEE',
   'Electrical',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Electrical Machines & Drives fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Blockchain Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Electrical Machines & Drives is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+A blockchain is a distributed ledger in which records are grouped into blocks and linked using cryptographic techniques. Different blockchain systems use different consensus mechanisms.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Electrical Machines & Drives.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **blockchain**
+- **block**
+- **ledger**
+- **transaction**
+- **hash**
+- **node**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -8419,203 +8525,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000042000001',
   '00000000-0000-4000-a000-000000000042',
-  'Q1. What is the primary definition of Electrical Machines & Drives?',
-  'A core technology or standard designed for managing and executing Electrical Machines & Drives processes.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Electrical Machines & Drives processes.'
-);
+  'Q1. What is blockchain?',
+  'cryptography',
+  'node',
+  'blockchain',
+  'transaction',
+  'C',
+  'blockchain is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000002',
   '00000000-0000-4000-a000-000000000042',
-  'Q2. Which key benefit is provided by Electrical Machines & Drives?',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with block?',
+  'proof of work',
+  'decentralization',
+  'transaction',
+  'block',
+  'D',
+  'block is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000003',
   '00000000-0000-4000-a000-000000000042',
-  'Q3. What is a fundamental requirement when implementing Electrical Machines & Drives?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes ledger?',
+  'blockchain',
+  'proof of work',
+  'ledger',
+  'hash',
+  'C',
+  'ledger is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000004',
   '00000000-0000-4000-a000-000000000042',
-  'Q4. How does Electrical Machines & Drives handle data and execution states?',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does transaction refer to?',
+  'transaction',
+  'block',
+  'proof of stake',
+  'immutability',
+  'A',
+  'transaction is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000005',
   '00000000-0000-4000-a000-000000000042',
-  'Q5. What is a recommended best practice when deploying Electrical Machines & Drives?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is hash?',
+  'wallet',
+  'hash',
+  'consensus',
+  'private key',
+  'B',
+  'hash is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000006',
   '00000000-0000-4000-a000-000000000042',
-  'Q6. Which layer or component plays a vital role in Electrical Machines & Drives?',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with node?',
+  'node',
+  'private key',
+  'cryptography',
+  'consensus',
+  'A',
+  'node is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000007',
   '00000000-0000-4000-a000-000000000042',
-  'Q7. What is a common bottleneck or challenge in Electrical Machines & Drives?',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'D',
-  'Option D is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes distributed?',
+  'public key',
+  'distributed',
+  'transaction',
+  'smart contract',
+  'B',
+  'distributed is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000008',
   '00000000-0000-4000-a000-000000000042',
-  'Q8. How is security typically enforced within Electrical Machines & Drives?',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does consensus refer to?',
+  'block',
+  'node',
+  'consensus',
+  'wallet',
+  'C',
+  'consensus is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000009',
   '00000000-0000-4000-a000-000000000042',
-  'Q9. Which metric is critical for measuring the performance of Electrical Machines & Drives?',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
+  'Q9. What is proof of work?',
+  'verification',
+  'ledger',
+  'proof of work',
+  'chain',
   'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'proof of work is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000010',
   '00000000-0000-4000-a000-000000000042',
-  'Q10. What is the role of versioning in Electrical Machines & Drives?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with proof of stake?',
+  'ledger',
+  'public key',
+  'proof of stake',
+  'private key',
+  'C',
+  'proof of stake is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000011',
   '00000000-0000-4000-a000-000000000042',
-  'Q11. In what scenario is Electrical Machines & Drives most effectively applied?',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes wallet?',
+  'wallet',
+  'verification',
+  'chain',
+  'smart contract',
+  'A',
+  'wallet is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000012',
   '00000000-0000-4000-a000-000000000042',
-  'Q12. Which tool or interface is standard for interacting with Electrical Machines & Drives?',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does public key refer to?',
+  'public key',
+  'node',
+  'decentralization',
+  'block',
+  'A',
+  'public key is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000013',
   '00000000-0000-4000-a000-000000000042',
-  'Q13. What is the initial phase when developing with Electrical Machines & Drives?',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is private key?',
+  'private key',
+  'decentralization',
+  'public key',
+  'chain',
+  'A',
+  'private key is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000014',
   '00000000-0000-4000-a000-000000000042',
-  'Q14. Which debugging technique is recommended for Electrical Machines & Drives?',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
+  'Q14. Which option is most directly associated with smart contract?',
+  'blockchain',
+  'proof of work',
+  'smart contract',
+  'wallet',
   'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'smart contract is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000042000015',
   '00000000-0000-4000-a000-000000000042',
-  'Q15. What is the overall goal of mastering Electrical Machines & Drives?',
-  'Bypassing standard security checks and protocols in Electrical Machines & Drives.',
-  'Legacy manual processing for Electrical Machines & Drives.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Hardcoding static binary files without backup in Electrical Machines & Drives.',
+  'Q15. Which statement best describes chain?',
+  'decentralization',
+  'consensus',
+  'chain',
+  'distributed',
   'C',
-  'Option C is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'chain is a key concept in Blockchain Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 43: Thermodynamics Fundamentals
+-- Quick Learn 43: Digital Electronics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000043',
-  'Thermodynamics Fundamentals',
-  'thermodynamics-fundamentals',
+  'Digital Electronics',
+  'digital-electronics',
   'MECH',
   'Mechanical',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Thermodynamics Fundamentals fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Digital Electronics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Thermodynamics Fundamentals is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Digital electronics represents information using discrete logic levels. Digital circuits use logic gates such as AND, OR and NOT to process binary signals.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Thermodynamics Fundamentals.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **digital**
+- **binary**
+- **logic gate**
+- **AND**
+- **OR**
+- **NOT**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -8623,203 +8732,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000043000001',
   '00000000-0000-4000-a000-000000000043',
-  'Q1. What is the primary definition of Thermodynamics Fundamentals?',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'A core technology or standard designed for managing and executing Thermodynamics Fundamentals processes.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Thermodynamics Fundamentals processes.'
-);
+  'Q1. What is digital?',
+  'flip-flop',
+  'OR',
+  'register',
+  'digital',
+  'D',
+  'digital is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000002',
   '00000000-0000-4000-a000-000000000043',
-  'Q2. Which key benefit is provided by Thermodynamics Fundamentals?',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with binary?',
+  'binary',
+  'circuit',
+  'AND',
+  'counter',
+  'A',
+  'binary is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000003',
   '00000000-0000-4000-a000-000000000043',
-  'Q3. What is a fundamental requirement when implementing Thermodynamics Fundamentals?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes logic gate?',
+  'bit',
+  'logic gate',
+  'counter',
+  'truth table',
+  'B',
+  'logic gate is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000004',
   '00000000-0000-4000-a000-000000000043',
-  'Q4. How does Thermodynamics Fundamentals handle data and execution states?',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does AND refer to?',
+  'binary',
+  'NAND',
+  'AND',
+  'counter',
+  'C',
+  'AND is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000005',
   '00000000-0000-4000-a000-000000000043',
-  'Q5. What is a recommended best practice when deploying Thermodynamics Fundamentals?',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is OR?',
+  'signal',
+  'combinational',
+  'bit',
+  'OR',
+  'D',
+  'OR is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000006',
   '00000000-0000-4000-a000-000000000043',
-  'Q6. Which layer or component plays a vital role in Thermodynamics Fundamentals?',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with NOT?',
+  'NOT',
+  'signal',
+  'AND',
+  'logic level',
+  'A',
+  'NOT is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000007',
   '00000000-0000-4000-a000-000000000043',
-  'Q7. What is a common bottleneck or challenge in Thermodynamics Fundamentals?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes NAND?',
+  'logic gate',
+  'truth table',
+  'AND',
+  'NAND',
+  'D',
+  'NAND is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000008',
   '00000000-0000-4000-a000-000000000043',
-  'Q8. How is security typically enforced within Thermodynamics Fundamentals?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
+  'Q8. In this topic, what does NOR refer to?',
+  'NOR',
+  'bit',
+  'AND',
+  'register',
   'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'NOR is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000009',
   '00000000-0000-4000-a000-000000000043',
-  'Q9. Which metric is critical for measuring the performance of Thermodynamics Fundamentals?',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is XOR?',
+  'Boolean',
+  'XOR',
+  'AND',
+  'OR',
+  'B',
+  'XOR is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000010',
   '00000000-0000-4000-a000-000000000043',
-  'Q10. What is the role of versioning in Thermodynamics Fundamentals?',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with bit?',
+  'circuit',
+  'bit',
+  'logic gate',
+  'flip-flop',
+  'B',
+  'bit is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000011',
   '00000000-0000-4000-a000-000000000043',
-  'Q11. In what scenario is Thermodynamics Fundamentals most effectively applied?',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'C',
-  'Option C is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes Boolean?',
+  'circuit',
+  'Boolean',
+  'binary',
+  'logic level',
+  'B',
+  'Boolean is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000012',
   '00000000-0000-4000-a000-000000000043',
-  'Q12. Which tool or interface is standard for interacting with Thermodynamics Fundamentals?',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does truth table refer to?',
+  'truth table',
+  'circuit',
+  'NOR',
+  'OR',
+  'A',
+  'truth table is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000013',
   '00000000-0000-4000-a000-000000000043',
-  'Q13. What is the initial phase when developing with Thermodynamics Fundamentals?',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is flip-flop?',
+  'NOR',
+  'flip-flop',
+  'truth table',
+  'logic gate',
+  'B',
+  'flip-flop is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000014',
   '00000000-0000-4000-a000-000000000043',
-  'Q14. Which debugging technique is recommended for Thermodynamics Fundamentals?',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with register?',
+  'OR',
+  'NOT',
+  'digital',
+  'register',
+  'D',
+  'register is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000043000015',
   '00000000-0000-4000-a000-000000000043',
-  'Q15. What is the overall goal of mastering Thermodynamics Fundamentals?',
-  'Hardcoding static binary files without backup in Thermodynamics Fundamentals.',
-  'Legacy manual processing for Thermodynamics Fundamentals.',
-  'Bypassing standard security checks and protocols in Thermodynamics Fundamentals.',
-  'To design, build, and maintain production-ready technology solutions.',
+  'Q15. Which statement best describes counter?',
+  'NOR',
+  'Boolean',
+  'NOT',
+  'counter',
   'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'counter is a key concept in Digital Electronics.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 44: Fluid Mechanics Principles
+-- Quick Learn 44: Microcontrollers
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000044',
-  'Fluid Mechanics Principles',
-  'fluid-mechanics-principles',
+  'Microcontrollers',
+  'microcontrollers',
   'MECH',
   'Mechanical',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Fluid Mechanics Principles fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Microcontrollers fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Fluid Mechanics Principles is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+A microcontroller is an integrated circuit containing a processor, memory and peripherals for controlling embedded systems. It is commonly programmed to read inputs and control outputs.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Fluid Mechanics Principles.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **microcontroller**
+- **CPU**
+- **memory**
+- **GPIO**
+- **timer**
+- **ADC**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -8827,203 +8939,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000044000001',
   '00000000-0000-4000-a000-000000000044',
-  'Q1. What is the primary definition of Fluid Mechanics Principles?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'A core technology or standard designed for managing and executing Fluid Mechanics Principles processes.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. A core technology or standard designed for managing and executing Fluid Mechanics Principles processes.'
-);
+  'Q1. What is microcontroller?',
+  'program',
+  'I2C',
+  'peripheral',
+  'microcontroller',
+  'D',
+  'microcontroller is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000002',
   '00000000-0000-4000-a000-000000000044',
-  'Q2. Which key benefit is provided by Fluid Mechanics Principles?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with CPU?',
+  'I2C',
+  'CPU',
+  'timer',
+  'clock',
+  'B',
+  'CPU is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000003',
   '00000000-0000-4000-a000-000000000044',
-  'Q3. What is a fundamental requirement when implementing Fluid Mechanics Principles?',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes memory?',
+  'CPU',
+  'I2C',
+  'interrupt',
+  'memory',
+  'D',
+  'memory is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000004',
   '00000000-0000-4000-a000-000000000044',
-  'Q4. How does Fluid Mechanics Principles handle data and execution states?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does GPIO refer to?',
+  'GPIO',
+  'RAM',
+  'program',
+  'controller',
+  'A',
+  'GPIO is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000005',
   '00000000-0000-4000-a000-000000000044',
-  'Q5. What is a recommended best practice when deploying Fluid Mechanics Principles?',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is timer?',
+  'embedded',
+  'SPI',
+  'timer',
+  'UART',
+  'C',
+  'timer is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000006',
   '00000000-0000-4000-a000-000000000044',
-  'Q6. Which layer or component plays a vital role in Fluid Mechanics Principles?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with ADC?',
+  'microcontroller',
+  'firmware',
+  'CPU',
+  'ADC',
+  'D',
+  'ADC is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000007',
   '00000000-0000-4000-a000-000000000044',
-  'Q7. What is a common bottleneck or challenge in Fluid Mechanics Principles?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes UART?',
+  'I2C',
+  'timer',
+  'CPU',
+  'UART',
+  'D',
+  'UART is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000008',
   '00000000-0000-4000-a000-000000000044',
-  'Q8. How is security typically enforced within Fluid Mechanics Principles?',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
+  'Q8. In this topic, what does SPI refer to?',
+  'program',
+  'SPI',
+  'embedded',
+  'clock',
   'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'SPI is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000009',
   '00000000-0000-4000-a000-000000000044',
-  'Q9. Which metric is critical for measuring the performance of Fluid Mechanics Principles?',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'A',
-  'Option A is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is I2C?',
+  'firmware',
+  'output',
+  'input',
+  'I2C',
+  'D',
+  'I2C is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000010',
   '00000000-0000-4000-a000-000000000044',
-  'Q10. What is the role of versioning in Fluid Mechanics Principles?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
+  'Q10. Which option is most directly associated with interrupt?',
+  'interrupt',
+  'ADC',
+  'RAM',
+  'UART',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'interrupt is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000011',
   '00000000-0000-4000-a000-000000000044',
-  'Q11. In what scenario is Fluid Mechanics Principles most effectively applied?',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes firmware?',
+  'embedded',
+  'I2C',
+  'firmware',
+  'GPIO',
+  'C',
+  'firmware is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000012',
   '00000000-0000-4000-a000-000000000044',
-  'Q12. Which tool or interface is standard for interacting with Fluid Mechanics Principles?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does embedded refer to?',
+  'embedded',
+  'firmware',
+  'I2C',
+  'ADC',
+  'A',
+  'embedded is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000013',
   '00000000-0000-4000-a000-000000000044',
-  'Q13. What is the initial phase when developing with Fluid Mechanics Principles?',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is input?',
+  'UART',
+  'memory',
+  'ADC',
+  'input',
+  'D',
+  'input is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000014',
   '00000000-0000-4000-a000-000000000044',
-  'Q14. Which debugging technique is recommended for Fluid Mechanics Principles?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with output?',
+  'flash',
+  'output',
+  'RAM',
+  'timer',
+  'B',
+  'output is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000044000015',
   '00000000-0000-4000-a000-000000000044',
-  'Q15. What is the overall goal of mastering Fluid Mechanics Principles?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Fluid Mechanics Principles.',
-  'Bypassing standard security checks and protocols in Fluid Mechanics Principles.',
-  'Hardcoding static binary files without backup in Fluid Mechanics Principles.',
+  'Q15. Which statement best describes clock?',
+  'clock',
+  'SPI',
+  'flash',
+  'GPIO',
   'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'clock is a key concept in Microcontrollers.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 45: Civil Engineering & Surveying
+-- Quick Learn 45: Sensors & Embedded Systems
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000045',
-  'Civil Engineering & Surveying',
-  'civil-engineering-surveying',
+  'Sensors & Embedded Systems',
+  'sensors-embedded-systems',
   'CIVIL',
   'Civil',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Civil Engineering & Surveying fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Sensors & Embedded Systems fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Civil Engineering & Surveying is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Sensors detect physical conditions such as temperature, light or motion and convert them into signals. Embedded systems combine hardware and software to perform dedicated functions.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Civil Engineering & Surveying.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **sensor**
+- **embedded system**
+- **temperature**
+- **light**
+- **motion**
+- **signal**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -9031,203 +9146,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000045000001',
   '00000000-0000-4000-a000-000000000045',
-  'Q1. What is the primary definition of Civil Engineering & Surveying?',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'A core technology or standard designed for managing and executing Civil Engineering & Surveying processes.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
+  'Q1. What is sensor?',
+  'application',
+  'sensor',
+  'output',
+  'sampling',
   'B',
-  'Option B is correct. A core technology or standard designed for managing and executing Civil Engineering & Surveying processes.'
-);
+  'sensor is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000002',
   '00000000-0000-4000-a000-000000000045',
-  'Q2. Which key benefit is provided by Civil Engineering & Surveying?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
+  'Q2. Which option is most directly associated with embedded system?',
+  'embedded system',
+  'power',
+  'control',
+  'sampling',
   'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'embedded system is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000003',
   '00000000-0000-4000-a000-000000000045',
-  'Q3. What is a fundamental requirement when implementing Civil Engineering & Surveying?',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'B',
-  'Option B is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes temperature?',
+  'communication',
+  'application',
+  'sensor',
+  'temperature',
+  'D',
+  'temperature is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000004',
   '00000000-0000-4000-a000-000000000045',
-  'Q4. How does Civil Engineering & Surveying handle data and execution states?',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
+  'Q4. In this topic, what does light refer to?',
+  'microcontroller',
+  'device',
+  'motion',
+  'light',
   'D',
-  'Option D is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'light is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000005',
   '00000000-0000-4000-a000-000000000045',
-  'Q5. What is a recommended best practice when deploying Civil Engineering & Surveying?',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'C',
-  'Option C is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is motion?',
+  'calibration',
+  'motion',
+  'control',
+  'device',
+  'B',
+  'motion is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000006',
   '00000000-0000-4000-a000-000000000045',
-  'Q6. Which layer or component plays a vital role in Civil Engineering & Surveying?',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with signal?',
+  'sensor',
+  'communication',
+  'signal',
+  'embedded system',
+  'C',
+  'signal is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000007',
   '00000000-0000-4000-a000-000000000045',
-  'Q7. What is a common bottleneck or challenge in Civil Engineering & Surveying?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes ADC?',
+  'firmware',
+  'temperature',
+  'ADC',
+  'sampling',
+  'C',
+  'ADC is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000008',
   '00000000-0000-4000-a000-000000000045',
-  'Q8. How is security typically enforced within Civil Engineering & Surveying?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does actuator refer to?',
+  'sensor',
+  'signal',
+  'temperature',
+  'actuator',
+  'D',
+  'actuator is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000009',
   '00000000-0000-4000-a000-000000000045',
-  'Q9. Which metric is critical for measuring the performance of Civil Engineering & Surveying?',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is microcontroller?',
+  'motion',
+  'microcontroller',
+  'output',
+  'calibration',
+  'B',
+  'microcontroller is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000010',
   '00000000-0000-4000-a000-000000000045',
-  'Q10. What is the role of versioning in Civil Engineering & Surveying?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with firmware?',
+  'temperature',
+  'device',
+  'firmware',
+  'motion',
+  'C',
+  'firmware is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000011',
   '00000000-0000-4000-a000-000000000045',
-  'Q11. In what scenario is Civil Engineering & Surveying most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes real-time?',
+  'application',
+  'real-time',
+  'communication',
+  'device',
+  'B',
+  'real-time is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000012',
   '00000000-0000-4000-a000-000000000045',
-  'Q12. Which tool or interface is standard for interacting with Civil Engineering & Surveying?',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does input refer to?',
+  'input',
+  'sensor',
+  'signal',
+  'output',
+  'A',
+  'input is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000013',
   '00000000-0000-4000-a000-000000000045',
-  'Q13. What is the initial phase when developing with Civil Engineering & Surveying?',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is output?',
+  'output',
+  'application',
+  'power',
+  'communication',
+  'A',
+  'output is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000014',
   '00000000-0000-4000-a000-000000000045',
-  'Q14. Which debugging technique is recommended for Civil Engineering & Surveying?',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with calibration?',
+  'microcontroller',
+  'embedded system',
+  'calibration',
+  'device',
+  'C',
+  'calibration is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000045000015',
   '00000000-0000-4000-a000-000000000045',
-  'Q15. What is the overall goal of mastering Civil Engineering & Surveying?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Civil Engineering & Surveying.',
-  'Bypassing standard security checks and protocols in Civil Engineering & Surveying.',
-  'Hardcoding static binary files without backup in Civil Engineering & Surveying.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes sampling?',
+  'temperature',
+  'real-time',
+  'application',
+  'sampling',
+  'D',
+  'sampling is a key concept in Sensors & Embedded Systems.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 46: CAD/CAM & Engineering Graphics
+-- Quick Learn 46: Cloud Storage
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000046',
-  'CAD/CAM & Engineering Graphics',
-  'cad-cam-engineering-graphics',
+  'Cloud Storage',
+  'cloud-storage',
   'MECH',
   'Design',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master CAD/CAM & Engineering Graphics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Cloud Storage fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-CAD/CAM & Engineering Graphics is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Cloud storage stores data on remote infrastructure accessed through a network. Services commonly provide synchronization, sharing, backup and scalable capacity.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of CAD/CAM & Engineering Graphics.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **cloud storage**
+- **object**
+- **file**
+- **bucket**
+- **upload**
+- **download**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -9235,203 +9353,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000046000001',
   '00000000-0000-4000-a000-000000000046',
-  'Q1. What is the primary definition of CAD/CAM & Engineering Graphics?',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'A core technology or standard designed for managing and executing CAD/CAM & Engineering Graphics processes.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
+  'Q1. What is cloud storage?',
+  'region',
+  'cloud storage',
+  'data transfer',
+  'bucket',
   'B',
-  'Option B is correct. A core technology or standard designed for managing and executing CAD/CAM & Engineering Graphics processes.'
-);
+  'cloud storage is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000002',
   '00000000-0000-4000-a000-000000000046',
-  'Q2. Which key benefit is provided by CAD/CAM & Engineering Graphics?',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'A',
-  'Option A is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with object?',
+  'access control',
+  'object',
+  'storage class',
+  'availability',
+  'B',
+  'object is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000003',
   '00000000-0000-4000-a000-000000000046',
-  'Q3. What is a fundamental requirement when implementing CAD/CAM & Engineering Graphics?',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'C',
-  'Option C is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'Q3. Which statement best describes file?',
+  'access control',
+  'file',
+  'download',
+  'scalability',
+  'B',
+  'file is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000004',
   '00000000-0000-4000-a000-000000000046',
-  'Q4. How does CAD/CAM & Engineering Graphics handle data and execution states?',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does bucket refer to?',
+  'sync',
+  'metadata',
+  'bucket',
+  'file',
+  'C',
+  'bucket is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000005',
   '00000000-0000-4000-a000-000000000046',
-  'Q5. What is a recommended best practice when deploying CAD/CAM & Engineering Graphics?',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
+  'Q5. What is upload?',
+  'sharing',
+  'upload',
+  'backup',
+  'storage class',
   'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'upload is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000006',
   '00000000-0000-4000-a000-000000000046',
-  'Q6. Which layer or component plays a vital role in CAD/CAM & Engineering Graphics?',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'The central execution handler and protocol controller.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'C',
-  'Option C is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with download?',
+  'metadata',
+  'download',
+  'versioning',
+  'bucket',
+  'B',
+  'download is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000007',
   '00000000-0000-4000-a000-000000000046',
-  'Q7. What is a common bottleneck or challenge in CAD/CAM & Engineering Graphics?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes sync?',
+  'sharing',
+  'sync',
+  'backup',
+  'object',
+  'B',
+  'sync is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000008',
   '00000000-0000-4000-a000-000000000046',
-  'Q8. How is security typically enforced within CAD/CAM & Engineering Graphics?',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does backup refer to?',
+  'bucket',
+  'download',
+  'backup',
+  'sharing',
+  'C',
+  'backup is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000009',
   '00000000-0000-4000-a000-000000000046',
-  'Q9. Which metric is critical for measuring the performance of CAD/CAM & Engineering Graphics?',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is sharing?',
+  'file',
+  'bucket',
+  'redundancy',
+  'sharing',
+  'D',
+  'sharing is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000010',
   '00000000-0000-4000-a000-000000000046',
-  'Q10. What is the role of versioning in CAD/CAM & Engineering Graphics?',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'D',
-  'Option D is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with access control?',
+  'storage class',
+  'access control',
+  'bucket',
+  'cloud storage',
+  'B',
+  'access control is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000011',
   '00000000-0000-4000-a000-000000000046',
-  'Q11. In what scenario is CAD/CAM & Engineering Graphics most effectively applied?',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes encryption?',
+  'encryption',
+  'backup',
+  'versioning',
+  'access control',
+  'A',
+  'encryption is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000012',
   '00000000-0000-4000-a000-000000000046',
-  'Q12. Which tool or interface is standard for interacting with CAD/CAM & Engineering Graphics?',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
+  'Q12. In this topic, what does redundancy refer to?',
+  'encryption',
+  'upload',
+  'cloud storage',
+  'redundancy',
   'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'redundancy is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000013',
   '00000000-0000-4000-a000-000000000046',
-  'Q13. What is the initial phase when developing with CAD/CAM & Engineering Graphics?',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is availability?',
+  'lifecycle',
+  'availability',
+  'file',
+  'versioning',
+  'B',
+  'availability is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000014',
   '00000000-0000-4000-a000-000000000046',
-  'Q14. Which debugging technique is recommended for CAD/CAM & Engineering Graphics?',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'A',
-  'Option A is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with scalability?',
+  'availability',
+  'scalability',
+  'cloud storage',
+  'lifecycle',
+  'B',
+  'scalability is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000046000015',
   '00000000-0000-4000-a000-000000000046',
-  'Q15. What is the overall goal of mastering CAD/CAM & Engineering Graphics?',
-  'Hardcoding static binary files without backup in CAD/CAM & Engineering Graphics.',
-  'Legacy manual processing for CAD/CAM & Engineering Graphics.',
-  'Bypassing standard security checks and protocols in CAD/CAM & Engineering Graphics.',
-  'To design, build, and maintain production-ready technology solutions.',
+  'Q15. Which statement best describes storage class?',
+  'bucket',
+  'scalability',
+  'versioning',
+  'storage class',
   'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'storage class is a key concept in Cloud Storage.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 47: Agile & Scrum Methodologies
+-- Quick Learn 47: SQL vs NoSQL
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000047',
-  'Agile & Scrum Methodologies',
-  'agile-scrum-methodologies',
+  'SQL vs NoSQL',
+  'sql-vs-nosql',
   'CSE',
   'Management',
   'Beginner',
   3,
   TRUE,
   10,
-  'Master Agile & Scrum Methodologies fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master SQL vs NoSQL fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Agile & Scrum Methodologies is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Relational databases use structured tables and SQL. NoSQL is a broad category of databases using models such as document, key-value, wide-column or graph, often chosen for particular scalability or data-model needs.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Agile & Scrum Methodologies.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **SQL**
+- **relational**
+- **table**
+- **row**
+- **column**
+- **schema**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -9439,203 +9560,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000047000001',
   '00000000-0000-4000-a000-000000000047',
-  'Q1. What is the primary definition of Agile & Scrum Methodologies?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'A core technology or standard designed for managing and executing Agile & Scrum Methodologies processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Agile & Scrum Methodologies processes.'
-);
+  'Q1. What is SQL?',
+  'table',
+  'SQL',
+  'graph',
+  'data model',
+  'B',
+  'SQL is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000002',
   '00000000-0000-4000-a000-000000000047',
-  'Q2. Which key benefit is provided by Agile & Scrum Methodologies?',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with relational?',
+  'key-value',
+  'graph',
+  'NoSQL',
+  'relational',
+  'D',
+  'relational is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000003',
   '00000000-0000-4000-a000-000000000047',
-  'Q3. What is a fundamental requirement when implementing Agile & Scrum Methodologies?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
+  'Q3. Which statement best describes table?',
+  'table',
+  'index',
+  'consistency',
+  'transaction',
   'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'table is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000004',
   '00000000-0000-4000-a000-000000000047',
-  'Q4. How does Agile & Scrum Methodologies handle data and execution states?',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does row refer to?',
+  'schema',
+  'row',
+  'document',
+  'table',
+  'B',
+  'row is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000005',
   '00000000-0000-4000-a000-000000000047',
-  'Q5. What is a recommended best practice when deploying Agile & Scrum Methodologies?',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
+  'Q5. What is column?',
+  'database',
+  'column',
+  'graph',
+  'wide-column',
   'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'column is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000006',
   '00000000-0000-4000-a000-000000000047',
-  'Q6. Which layer or component plays a vital role in Agile & Scrum Methodologies?',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'The central execution handler and protocol controller.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
+  'Q6. Which option is most directly associated with schema?',
+  'index',
+  'schema',
+  'data model',
+  'JOIN',
   'B',
-  'Option B is correct. The central execution handler and protocol controller.'
-);
+  'schema is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000007',
   '00000000-0000-4000-a000-000000000047',
-  'Q7. What is a common bottleneck or challenge in Agile & Scrum Methodologies?',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'C',
-  'Option C is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes NoSQL?',
+  'row',
+  'NoSQL',
+  'SQL',
+  'wide-column',
+  'B',
+  'NoSQL is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000008',
   '00000000-0000-4000-a000-000000000047',
-  'Q8. How is security typically enforced within Agile & Scrum Methodologies?',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'A',
-  'Option A is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does document refer to?',
+  'consistency',
+  'data model',
+  'document',
+  'NoSQL',
+  'C',
+  'document is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000009',
   '00000000-0000-4000-a000-000000000047',
-  'Q9. Which metric is critical for measuring the performance of Agile & Scrum Methodologies?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is key-value?',
+  'JOIN',
+  'key-value',
+  'index',
+  'graph',
+  'B',
+  'key-value is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000010',
   '00000000-0000-4000-a000-000000000047',
-  'Q10. What is the role of versioning in Agile & Scrum Methodologies?',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
+  'Q10. Which option is most directly associated with wide-column?',
+  'relational',
+  'JOIN',
+  'wide-column',
+  'scalability',
   'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'wide-column is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000011',
   '00000000-0000-4000-a000-000000000047',
-  'Q11. In what scenario is Agile & Scrum Methodologies most effectively applied?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes graph?',
+  'graph',
+  'row',
+  'document',
+  'query',
+  'A',
+  'graph is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000012',
   '00000000-0000-4000-a000-000000000047',
-  'Q12. Which tool or interface is standard for interacting with Agile & Scrum Methodologies?',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'B',
-  'Option B is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does JOIN refer to?',
+  'transaction',
+  'schema',
+  'database',
+  'JOIN',
+  'D',
+  'JOIN is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000013',
   '00000000-0000-4000-a000-000000000047',
-  'Q13. What is the initial phase when developing with Agile & Scrum Methodologies?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is transaction?',
+  'row',
+  'query',
+  'transaction',
+  'scalability',
+  'C',
+  'transaction is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000014',
   '00000000-0000-4000-a000-000000000047',
-  'Q14. Which debugging technique is recommended for Agile & Scrum Methodologies?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'D',
-  'Option D is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'Q14. Which option is most directly associated with scalability?',
+  'transaction',
+  'scalability',
+  'schema',
+  'row',
+  'B',
+  'scalability is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000047000015',
   '00000000-0000-4000-a000-000000000047',
-  'Q15. What is the overall goal of mastering Agile & Scrum Methodologies?',
-  'Hardcoding static binary files without backup in Agile & Scrum Methodologies.',
-  'Legacy manual processing for Agile & Scrum Methodologies.',
-  'Bypassing standard security checks and protocols in Agile & Scrum Methodologies.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'Q15. Which statement best describes flexible schema?',
+  'table',
+  'SQL',
+  'flexible schema',
+  'relational',
+  'C',
+  'flexible schema is a key concept in SQL vs NoSQL.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 48: Big Data & Analytics Basics
+-- Quick Learn 48: Mobile App Development
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000048',
-  'Big Data & Analytics Basics',
-  'big-data-analytics-basics',
+  'Mobile App Development',
+  'mobile-app-development',
   'CSE',
   'Data Science',
   'Intermediate',
   3,
   TRUE,
   10,
-  'Master Big Data & Analytics Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master Mobile App Development fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Big Data & Analytics Basics is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+Mobile app development involves designing, building, testing and deploying applications for mobile devices. Native and cross-platform frameworks are common approaches.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Big Data & Analytics Basics.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **mobile app**
+- **Android**
+- **iOS**
+- **native**
+- **cross-platform**
+- **UI**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -9643,203 +9767,206 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000048000001',
   '00000000-0000-4000-a000-000000000048',
-  'Q1. What is the primary definition of Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'A core technology or standard designed for managing and executing Big Data & Analytics Basics processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Big Data & Analytics Basics processes.'
-);
+  'Q1. What is mobile app?',
+  'build',
+  'mobile app',
+  'permissions',
+  'iOS',
+  'B',
+  'mobile app is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000002',
   '00000000-0000-4000-a000-000000000048',
-  'Q2. Which key benefit is provided by Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'D',
-  'Option D is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with Android?',
+  'API',
+  'Android',
+  'cross-platform',
+  'navigation',
+  'B',
+  'Android is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000003',
   '00000000-0000-4000-a000-000000000048',
-  'Q3. What is a fundamental requirement when implementing Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Proper system configuration, security protocols, and integration standards.',
+  'Q3. Which statement best describes iOS?',
+  'cross-platform',
+  'deployment',
+  'API',
+  'iOS',
   'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'iOS is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000004',
   '00000000-0000-4000-a000-000000000048',
-  'Q4. How does Big Data & Analytics Basics handle data and execution states?',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q4. In this topic, what does native refer to?',
+  'cross-platform',
+  'native',
+  'permissions',
+  'Android',
   'B',
-  'Option B is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'native is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000005',
   '00000000-0000-4000-a000-000000000048',
-  'Q5. What is a recommended best practice when deploying Big Data & Analytics Basics?',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q5. What is cross-platform?',
+  'navigation',
+  'cross-platform',
+  'mobile app',
+  'app lifecycle',
   'B',
-  'Option B is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'cross-platform is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000006',
   '00000000-0000-4000-a000-000000000048',
-  'Q6. Which layer or component plays a vital role in Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with UI?',
+  'testing',
+  'UI',
+  'local storage',
+  'responsive',
+  'B',
+  'UI is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000007',
   '00000000-0000-4000-a000-000000000048',
-  'Q7. What is a common bottleneck or challenge in Big Data & Analytics Basics?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes navigation?',
+  'notification',
+  'deployment',
+  'responsive',
+  'navigation',
+  'D',
+  'navigation is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000008',
   '00000000-0000-4000-a000-000000000048',
-  'Q8. How is security typically enforced within Big Data & Analytics Basics?',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'C',
-  'Option C is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does API refer to?',
+  'API',
+  'notification',
+  'permissions',
+  'deployment',
+  'A',
+  'API is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000009',
   '00000000-0000-4000-a000-000000000048',
-  'Q9. Which metric is critical for measuring the performance of Big Data & Analytics Basics?',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'B',
-  'Option B is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'Q9. What is local storage?',
+  'local storage',
+  'authentication',
+  'store',
+  'UI',
+  'A',
+  'local storage is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000010',
   '00000000-0000-4000-a000-000000000048',
-  'Q10. What is the role of versioning in Big Data & Analytics Basics?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q10. Which option is most directly associated with authentication?',
+  'authentication',
+  'performance',
+  'app lifecycle',
+  'cross-platform',
   'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'authentication is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000011',
   '00000000-0000-4000-a000-000000000048',
-  'Q11. In what scenario is Big Data & Analytics Basics most effectively applied?',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q11. Which statement best describes notification?',
+  'notification',
+  'build',
+  'permissions',
+  'store',
   'A',
-  'Option A is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'notification is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000012',
   '00000000-0000-4000-a000-000000000048',
-  'Q12. Which tool or interface is standard for interacting with Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does testing refer to?',
+  'testing',
+  'navigation',
+  'framework',
+  'Android',
+  'A',
+  'testing is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000013',
   '00000000-0000-4000-a000-000000000048',
-  'Q13. What is the initial phase when developing with Big Data & Analytics Basics?',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q13. What is deployment?',
+  'cross-platform',
+  'permissions',
+  'deployment',
+  'API',
   'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'deployment is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000014',
   '00000000-0000-4000-a000-000000000048',
-  'Q14. Which debugging technique is recommended for Big Data & Analytics Basics?',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
+  'Q14. Which option is most directly associated with responsive?',
+  'mobile app',
+  'responsive',
+  'native',
+  'Android',
   'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'responsive is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000048000015',
   '00000000-0000-4000-a000-000000000048',
-  'Q15. What is the overall goal of mastering Big Data & Analytics Basics?',
-  'Hardcoding static binary files without backup in Big Data & Analytics Basics.',
-  'Legacy manual processing for Big Data & Analytics Basics.',
-  'Bypassing standard security checks and protocols in Big Data & Analytics Basics.',
-  'To design, build, and maintain production-ready technology solutions.',
+  'Q15. Which statement best describes performance?',
+  'notification',
+  'mobile app',
+  'permissions',
+  'performance',
   'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'performance is a key concept in Mobile App Development.'
+) ON CONFLICT (id) DO NOTHING;
 
--- Quick Learn 49: Blockchain & Smart Contracts
+-- Quick Learn 49: UI/UX Design Basics
 INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
 VALUES (
   '00000000-0000-4000-a000-000000000049',
-  'Blockchain & Smart Contracts',
-  'blockchain-smart-contracts',
+  'UI/UX Design Basics',
+  'uiux-design-basics',
   'CSE',
   'Web3',
   'Advanced',
   3,
   TRUE,
   10,
-  'Master Blockchain & Smart Contracts fundamentals with quick reading and 15 practice MCQs on FEEDX.',
+  'Master UI/UX Design Basics fundamentals with quick reading and 15 practice MCQs on FEEDX.',
   '### Learning Text
-Blockchain & Smart Contracts is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
+UI design focuses on the visual interface and controls. UX design focuses on the overall experience, usability, user needs and interaction flow.
 
 ### Key Points
-- **Core Concepts**: Fundamentals of Blockchain & Smart Contracts.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
+- **UI**
+- **UX**
+- **usability**
+- **user**
+- **wireframe**
+- **prototype**',
   TRUE
 ) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
 
@@ -9847,385 +9974,181 @@ INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, o
 VALUES (
   '00000000-0001-4000-a000-000049000001',
   '00000000-0000-4000-a000-000000000049',
-  'Q1. What is the primary definition of Blockchain & Smart Contracts?',
-  'A core technology or standard designed for managing and executing Blockchain & Smart Contracts processes.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'A',
-  'Option A is correct. A core technology or standard designed for managing and executing Blockchain & Smart Contracts processes.'
-);
+  'Q1. What is UI?',
+  'spacing',
+  'research',
+  'component',
+  'UI',
+  'D',
+  'UI is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000002',
   '00000000-0000-4000-a000-000000000049',
-  'Q2. Which key benefit is provided by Blockchain & Smart Contracts?',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'B',
-  'Option B is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
+  'Q2. Which option is most directly associated with UX?',
+  'component',
+  'hierarchy',
+  'usability',
+  'UX',
+  'D',
+  'UX is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000003',
   '00000000-0000-4000-a000-000000000049',
-  'Q3. What is a fundamental requirement when implementing Blockchain & Smart Contracts?',
-  'Proper system configuration, security protocols, and integration standards.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
+  'Q3. Which statement best describes usability?',
+  'usability',
+  'UI',
+  'typography',
+  'design system',
   'A',
-  'Option A is correct. Proper system configuration, security protocols, and integration standards.'
-);
+  'usability is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000004',
   '00000000-0000-4000-a000-000000000049',
-  'Q4. How does Blockchain & Smart Contracts handle data and execution states?',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'C',
-  'Option C is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
+  'Q4. In this topic, what does user refer to?',
+  'accessibility',
+  'user',
+  'consistency',
+  'hierarchy',
+  'B',
+  'user is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000005',
   '00000000-0000-4000-a000-000000000049',
-  'Q5. What is a recommended best practice when deploying Blockchain & Smart Contracts?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'D',
-  'Option D is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
+  'Q5. What is wireframe?',
+  'wireframe',
+  'usability',
+  'feedback',
+  'spacing',
+  'A',
+  'wireframe is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000006',
   '00000000-0000-4000-a000-000000000049',
-  'Q6. Which layer or component plays a vital role in Blockchain & Smart Contracts?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'The central execution handler and protocol controller.',
-  'D',
-  'Option D is correct. The central execution handler and protocol controller.'
-);
+  'Q6. Which option is most directly associated with prototype?',
+  'spacing',
+  'interaction',
+  'prototype',
+  'hierarchy',
+  'C',
+  'prototype is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000007',
   '00000000-0000-4000-a000-000000000049',
-  'Q7. What is a common bottleneck or challenge in Blockchain & Smart Contracts?',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'A',
-  'Option A is correct. Managing system state synchronization and resource contention under heavy load.'
-);
+  'Q7. Which statement best describes layout?',
+  'user',
+  'UI',
+  'layout',
+  'component',
+  'C',
+  'layout is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000008',
   '00000000-0000-4000-a000-000000000049',
-  'Q8. How is security typically enforced within Blockchain & Smart Contracts?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'D',
-  'Option D is correct. Through strong authentication, access control permissions, and data encryption.'
-);
+  'Q8. In this topic, what does typography refer to?',
+  'typography',
+  'feedback',
+  'design system',
+  'hierarchy',
+  'A',
+  'typography is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000009',
   '00000000-0000-4000-a000-000000000049',
-  'Q9. Which metric is critical for measuring the performance of Blockchain & Smart Contracts?',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
+  'Q9. What is color?',
+  'wireframe',
+  'typography',
+  'color',
+  'layout',
   'C',
-  'Option C is correct. Response latency, throughput, resource utilization, and error rates.'
-);
+  'color is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000010',
   '00000000-0000-4000-a000-000000000049',
-  'Q10. What is the role of versioning in Blockchain & Smart Contracts?',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'C',
-  'Option C is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
+  'Q10. Which option is most directly associated with spacing?',
+  'research',
+  'wireframe',
+  'design system',
+  'spacing',
+  'D',
+  'spacing is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000011',
   '00000000-0000-4000-a000-000000000049',
-  'Q11. In what scenario is Blockchain & Smart Contracts most effectively applied?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'D',
-  'Option D is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
+  'Q11. Which statement best describes component?',
+  'component',
+  'design system',
+  'feedback',
+  'usability',
+  'A',
+  'component is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000012',
   '00000000-0000-4000-a000-000000000049',
-  'Q12. Which tool or interface is standard for interacting with Blockchain & Smart Contracts?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'D',
-  'Option D is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
+  'Q12. In this topic, what does navigation refer to?',
+  'navigation',
+  'feedback',
+  'design system',
+  'consistency',
+  'A',
+  'navigation is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000013',
   '00000000-0000-4000-a000-000000000049',
-  'Q13. What is the initial phase when developing with Blockchain & Smart Contracts?',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'D',
-  'Option D is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
+  'Q13. What is accessibility?',
+  'wireframe',
+  'persona',
+  'accessibility',
+  'layout',
+  'C',
+  'accessibility is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000014',
   '00000000-0000-4000-a000-000000000049',
-  'Q14. Which debugging technique is recommended for Blockchain & Smart Contracts?',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
+  'Q14. Which option is most directly associated with feedback?',
+  'user',
+  'feedback',
+  'design system',
+  'hierarchy',
   'B',
-  'Option B is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
+  'feedback is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
 VALUES (
   '00000000-0001-4000-a000-000049000015',
   '00000000-0000-4000-a000-000000000049',
-  'Q15. What is the overall goal of mastering Blockchain & Smart Contracts?',
-  'To design, build, and maintain production-ready technology solutions.',
-  'Legacy manual processing for Blockchain & Smart Contracts.',
-  'Bypassing standard security checks and protocols in Blockchain & Smart Contracts.',
-  'Hardcoding static binary files without backup in Blockchain & Smart Contracts.',
-  'A',
-  'Option A is correct. To design, build, and maintain production-ready technology solutions.'
-);
-
--- Quick Learn 50: Cloud Native & Serverless Computing
-INSERT INTO public.quick_learn_lessons (id, title, slug, branch, category, difficulty, estimated_minutes, is_recommended, fx_reward, short_description, content_markdown, is_published)
-VALUES (
-  '00000000-0000-4000-a000-000000000050',
-  'Cloud Native & Serverless Computing',
-  'cloud-native-serverless-computing',
-  'CSE',
-  'Cloud',
-  'Advanced',
-  3,
-  TRUE,
-  10,
-  'Master Cloud Native & Serverless Computing fundamentals with quick reading and 15 practice MCQs on FEEDX.',
-  '### Learning Text
-Cloud Native & Serverless Computing is an essential concept in modern technology and engineering education. Understanding its core components enables effective problem-solving and application development.
-
-### Key Points
-- **Core Concepts**: Fundamentals of Cloud Native & Serverless Computing.
-- **Best Practices**: Implementation standards.
-- **Workflow**: Practical application and deployment.',
-  TRUE
-) ON CONFLICT (slug) DO UPDATE SET title = EXCLUDED.title;
-
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000001',
-  '00000000-0000-4000-a000-000000000050',
-  'Q1. What is the primary definition of Cloud Native & Serverless Computing?',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'A core technology or standard designed for managing and executing Cloud Native & Serverless Computing processes.',
-  'D',
-  'Option D is correct. A core technology or standard designed for managing and executing Cloud Native & Serverless Computing processes.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000002',
-  '00000000-0000-4000-a000-000000000050',
-  'Q2. Which key benefit is provided by Cloud Native & Serverless Computing?',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Improved efficiency, scalability, modularity, and operational reliability.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'C',
-  'Option C is correct. Improved efficiency, scalability, modularity, and operational reliability.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000003',
-  '00000000-0000-4000-a000-000000000050',
-  'Q3. What is a fundamental requirement when implementing Cloud Native & Serverless Computing?',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Proper system configuration, security protocols, and integration standards.',
-  'D',
-  'Option D is correct. Proper system configuration, security protocols, and integration standards.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000004',
-  '00000000-0000-4000-a000-000000000050',
-  'Q4. How does Cloud Native & Serverless Computing handle data and execution states?',
-  'By utilizing structured schemas, indexes, and optimized execution pipelines.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'A',
-  'Option A is correct. By utilizing structured schemas, indexes, and optimized execution pipelines.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000005',
-  '00000000-0000-4000-a000-000000000050',
-  'Q5. What is a recommended best practice when deploying Cloud Native & Serverless Computing?',
-  'Conducting regular automated testing, logging, and monitoring checks.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'A',
-  'Option A is correct. Conducting regular automated testing, logging, and monitoring checks.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000006',
-  '00000000-0000-4000-a000-000000000050',
-  'Q6. Which layer or component plays a vital role in Cloud Native & Serverless Computing?',
-  'The central execution handler and protocol controller.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'A',
-  'Option A is correct. The central execution handler and protocol controller.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000007',
-  '00000000-0000-4000-a000-000000000050',
-  'Q7. What is a common bottleneck or challenge in Cloud Native & Serverless Computing?',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Managing system state synchronization and resource contention under heavy load.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
+  'Q15. Which statement best describes consistency?',
+  'spacing',
+  'consistency',
+  'accessibility',
+  'user',
   'B',
-  'Option B is correct. Managing system state synchronization and resource contention under heavy load.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000008',
-  '00000000-0000-4000-a000-000000000050',
-  'Q8. How is security typically enforced within Cloud Native & Serverless Computing?',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Through strong authentication, access control permissions, and data encryption.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'B',
-  'Option B is correct. Through strong authentication, access control permissions, and data encryption.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000009',
-  '00000000-0000-4000-a000-000000000050',
-  'Q9. Which metric is critical for measuring the performance of Cloud Native & Serverless Computing?',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Response latency, throughput, resource utilization, and error rates.',
-  'D',
-  'Option D is correct. Response latency, throughput, resource utilization, and error rates.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000010',
-  '00000000-0000-4000-a000-000000000050',
-  'Q10. What is the role of versioning in Cloud Native & Serverless Computing?',
-  'To support safe updates, maintain backward compatibility, and enable rollbacks.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'A',
-  'Option A is correct. To support safe updates, maintain backward compatibility, and enable rollbacks.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000011',
-  '00000000-0000-4000-a000-000000000050',
-  'Q11. In what scenario is Cloud Native & Serverless Computing most effectively applied?',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'In modern scalable enterprise systems requiring structured workflows and reliability.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'B',
-  'Option B is correct. In modern scalable enterprise systems requiring structured workflows and reliability.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000012',
-  '00000000-0000-4000-a000-000000000050',
-  'Q12. Which tool or interface is standard for interacting with Cloud Native & Serverless Computing?',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Dedicated command line tools, SDK APIs, and management dashboards.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'C',
-  'Option C is correct. Dedicated command line tools, SDK APIs, and management dashboards.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000013',
-  '00000000-0000-4000-a000-000000000050',
-  'Q13. What is the initial phase when developing with Cloud Native & Serverless Computing?',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Defining requirements, setting up the development environment, and configuring dependencies.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'C',
-  'Option C is correct. Defining requirements, setting up the development environment, and configuring dependencies.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000014',
-  '00000000-0000-4000-a000-000000000050',
-  'Q14. Which debugging technique is recommended for Cloud Native & Serverless Computing?',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Inspecting log trace files, using debugger tools, and verifying stack traces.',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'C',
-  'Option C is correct. Inspecting log trace files, using debugger tools, and verifying stack traces.'
-);
-INSERT INTO public.quick_learn_checks (id, lesson_id, question_text, option_a, option_b, option_c, option_d, correct_option, explanation)
-VALUES (
-  '00000000-0001-4000-a000-000050000015',
-  '00000000-0000-4000-a000-000000000050',
-  'Q15. What is the overall goal of mastering Cloud Native & Serverless Computing?',
-  'Hardcoding static binary files without backup in Cloud Native & Serverless Computing.',
-  'Legacy manual processing for Cloud Native & Serverless Computing.',
-  'Bypassing standard security checks and protocols in Cloud Native & Serverless Computing.',
-  'To design, build, and maintain production-ready technology solutions.',
-  'D',
-  'Option D is correct. To design, build, and maintain production-ready technology solutions.'
-);
+  'consistency is a key concept in UI/UX Design Basics.'
+) ON CONFLICT (id) DO NOTHING;
 
 COMMIT;

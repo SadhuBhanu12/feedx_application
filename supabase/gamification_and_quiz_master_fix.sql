@@ -169,7 +169,8 @@ DECLARE
     v_already_claimed BOOLEAN := FALSE;
     v_new_coins INT := 0;
     v_new_xp INT := 0;
-    v_coin_reward_actual INT := p_coin_reward; -- Award coins/tokens directly
+    v_coin_reward_actual INT := COALESCE(p_coin_reward, 0); -- Strictly 0 for tasks/quizzes
+    v_tokens_reward INT := COALESCE(p_xp_reward, 0);
 BEGIN
     -- Check if reward was already awarded for this specific source
     IF EXISTS (
@@ -182,32 +183,29 @@ BEGIN
     ELSE
         -- Insert unique reward transaction record
         INSERT INTO public.reward_transactions (user_id, student_id, source_type, source_id, coins, points)
-        VALUES (p_student_id, p_student_id, p_activity_type, p_reference_id, v_coin_reward_actual, p_xp_reward);
+        VALUES (p_student_id, p_student_id, p_activity_type, p_reference_id, v_coin_reward_actual, v_tokens_reward);
 
         -- Also record in coin_transactions if present
         INSERT INTO public.coin_transactions (student_id, amount, activity_type, reference_id, description)
-        VALUES (p_student_id, v_coin_reward_actual, p_activity_type, p_reference_id, 'Earned +' || p_xp_reward || ' Tokens (XP)');
+        VALUES (p_student_id, v_tokens_reward, p_activity_type, p_reference_id, 'Earned +' || v_tokens_reward || ' Task Tokens');
 
-        -- Atomically update student profile balances in public.students table if present
-        UPDATE public.students
-        SET gold_coins = COALESCE(gold_coins, 0) + v_coin_reward_actual,
-            coins = COALESCE(coins, 0) + v_coin_reward_actual,
-            xp_points = COALESCE(xp_points, 0) + p_xp_reward,
+        -- Also record in fx_transactions
+        INSERT INTO public.fx_transactions (user_id, amount, source_type, source_id, description)
+        VALUES (p_student_id, v_tokens_reward, p_activity_type, p_reference_id, 'Earned +' || v_tokens_reward || ' Task Tokens');
+
+        -- Atomically update public.student_wallets table (authoritative source for gold_coins & tokens)
+        INSERT INTO public.student_wallets (student_id, user_id, gold_coins, tokens, total_earned, updated_at)
+        VALUES (p_student_id, p_student_id, v_coin_reward_actual, v_tokens_reward, v_tokens_reward, NOW())
+        ON CONFLICT (student_id) DO UPDATE
+        SET gold_coins = COALESCE(public.student_wallets.gold_coins, 0) + v_coin_reward_actual,
+            tokens = COALESCE(public.student_wallets.tokens, 0) + v_tokens_reward,
+            total_earned = COALESCE(public.student_wallets.total_earned, 0) + v_tokens_reward,
             updated_at = NOW()
-        WHERE id = p_student_id
-        RETURNING COALESCE(gold_coins, 0), COALESCE(xp_points, 0) INTO v_new_coins, v_new_xp;
+        RETURNING COALESCE(gold_coins, 0), COALESCE(tokens, 0) INTO v_new_coins, v_new_xp;
 
-        -- Also sync public.users table if present
-        UPDATE public.users
-        SET gold_coins = COALESCE(gold_coins, 0) + v_coin_reward_actual,
-            coins = COALESCE(coins, 0) + v_coin_reward_actual,
-            xp = COALESCE(xp, 0) + p_xp_reward
-        WHERE id = p_student_id;
-
-        -- Also sync public.student_wallets table if present
-        UPDATE public.student_wallets
-        SET gold_coins = COALESCE(gold_coins, 0) + v_coin_reward_actual,
-            total_earned = COALESCE(total_earned, 0) + v_coin_reward_actual,
+        -- Sync daily_streaks
+        UPDATE public.daily_streaks
+        SET xp_points = COALESCE(xp_points, 0) + v_tokens_reward,
             updated_at = NOW()
         WHERE student_id = p_student_id;
     END IF;
@@ -216,8 +214,9 @@ BEGIN
         'success', true,
         'already_completed', v_already_claimed,
         'already_earned', v_already_claimed,
-        'coins_awarded', CASE WHEN v_already_claimed THEN 0 ELSE p_coin_reward END,
-        'xp_awarded', CASE WHEN v_already_claimed THEN 0 ELSE p_xp_reward END,
+        'tokens_awarded', CASE WHEN v_already_claimed THEN 0 ELSE v_tokens_reward END,
+        'coins_awarded', CASE WHEN v_already_claimed THEN 0 ELSE v_coin_reward_actual END,
+        'xp_awarded', CASE WHEN v_already_claimed THEN 0 ELSE v_tokens_reward END,
         'new_coins', v_new_coins,
         'new_xp', v_new_xp
     );
@@ -437,5 +436,12 @@ GRANT EXECUTE ON FUNCTION public.award_student_activity(UUID, VARCHAR, INT, INT,
 GRANT EXECUTE ON FUNCTION public.submit_daily_task(UUID, VARCHAR, INT, INT) TO authenticated, anon;
 GRANT EXECUTE ON FUNCTION public.submit_daily_challenge(UUID, UUID, TEXT) TO authenticated, anon;
 GRANT EXECUTE ON FUNCTION public.submit_daily_quiz_attempt(UUID) TO authenticated, anon;
+
+-- Ensure public.users table RLS allows users to insert/update their own profile
+DROP POLICY IF EXISTS "users_insert_own" ON public.users;
+CREATE POLICY "users_insert_own" ON public.users FOR INSERT TO authenticated WITH CHECK (auth.uid() = id);
+
+DROP POLICY IF EXISTS "users_update_own" ON public.users;
+CREATE POLICY "users_update_own" ON public.users FOR UPDATE TO authenticated USING (auth.uid() = id);
 
 NOTIFY pgrst, 'reload schema';

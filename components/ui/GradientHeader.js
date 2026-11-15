@@ -39,14 +39,20 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 24,
   },
   headerLeft: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     marginRight: 12,
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    padding: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   logoHeader: {
     width: '100%',
     height: '100%',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   title: {
     fontSize: 28,

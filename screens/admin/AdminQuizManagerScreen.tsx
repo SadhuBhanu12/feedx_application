@@ -12,15 +12,31 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '@/context/ThemeContext';
+import { useUser } from '@/context/UserContext';
 import { supabase } from '@/lib/supabase';
 
 export default function AdminQuizManagerScreen() {
   const { colors, isDark } = useTheme();
+  const { user } = useUser();
   const router = useRouter();
+
+  const role = String(user?.role || '').trim().toLowerCase();
+  const isAdmin = ['admin', 'super_admin', 'inst_admin', 'college_admin', 'campus_admin'].includes(role);
+
+  useEffect(() => {
+    if (!user || !isAdmin) {
+      Alert.alert('Access Denied', 'Administrative privileges required.');
+      router.replace('/(tabs)');
+    }
+  }, [user, isAdmin, router]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [quizDate, setQuizDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [quizId, setQuizId] = useState<string | null>(null);
+
+  if (!user || !isAdmin) {
+    return null;
+  }
   const [quizStatus, setQuizStatus] = useState<string>('published');
   const [questions, setQuestions] = useState<any[]>([]);
   const [saving, setSaving] = useState<boolean>(false);
@@ -151,7 +167,10 @@ export default function AdminQuizManagerScreen() {
           {saving ? (
             <ActivityIndicator size="small" color="#FFFFFF" />
           ) : (
-            <Text style={styles.publishBtnText}>Publish 🚀</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <Ionicons name="cloud-upload-outline" size={16} color="#FFFFFF" />
+              <Text style={styles.publishBtnText}>Publish</Text>
+            </View>
           )}
         </TouchableOpacity>
       </View>

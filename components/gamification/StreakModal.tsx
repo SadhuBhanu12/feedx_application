@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, ScrollView, Share, Image } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useGamification } from '@/context/GamificationContext';
 import { useUser } from '@/context/UserContext';
 import { useTheme } from '@/context/ThemeContext';
+import { FeedxToken } from '@/components/ui/FeedxToken';
 
 interface StreakModalProps {
   visible: boolean;
@@ -28,30 +29,40 @@ const BADGE_IMAGES = {
 };
 
 const MILESTONES: MilestoneItem[] = [
-  { day: 1, reward: '1 Gold Coin', title: 'Beginner Flame', badgeType: 'flame_starter', icon: '🔥', accentColor: '#F59E0B', image: BADGE_IMAGES.flame },
-  { day: 2, reward: '1 Gold Coin', title: 'Spark Scholar', badgeType: 'iron_streak', icon: '⚡', accentColor: '#06B6D4', image: BADGE_IMAGES.flame },
-  { day: 3, reward: '2 Gold Coins', title: 'Blaze Champion', badgeType: 'blaze_scholar', icon: '💥', accentColor: '#EF4444', image: BADGE_IMAGES.flame },
-  { day: 7, reward: '5 Coins + Bonus Badge', title: 'Weekly Knight', badgeType: 'weekly_champ', icon: '🏆', accentColor: '#8B5CF6', image: BADGE_IMAGES.knight },
-  { day: 15, reward: 'Bronze Learner Badge', title: 'Bronze Guardian', badgeType: 'bronze_shield', icon: '🛡️', accentColor: '#D97706', image: BADGE_IMAGES.knight },
-  { day: 30, reward: 'Silver Learner Badge + 15 Coins', title: 'Silver Titan', badgeType: 'silver_shield', icon: '⚔️', accentColor: '#38BDF8', image: BADGE_IMAGES.titan },
-  { day: 50, reward: 'Gold Learner Badge', title: 'Gold Master', badgeType: 'gold_crown', icon: '👑', accentColor: '#EAB308', image: BADGE_IMAGES.gold },
-  { day: 100, reward: 'Platinum Learner Badge', title: 'Platinum Genius', badgeType: 'platinum_diamond', icon: '💎', accentColor: '#A855F7', image: BADGE_IMAGES.gold },
-  { day: 365, reward: 'FEEDX Legend Status', title: 'FEEDX Legend', badgeType: 'legend_star', icon: '🌟', accentColor: '#EC4899', image: BADGE_IMAGES.gold },
+  { day: 1, reward: '1 FEEDX Token', title: 'Beginner Flame', badgeType: 'flame_starter', icon: 'fire', accentColor: '#F59E0B', image: BADGE_IMAGES.flame },
+  { day: 2, reward: '1 FEEDX Token', title: 'Spark Scholar', badgeType: 'iron_streak', icon: 'zap', accentColor: '#06B6D4', image: BADGE_IMAGES.flame },
+  { day: 3, reward: '2 FEEDX Tokens', title: 'Blaze Champion', badgeType: 'blaze_scholar', icon: 'trending-up', accentColor: '#EF4444', image: BADGE_IMAGES.flame },
+  { day: 7, reward: '5 Tokens + Bonus Badge', title: 'Weekly Knight', badgeType: 'weekly_champ', icon: 'award', accentColor: '#8B5CF6', image: BADGE_IMAGES.knight },
+  { day: 15, reward: 'Bronze Learner Badge', title: 'Bronze Guardian', badgeType: 'bronze_shield', icon: 'shield', accentColor: '#D97706', image: BADGE_IMAGES.knight },
+  { day: 30, reward: 'Silver Learner Badge + 15 Tokens', title: 'Silver Titan', badgeType: 'silver_shield', icon: 'star', accentColor: '#38BDF8', image: BADGE_IMAGES.titan },
+  { day: 50, reward: 'Gold Learner Badge', title: 'Gold Master', badgeType: 'gold_crown', icon: 'award', accentColor: '#EAB308', image: BADGE_IMAGES.gold },
+  { day: 100, reward: 'Platinum Learner Badge', title: 'Platinum Genius', badgeType: 'platinum_diamond', icon: 'award', accentColor: '#A855F7', image: BADGE_IMAGES.gold },
+  { day: 365, reward: 'FEEDX Legend Status', title: 'FEEDX Legend', badgeType: 'legend_star', icon: 'star', accentColor: '#EC4899', image: BADGE_IMAGES.gold },
 ];
 
 export default function StreakModal({ visible, onClose }: StreakModalProps) {
-  const { streak } = useGamification();
+  const { streak, wallet } = useGamification();
   const { user } = useUser();
   const { colors, isDark } = useTheme();
   const [shareBadge, setShareBadge] = useState<MilestoneItem | null>(null);
 
-  const currentStreak = streak?.current_streak || 1;
-  const longestStreak = streak?.longest_streak || currentStreak;
-  const freezeCount = streak?.streak_freeze_count || 1;
+  const currentStreak = streak?.current_streak !== undefined ? streak.current_streak : (user?.streak_count ?? user?.streak ?? 0);
+  const longestStreak = streak?.longest_streak !== undefined ? streak.longest_streak : (user?.max_streak ?? user?.longest_streak ?? currentStreak);
+  const freezeCount = streak?.streak_freeze_count ?? 1;
+
+  // 24-Hour Cycle & Reset Calculations
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const diffMs = Math.max(0, midnight.getTime() - now.getTime());
+  const hoursUntilMidnight = Math.floor(diffMs / (1000 * 60 * 60));
+  const minsUntilMidnight = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const todayDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const isTodayActive = Boolean(streak?.last_active_date && streak.last_active_date.startsWith(todayDateStr));
 
   // Generate 30 days history dots
   const historyDots = Array.from({ length: 30 }, (_, i) => {
-    const isCompleted = i < currentStreak;
+    const isCompleted = currentStreak > 0 && i < currentStreak;
     return { dayNum: i + 1, active: isCompleted };
   });
 
@@ -61,7 +72,10 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
         <View style={[styles.modalCard, { backgroundColor: isDark ? '#0F172A' : '#FFFFFF' }]}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>🔥 Daily Streak Engine</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <MaterialCommunityIcons name="fire" size={22} color="#F59E0B" />
+              <Text style={[styles.title, { color: colors.textPrimary }]}>Daily Streak Engine</Text>
+            </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <Ionicons name="close" size={24} color={colors.textPrimary} />
             </TouchableOpacity>
@@ -71,7 +85,7 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
             {/* Hero Flame Section */}
             <View style={styles.heroSection}>
               <View style={styles.flameCircle}>
-                <Text style={styles.bigFlame}>🔥</Text>
+                <MaterialCommunityIcons name="fire" size={48} color="#F59E0B" />
               </View>
               <Text style={[styles.heroCount, { color: colors.textPrimary }]}>{currentStreak} Days</Text>
               <Text style={styles.heroSub}>Keep learning daily to maintain your multiplier!</Text>
@@ -86,48 +100,98 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
                 }}
               >
                 <Ionicons name="share-social" size={14} color="#FFFFFF" style={{ marginRight: 6 }} />
-                <Text style={styles.shareStreakBtnText}>Share Streak Badge 🏆</Text>
+                <Text style={styles.shareStreakBtnText}>Share Streak Badge</Text>
               </TouchableOpacity>
 
-              {/* Stats Bar */}
+              {/* Stats & Balances Bar */}
               <View style={[styles.statsBar, { backgroundColor: isDark ? '#1E293B' : '#F8FAFC' }]}>
                 <View style={styles.statItem}>
-                  <Text style={styles.statVal}>{longestStreak}</Text>
-                  <Text style={styles.statLbl}>Best Streak</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <Ionicons name="flash" size={13} color="#818CF8" />
+                    <Text style={styles.statVal}>{streak?.xp_points ?? user?.xp_points ?? 0}</Text>
+                  </View>
+                  <Text style={styles.statLbl}>FX Points</Text>
                 </View>
                 <View style={styles.divider} />
                 <View style={styles.statItem}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <FontAwesome5 name="shield-alt" size={14} color="#3B82F6" style={{ marginRight: 4 }} />
-                    <Text style={styles.statVal}>{freezeCount}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <FeedxToken size="sm" />
+                    <Text style={styles.statVal}>{wallet?.gold_coins !== undefined ? wallet.gold_coins : (user?.gold_coins ?? 0)}</Text>
                   </View>
-                  <Text style={styles.statLbl}>Streak Shields</Text>
+                  <Text style={styles.statLbl}>Tokens</Text>
+                </View>
+                <View style={styles.divider} />
+                <View style={styles.statItem}>
+                  <Text style={styles.statVal}>{longestStreak}d</Text>
+                  <Text style={styles.statLbl}>Best Streak</Text>
                 </View>
               </View>
-            </View>
 
-            {/* 30 Day Heatmap Grid */}
-            <Text style={[styles.sectionHeading, { color: colors.textPrimary }]}>30-Day Activity Grid</Text>
-            <View style={styles.heatmapGrid}>
-              {historyDots.map((dot) => (
-                <View
-                  key={dot.dayNum}
-                  style={[
-                    styles.dot,
-                    {
-                      backgroundColor: dot.active
-                        ? '#F59E0B'
-                        : isDark
-                        ? '#334155'
-                        : '#E2E8F0',
-                    },
-                  ]}
-                >
-                  <Text style={[styles.dotText, { color: dot.active ? '#FFFFFF' : colors.textSecondary }]}>
-                    {dot.dayNum}
+              {/* 5-Day Streak Visual Sequence */}
+              <View style={{ width: '100%', marginTop: 14 }}>
+                <Text style={{ fontSize: 11, fontWeight: '800', color: colors.textSecondary, marginBottom: 8, textAlign: 'center', letterSpacing: 0.5 }}>
+                  CONSECUTIVE 5-DAY STREAK CHAIN
+                </Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: isDark ? '#1E293B' : '#F1F5F9', padding: 12, borderRadius: 16, borderWidth: 1, borderColor: isDark ? '#334155' : '#E2E8F0' }}>
+                  {[1, 2, 3, 4, 5].map((d) => {
+                    const isDayDone = currentStreak >= d;
+                    return (
+                      <View key={d} style={{ alignItems: 'center', gap: 4 }}>
+                        <View style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: 18,
+                          backgroundColor: isDayDone ? '#F59E0B' : (isDark ? '#334155' : '#CBD5E1'),
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderWidth: isDayDone ? 2 : 1,
+                          borderColor: isDayDone ? '#FCD34D' : 'transparent',
+                        }}>
+                          {isDayDone ? (
+                            <MaterialCommunityIcons name="fire" size={18} color="#FFF" />
+                          ) : (
+                            <Feather name="lock" size={14} color="#94A3B8" />
+                          )}
+                        </View>
+                        <Text style={{ fontSize: 10, fontWeight: '900', color: isDayDone ? '#F59E0B' : colors.textMuted }}>
+                          Day {d}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              </View>
+
+              {/* 24-Hour Cycle & Streak Reset Policy Banner */}
+              <View style={[styles.cycleRulesCard, { backgroundColor: isDark ? 'rgba(239, 68, 68, 0.08)' : '#FEF2F2', borderColor: isDark ? 'rgba(239, 68, 68, 0.3)' : '#FCA5A5' }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <MaterialCommunityIcons name="timer-sand" size={18} color="#EF4444" />
+                  <Text style={[styles.cycleRulesTitle, { color: '#EF4444' }]}>24-HOUR DAILY CYCLE & RESET RULE</Text>
+                </View>
+
+                <Text style={[styles.cycleRulesDesc, { color: colors.textSecondary }]}>
+                  • <Text style={{ fontWeight: '800', color: colors.textPrimary }}>Daily 24-Hour Window (12:00 AM – 12:00 AM):</Text> Complete at least 1 verified learning activity every calendar day to advance your streak.
+                </Text>
+
+                <Text style={[styles.cycleRulesDesc, { color: colors.textSecondary, marginTop: 5 }]}>
+                  • <Text style={{ fontWeight: '800', color: '#EF4444' }}>Miss a Day = Streak Reset:</Text> If you miss even a single day (exceeding 24–48 hours without completing an activity), your streak automatically resets to Day 0.
+                </Text>
+
+                <Text style={[styles.cycleRulesDesc, { color: colors.textSecondary, marginTop: 5 }]}>
+                  • <Text style={{ fontWeight: '800', color: colors.textPrimary }}>Next Increment After 24 Hours:</Text> You cannot increment streak twice in the same day. Return after 24 hours (12:00 AM midnight reset) for the next streak day.
+                </Text>
+
+                <View style={[styles.cycleStatusRow, { borderTopColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }]}>
+                  <View style={[styles.statusPillBadge, { backgroundColor: isTodayActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)', borderColor: isTodayActive ? '#10B981' : '#F59E0B' }]}>
+                    <Text style={[styles.statusPillText, { color: isTodayActive ? '#10B981' : '#F59E0B' }]}>
+                      {isTodayActive ? '✓ Today\'s Streak Maintained' : '⏳ Action Needed Today'}
+                    </Text>
+                  </View>
+                  <Text style={[styles.cycleCountdownText, { color: colors.textMuted }]}>
+                    {hoursUntilMidnight}h {minsUntilMidnight}m until next 12:00 AM cycle
                   </Text>
                 </View>
-              ))}
+              </View>
             </View>
 
             {/* Milestone Ladder */}
@@ -160,7 +224,7 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
                         {reached ? (
                           <Image source={m.image} style={{ width: 28, height: 28, borderRadius: 14 }} resizeMode="contain" />
                         ) : (
-                          <Text style={styles.milestoneIcon}>🔒</Text>
+                          <Feather name="lock" size={14} color="#94A3B8" />
                         )}
                       </View>
                       <View>
@@ -172,7 +236,7 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
                     </View>
                     {reached && (
                       <View style={[styles.unlockedBadge, { backgroundColor: m.accentColor }]}>
-                        <Text style={styles.unlockedText}>SHARE BADGE 🚀</Text>
+                        <Text style={styles.unlockedText}>SHARE BADGE</Text>
                       </View>
                     )}
                   </TouchableOpacity>
@@ -199,7 +263,10 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
                   <Image source={shareBadge.image} style={{ width: 72, height: 72, borderRadius: 36 }} resizeMode="contain" />
                 </View>
 
-                <Text style={[styles.badgeHonorTag, { color: shareBadge.accentColor }]}>🏆 FEEDX STREAK HONORS</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                  <Feather name="award" size={15} color={shareBadge.accentColor} />
+                  <Text style={[styles.badgeHonorTag, { color: shareBadge.accentColor, marginBottom: 0 }]}>FEEDX STREAK HONORS</Text>
+                </View>
                 <Text style={styles.badgeCertSub}>DAY {shareBadge.day} STREAK BADGE</Text>
                 <Text style={[styles.badgeCertTitle, { color: shareBadge.accentColor }]}>{shareBadge.title.toUpperCase()}</Text>
 
@@ -236,13 +303,13 @@ export default function StreakModal({ visible, onClose }: StreakModalProps) {
                     try {
                       await Share.share({
                         title: `FEEDX ${shareBadge.title} Streak Badge`,
-                        message: `📜 Official FEEDX Streak Badge awarded to ${user?.full_name || 'Student'}!\n\n${shareBadge.icon} ${shareBadge.title} (${shareBadge.day}-Day Streak)\nBadge ID: FX-STRK-0${shareBadge.day}\nVerify online on FEEDX App.`,
+                        message: `Official FEEDX Streak Badge awarded to ${user?.full_name || 'Student'}!\n\n${shareBadge.title} (${shareBadge.day}-Day Streak)\nBadge ID: FX-STRK-0${shareBadge.day}\nVerify online on FEEDX App.`,
                       });
                     } catch (_) {}
                   }}
                 >
                   <Ionicons name="share-social" size={18} color="#FFFFFF" style={{ marginRight: 8 }} />
-                  <Text style={styles.badgeShareActionBtnText}>Share Streak Badge 🚀</Text>
+                  <Text style={styles.badgeShareActionBtnText}>Share Streak Badge</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -337,23 +404,6 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     marginBottom: 10,
     marginTop: 8,
-  },
-  heatmapGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 20,
-  },
-  dot: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dotText: {
-    fontSize: 10,
-    fontWeight: '800',
   },
   milestoneList: {
     gap: 8,
@@ -547,5 +597,45 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '900',
     color: '#FFFFFF',
+  },
+  cycleRulesCard: {
+    marginTop: 14,
+    width: '100%',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    padding: 14,
+  },
+  cycleRulesTitle: {
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0.8,
+  },
+  cycleRulesDesc: {
+    fontSize: 11.5,
+    lineHeight: 17,
+  },
+  cycleStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  statusPillBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  statusPillText: {
+    fontSize: 10,
+    fontWeight: '900',
+  },
+  cycleCountdownText: {
+    fontSize: 10.5,
+    fontWeight: '700',
   },
 });

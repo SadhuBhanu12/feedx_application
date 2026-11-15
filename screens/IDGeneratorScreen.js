@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Share, Alert, TextInput, Modal, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ButtonLoading } from '@/components/ui/Loaders';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
@@ -11,7 +10,8 @@ import { Image } from 'expo-image';
 import { supabase } from '@/lib/supabase';
 import QRCode from 'react-native-qrcode-svg';
 import { UserAvatar } from '@/components/ui/UserAvatar';
-
+import StudentIdCardFlip from '@/components/ui/StudentIdCardFlip';
+import { resolveStandardFeedXId, resolveQuizueId, getQrVerificationPayload } from '@/services/idService';
 import { useTheme } from '@/context/ThemeContext';
 
 const { width } = Dimensions.get('window');
@@ -59,7 +59,7 @@ function DropdownSelect({ label, placeholder, options, value, onSelect, keyName,
 
 export default function IDGeneratorScreen() {
   const router = useRouter();
-  const { user, setUser } = useUser();
+  const { user, setUser, refreshDashboard } = useUser();
   const { colors, isDark } = useTheme();
 
   const [editModalVisible, setEditModalVisible] = useState(false);
@@ -92,10 +92,14 @@ export default function IDGeneratorScreen() {
         if (stData) {
           setUser((prev) => ({
             ...prev,
+            full_name: stData.full_name || prev?.full_name,
+            name: stData.full_name || prev?.name,
+            phone: stData.phone || prev?.phone,
+            feedx_id: stData.feedx_id || prev?.feedx_id,
             roll_no: stData.roll_number || prev?.roll_no || '21001-C-001',
             roll_number: stData.roll_number || prev?.roll_number || '21001-C-001',
             branch: stData.branches?.branch_name || stData.branch || prev?.branch || 'CSE',
-            college_name: stData.colleges?.college_name || prev?.college_name || 'Government Polytechnic',
+            college_name: stData.colleges?.college_name || prev?.college_name || 'FEEDX Polytechnic',
             year: stData.year || stData.academic_years?.year_name || prev?.year || '3rd Year',
             semester: stData.semester || stData.academic_years?.semester || prev?.semester || '5',
             college_id: stData.college_id || prev?.college_id,
@@ -187,7 +191,7 @@ export default function IDGeneratorScreen() {
           ...updatedUser,
           ...updatedStudent,
           roll_no: updatedStudent?.roll_number || '',
-          college_name: updatedStudent?.colleges?.college_name || 'FeedX Polytechnic',
+          college_name: updatedStudent?.colleges?.college_name || 'FEEDX Polytechnic',
           branch: updatedStudent?.branches?.branch_name || updatedStudent?.branch || '',
           year: updatedStudent?.year || updatedStudent?.academic_years?.year_name || '',
           semester: updatedStudent?.semester || updatedStudent?.academic_years?.semester || '',
@@ -195,6 +199,10 @@ export default function IDGeneratorScreen() {
           branch_id: selectedBranch,
           academic_year_id: selectedYear
         }));
+      }
+
+      if (refreshDashboard) {
+        refreshDashboard(true).catch(() => {});
       }
 
       Alert.alert('Success', 'Your ID details have been updated successfully.');
@@ -208,7 +216,7 @@ export default function IDGeneratorScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />}
       
       <View style={[styles.header, { borderBottomColor: colors.border, backgroundColor: colors.background }]}>
         <TouchableOpacity onPress={() => router.back()} style={[styles.backBtn, { backgroundColor: colors.inputBg }]}>
@@ -218,102 +226,11 @@ export default function IDGeneratorScreen() {
           <Text style={[styles.title, { color: colors.textPrimary }]}>FEEDX ID</Text>
           <Text style={[styles.subtitle, { color: colors.textMuted }]}>Your Verified Digital Student Identity</Text>
         </View>
-        <View style={{ width: 44 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Animated.View entering={FadeInDown.duration(600).springify()} style={styles.cardContainer}>
-          <LinearGradient
-            colors={['#0284C7', '#0369A1', '#0F4C81']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={[styles.idCard, { borderColor: 'rgba(255, 255, 255, 0.45)', borderWidth: 1.5 }]}
-          >
-            <View style={styles.cardHeader}>
-               <Image source={require('../assets/images/icon.png')} style={styles.logo} />
-               <View style={{ flex: 1 }}>
-                  <Text style={styles.instName} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>{user?.college_name || 'FEEDX POLYTECHNIC'}</Text>
-                  <Text style={styles.cardType}>STUDENT IDENTITY CARD</Text>
-               </View>
-            </View>
-
-            <View style={styles.cardBody}>
-               <View style={styles.photoContainer}>
-                  <UserAvatar user={user} size={70} />
-               </View>
-               <View style={styles.infoCol}>
-                  <Text style={styles.name} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{user?.full_name?.toUpperCase() || 'STUDENT NAME'}</Text>
-                  <Text style={styles.roll} numberOfLines={1}>{user?.roll_no || 'ROLL-XXXX'}</Text>
-                  
-                  <View style={styles.detailRow}>
-                     <Text style={styles.label}>BRANCH:</Text>
-                     <Text style={styles.value} numberOfLines={1}>{user?.branch || 'CSE'}</Text>
-                  </View>
-                  <View style={styles.detailRow}>
-                     <Text style={styles.label}>SEM:</Text>
-                     <Text style={styles.value}>{user?.semester ? `${user.semester}th SEMESTER` : 'N/A'}</Text>
-                  </View>
-                  <TouchableOpacity 
-                    style={styles.detailRow}
-                    onPress={() => {
-                      const idToCopy = user?.feedx_id || (() => {
-                        const college = user?.college_name || 'STUDENT';
-                        let collegeCode = college.split(' ').map(w => w[0]).join('').replace(/[^A-Za-z]/g, '').toUpperCase();
-                        if (collegeCode.length < 2) collegeCode = college.slice(0, 4).toUpperCase();
-                        const branch = user?.branch || 'GEN';
-                        let branchCode = branch.split(' ').map(w => w[0]).join('').replace(/[^A-Za-z]/g, '').toUpperCase();
-                        if (branchCode.length < 2) branchCode = branch.slice(0, 3).toUpperCase();
-                        const roll = (user?.roll_no || user?.roll_number || '00000').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                        return `FEEDX-${collegeCode}-${branchCode}-${roll}`;
-                      })();
-                      if (Platform.OS === 'web' && navigator?.clipboard) {
-                        navigator.clipboard.writeText(idToCopy);
-                      }
-                      Alert.alert('Copied!', 'FEEDX ID copied successfully.');
-                    }}
-                  >
-                     <Text style={[styles.label, { color: '#E2E8F0' }]}>FEEDX ID:</Text>
-                     <Text style={[styles.value, { color: '#FACC15', fontWeight: '900' }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
-                       {user?.feedx_id || (() => {
-                         if (!user) return 'PENDING';
-                         const prefix = 'FEEDX';
-                         const college = user.college_name || 'STUDENT';
-                         let collegeCode = college.split(' ').map(w => w[0]).join('').replace(/[^A-Za-z]/g, '').toUpperCase();
-                         if (collegeCode.length < 2) collegeCode = college.slice(0, 4).toUpperCase();
-                         const branch = user.branch || 'GEN';
-                         let branchCode = branch.split(' ').map(w => w[0]).join('').replace(/[^A-Za-z]/g, '').toUpperCase();
-                         if (branchCode.length < 2) branchCode = branch.slice(0, 3).toUpperCase();
-                         const roll = (user.roll_no || user.roll_number || '00000').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                         return `${prefix}-${collegeCode}-${branchCode}-${roll}`;
-                       })()}
-                     </Text>
-                  </TouchableOpacity>
-               </View>
-            </View>
-
-            <View style={styles.cardFooter}>
-               {user?.id ? (
-                 <TouchableOpacity 
-                   onPress={() => setFullQrVisible(true)}
-                   activeOpacity={0.8}
-                   style={{ backgroundColor: '#FFF', padding: 4, borderRadius: 6 }}
-                 >
-                   <QRCode
-                     value={user?.feedx_id || user?.roll_number || 'FEEDX-IDENTITY'}
-                     size={44}
-                     color="#000"
-                     backgroundColor="#FFF"
-                   />
-                 </TouchableOpacity>
-               ) : (
-                 <MaterialCommunityIcons name="qrcode-scan" size={40} color="#FFF" />
-               )}
-               <View style={{ flex: 1, marginLeft: 16 }}>
-                  <Text style={styles.validText}>VERIFIED STUDENT</Text>
-                  <Text style={styles.authText}>SYSTEM AUTHORIZED IDENTITY</Text>
-               </View>
-            </View>
-          </LinearGradient>
+        <Animated.View entering={FadeInDown.duration(350).springify()} style={styles.cardContainer}>
+          <StudentIdCardFlip user={user} showTapHint={true} />
         </Animated.View>
 
         {/* Action Buttons Row */}
@@ -321,32 +238,32 @@ export default function IDGeneratorScreen() {
           <TouchableOpacity 
             style={[styles.downloadBtn, { flex: 1 }]}
             onPress={() => {
-              const currentFeedxId = user?.feedx_id || 'FEEDX-STUDENT-ID';
+              const currentFeedxId = resolveStandardFeedXId(user);
               if (Platform.OS === 'web' && navigator?.clipboard) {
                 navigator.clipboard.writeText(currentFeedxId);
               }
-              Alert.alert('Copied!', 'FEEDX ID copied successfully.');
+              Alert.alert('Copied!', `FEEDX ID (${currentFeedxId}) copied successfully.`);
             }}
           >
              <LinearGradient colors={['#3B82F6', '#1D4ED8']} style={styles.btnInner} start={{x:0,y:0}} end={{x:1,y:0}}>
                 <Feather name="copy" size={18} color="#FFF" />
-                <Text style={styles.btnText}>Copy FEEDX ID</Text>
+                <Text style={styles.btnText} numberOfLines={1}>Copy FEEDX ID</Text>
              </LinearGradient>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={[styles.downloadBtn, { flex: 1 }]}
             onPress={() => {
-              const currentFeedxId = user?.feedx_id || 'FEEDX-STUDENT-ID';
-              const message = `FeedX Digital Student ID\nName: ${user?.full_name}\nFEEDX ID: ${currentFeedxId}\nCollege: ${user?.college_name || 'FeedX Polytechnic'}`;
+              const currentFeedxId = resolveStandardFeedXId(user);
+              const message = `📜 FEEDX Verified Student Identity Card\n\n👤 Name: ${user?.full_name || 'Student'}\n🆔 FEEDX ID: ${currentFeedxId}\n🏛️ Institution: ${user?.college_name || 'FEEDX Polytechnic'}\n📚 Branch: ${user?.branch || 'N/A'}\n🎓 Academic Year: ${user?.year || '1st Year'}\n✅ Status: Verified Polytechnic Student\n🔗 Verification: https://feedxpolytechnic.com/verify/${currentFeedxId}`;
               Alert.alert(
                 'Digital ID Export',
-                'Your digital identity card is ready for export.',
+                'Your verified digital identity is ready to share.',
                 [
                   { text: 'Cancel', style: 'cancel' },
                   { 
-                    text: 'Save/Share', 
-                    onPress: () => Share.share({ message, title: 'Student ID' }) 
+                    text: 'Share ID Card', 
+                    onPress: () => Share.share({ message, title: 'FEEDX Verified Student ID' }) 
                   }
                 ]
               );
@@ -354,7 +271,7 @@ export default function IDGeneratorScreen() {
           >
              <LinearGradient colors={COLORS.gradientSecondary} style={styles.btnInner} start={{x:0,y:0}} end={{x:1,y:0}}>
                 <Feather name="share-2" size={18} color="#FFF" />
-                <Text style={styles.btnText}>Share Identity</Text>
+                <Text style={styles.btnText} numberOfLines={1}>Share Identity</Text>
              </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -378,7 +295,7 @@ export default function IDGeneratorScreen() {
 
             <View style={{ backgroundColor: '#FFF', padding: 16, borderRadius: 16, marginVertical: 12 }}>
               <QRCode
-                value={user?.feedx_id || user?.roll_number || 'FEEDX-IDENTITY'}
+                value={getQrVerificationPayload(resolveStandardFeedXId(user), resolveQuizueId(user))}
                 size={220}
                 color="#000"
                 backgroundColor="#FFF"
@@ -386,7 +303,7 @@ export default function IDGeneratorScreen() {
             </View>
 
             <Text style={{ fontSize: 14, fontWeight: '800', color: '#60A5FA', letterSpacing: 0.5 }}>
-              {user?.feedx_id || 'FEEDX-STUDENT-ID'}
+              {resolveStandardFeedXId(user)}
             </Text>
             <Text style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', textAlign: 'center' }}>
               Scan this QR code to verify student identity, library access, and institutional credentials.
@@ -395,7 +312,7 @@ export default function IDGeneratorScreen() {
             <TouchableOpacity
               style={[styles.downloadBtn, { width: '100%', marginTop: 8 }]}
               onPress={() => {
-                const currentId = user?.feedx_id || 'FEEDX-STUDENT-ID';
+                const currentId = resolveStandardFeedXId(user);
                 if (Platform.OS === 'web' && navigator?.clipboard) {
                   navigator.clipboard.writeText(currentId);
                 }
@@ -519,7 +436,7 @@ const styles = StyleSheet.create({
   // Modal & Form Styling
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.85)', justifyContent: 'flex-end' },
   modalContainer: { height: '85%' },
-  modalContent: { flex: 1, backgroundColor: '#0F172A', borderTopLeftRadius: rs(28), borderTopRightRadius: rs(28), borderHorizontalWidth: 1, borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: rs(24) },
+  modalContent: { flex: 1, backgroundColor: '#0F172A', borderTopLeftRadius: rs(28), borderTopRightRadius: rs(28), borderLeftWidth: 1, borderRightWidth: 1, borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: rs(24) },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: rs(20) },
   modalTitle: { fontSize: rf(18), fontWeight: '900', color: '#FFF' },
   formScroll: { flex: 1 },

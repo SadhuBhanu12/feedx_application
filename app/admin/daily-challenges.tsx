@@ -105,7 +105,7 @@ export default function AdminDailyChallengesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.cardBorder }]}>

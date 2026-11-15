@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabase';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import { safeBack } from '@/utils/navigation';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native';
 import { SkeletonLoader } from '@/components/ui/Loaders';
@@ -137,11 +138,11 @@ export default function CollegesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />}
       
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <View style={styles.headerTop}>
-           <TouchableOpacity onPress={() => router.back()} style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
+           <TouchableOpacity onPress={() => safeBack('/(tabs)')} style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
               <Feather name="arrow-left" size={24} color={colors.textPrimary} />
            </TouchableOpacity>
            <Text style={[styles.title, { color: colors.textPrimary }]}>Institutions</Text>
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
   list: { padding: rs(20), paddingBottom: rs(100) },
   collegeCard: { minHeight: rs(250), borderRadius: rs(24), overflow: 'hidden', marginBottom: rs(18), backgroundColor: COLORS.card, ...SHADOWS.medium },
   cardBanner: { width: '100%', height: '100%', position: 'absolute' },
-  cardOverlay: { ...StyleSheet.absoluteFillObject },
+  cardOverlay: { ...StyleSheet.absoluteFill },
   cardContent: { flex: 1, padding: rs(18), justifyContent: 'space-between' },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   rankBadge: { backgroundColor: 'rgba(0,0,0,0.4)', paddingHorizontal: rs(10), paddingVertical: rs(4), borderRadius: rs(8) },

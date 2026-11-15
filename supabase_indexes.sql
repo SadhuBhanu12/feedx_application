@@ -59,6 +59,19 @@ CREATE INDEX IF NOT EXISTS idx_bookmarks_user_entity ON public.bookmarks(user_id
 
 -- Optimized composite index for college opportunities list
 CREATE INDEX IF NOT EXISTS idx_opportunities_composite ON public.opportunities(college_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_opportunities_type_composite ON public.opportunities(college_id, type, created_at DESC);
+
+-- Optimized composite index for events query filtering by category & status
+CREATE INDEX IF NOT EXISTS idx_events_category_composite ON public.events(college_id, category, status, start_date DESC);
+
+-- Optimized composite index for community posts feed
+CREATE INDEX IF NOT EXISTS idx_community_posts_composite ON public.community_posts(college_id, created_at DESC);
+
+-- Optimized composite index for roadmap student progress
+CREATE INDEX IF NOT EXISTS idx_student_roadmap_composite ON public.student_roadmap_progress(user_id, career_role_id);
+
+-- Support nested/reply comments in community_comments
+ALTER TABLE public.community_comments ADD COLUMN IF NOT EXISTS parent_id UUID REFERENCES public.community_comments(id) ON DELETE CASCADE;
 
 -- ==========================================
 -- CONFLICT PREVENTION (UNIQUE CONSTRAINTS)

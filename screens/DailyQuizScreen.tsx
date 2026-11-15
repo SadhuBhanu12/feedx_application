@@ -28,9 +28,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function DailyQuizScreen() {
   const { user } = useUser();
   const { colors, isDark } = useTheme();
-  const { refreshGamification } = useGamification();
+  const { refreshGamification, triggerReward } = useGamification();
   const router = useRouter();
-  const params = useLocalSearchParams<{ quizId?: string }>();
+  const params = useLocalSearchParams<{ quizId?: string; isDaily?: string; source?: string }>();
 
   const [loading, setLoading] = useState<boolean>(true);
   const [quiz, setQuiz] = useState<DailyQuiz | null>(null);
@@ -61,9 +61,15 @@ export default function DailyQuizScreen() {
           coins_awarded: 0,
         };
 
-        // If attempt already completed today, navigate to results directly!
         if (att.status === 'COMPLETED') {
-          router.replace({ pathname: '/daily-quiz-result' as any, params: { attemptId: att.id } });
+          router.replace({
+            pathname: '/daily-quiz-result' as any,
+            params: {
+              attemptId: att.id,
+              isDaily: params.isDaily !== undefined ? String(params.isDaily) : 'true',
+              source: params.source !== undefined ? String(params.source) : 'daily_mission',
+            }
+          });
           return;
         }
 
@@ -163,16 +169,51 @@ export default function DailyQuizScreen() {
     if (!attempt) return;
     setSubmitting(true);
     try {
-      const res = await submitQuizAttempt(attempt.id);
-      if (res.success) {
-        await refreshGamification();
-        router.replace({
-          pathname: '/daily-quiz-result' as any,
-          params: { attemptId: attempt.id }
-        });
-      } else {
-        Alert.alert('Notice', 'Quiz completion failed to sync. Please try submitting again.');
+      const isDailyQuiz = params.isDaily !== 'false' && params.source !== 'explore';
+      const tokenReward = isDailyQuiz ? 50 : 15;
+      const totalQ = questions.length || 10;
+      
+      // Calculate score immediately from client state for instant feedback
+      let quickCorrect = 0;
+      questions.forEach((q) => {
+        const userAns = String(answers[q.id] || '').trim().toUpperCase();
+        const target = String(q.correct_option || '').trim().toUpperCase();
+        if (userAns && target && userAns === target) {
+          quickCorrect++;
+        }
+      });
+
+      // Submit attempt
+      const res = await submitQuizAttempt(attempt.id, {
+        isDaily: isDailyQuiz,
+        source: String(params.source || (isDailyQuiz ? 'daily_mission' : 'explore')),
+      });
+
+      const finalScore = res?.score !== undefined ? res.score : quickCorrect;
+
+      // Instantly trigger celebratory reward popup without blocking
+      if (user?.id && triggerReward) {
+        triggerReward({
+          userId: user.id,
+          activityType: isDailyQuiz ? 'home_daily_quiz' : 'explore_quiz',
+          points: tokenReward,
+          activityName: isDailyQuiz ? "Today's Mission Quiz Completed" : 'Explore Quiz Completed',
+          scoreText: `${finalScore}/${totalQ} Correct (${Math.round((finalScore / totalQ) * 100)}%)`,
+          forcePopup: true,
+        }).catch(() => {});
       }
+
+      await refreshGamification();
+      router.replace({
+        pathname: '/daily-quiz-result' as any,
+        params: {
+          attemptId: attempt.id,
+          score: String(finalScore),
+          total: String(totalQ),
+          isDaily: params.isDaily !== undefined ? String(params.isDaily) : 'true',
+          source: params.source !== undefined ? String(params.source) : 'daily_mission',
+        }
+      });
     } catch (err) {
       console.error('Submission error:', err);
     } finally {
@@ -190,7 +231,9 @@ export default function DailyQuizScreen() {
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>🔥 Daily Quiz (10 MCQs)</Text>
         <View style={styles.coinBadge}>
           <FontAwesome5 name="coins" size={12} color="#D97706" style={{ marginRight: 4 }} />
-          <Text style={styles.coinBadgeText}>+5 Coins</Text>
+          <Text style={styles.coinBadgeText}>
+            {params.isDaily !== 'false' && params.source !== 'explore' ? '+50 Tokens' : '+15 Tokens'}
+          </Text>
         </View>
       </View>
 

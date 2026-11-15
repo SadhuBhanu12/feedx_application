@@ -105,7 +105,7 @@ export function ContinueLearning({ lessons = [], lessonProgress = [] }: Continue
 
         <View style={styles.progressRow}>
           <View style={styles.barTrack}>
-            <View style={[styles.barFill, { width: `${Math.max(10, progressPct)}%`, backgroundColor: colors.primary }]} />
+            <View style={[styles.barFill, { width: `${Math.min(100, Math.max(0, progressPct))}%`, backgroundColor: colors.primary }]} />
           </View>
           <Text style={[styles.pctText, { color: colors.textSecondary }]}>{progressPct}%</Text>
         </View>

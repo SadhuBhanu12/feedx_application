@@ -25,6 +25,7 @@ import { safeNavigate } from '@/utils/navigationGuard';
 import { requestQueue } from '@/lib/requestQueue';
 import { ErrorState } from '@/components/ui/ErrorState';
 import BookmarkButton from '@/components/ui/BookmarkButton';
+import PressableCard from '@/components/ui/PressableCard';
 import Animated, { FadeInDown, Layout } from 'react-native-reanimated';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
@@ -82,9 +83,10 @@ const OpportunityCard = React.memo(function OpportunityCard({ item, index, isBoo
 
   return (
     <Animated.View entering={FadeInDown.delay(Math.min(index, 6) * 30).springify()} layout={Layout.springify()} style={styles.cardWrapper}>
-      <TouchableOpacity 
+      <PressableCard 
         style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]} 
-        activeOpacity={0.8}
+        scaleTo={0.98}
+        haptic
         onPress={onPress}
       >
           {/* Top Row: Title and save */}
@@ -168,13 +170,13 @@ const OpportunityCard = React.memo(function OpportunityCard({ item, index, isBoo
                 {item.deadline && (
                   <Text style={[styles.deadlineText, { color: colors.textMuted }]}>Apply by {new Date(item.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</Text>
                 )}
-                <View style={styles.applyBtnMini}>
-                  <Text style={styles.applyBtnText}>Details</Text>
-                  <Feather name="arrow-right" size={14} color="#FFF" />
+                <View style={[styles.applyBtnMini, isApplied && { backgroundColor: '#10B981' }]}>
+                  <Text style={styles.applyBtnText}>{isApplied ? 'Applied ✓' : 'Details'}</Text>
+                  <Feather name={isApplied ? "check-circle" : "arrow-right"} size={14} color="#FFF" />
                 </View>
              </View>
           </View>
-      </TouchableOpacity>
+      </PressableCard>
     </Animated.View>
   );
 });
@@ -184,7 +186,7 @@ export default function OpportunitiesScreen() {
   const { colors, isDark } = useTheme();
   const { listRef, handleScroll } = useScrollRestoration('opportunities');
   const queryClient = useQueryClient();
-  const { data: rawOpportunities, isLoading, isFetching, isError, refetch } = useSupabaseList('opportunities', 'id, title, company, company_logo, type, location, stipend, duration, deadline, created_at, eligible_branches, eligible_years', {
+  const { data: rawOpportunities, isLoading, isFetching, isError, refetch } = useSupabaseList('opportunities', '*', {
     order: { column: 'created_at', ascending: false }
   });
   const { data: userBookmarks, refetch: refetchBookmarks } = useRawBookmarksQuery(user?.id);
@@ -241,22 +243,29 @@ export default function OpportunitiesScreen() {
 
   useEffect(() => {
     if (rawOpportunities) {
+      const items = Array.isArray(rawOpportunities) ? rawOpportunities : [];
       const todayStr = new Date().toISOString().split('T')[0];
-      const unexpired = rawOpportunities.filter((o) => !o.deadline || o.deadline >= todayStr);
+      const unexpired = items.filter((o) => !o.deadline || o.deadline >= todayStr);
+      const listToFilter = unexpired.length > 0 ? unexpired : items;
 
-      const filtered = unexpired.filter(item => {
+      const filtered = listToFilter.filter(item => {
         if (!user?.branch) return true;
-        const userBranch = user.branch.toLowerCase();
-        const branchMatch = !item.eligible_branches || 
-                           item.eligible_branches.length === 0 ||
-                           item.eligible_branches.includes('All') || 
-                           item.eligible_branches.some(b => {
-                             const tb = b.toLowerCase();
-                             return tb === userBranch || tb.includes(userBranch) || userBranch.includes(tb);
-                           });
-        return branchMatch;
+        const userBranch = String(user.branch).toLowerCase().trim();
+        if (!item.eligible_branches) return true;
+        if (Array.isArray(item.eligible_branches)) {
+          if (item.eligible_branches.length === 0 || item.eligible_branches.includes('All')) return true;
+          return item.eligible_branches.some(b => {
+            const tb = String(b).toLowerCase().trim();
+            return tb === userBranch || tb.includes(userBranch) || userBranch.includes(tb);
+          });
+        }
+        if (typeof item.eligible_branches === 'string') {
+          const str = item.eligible_branches.toLowerCase();
+          return str.includes('all') || str.includes(userBranch);
+        }
+        return true;
       });
-      setOpportunities(filtered);
+      setOpportunities(filtered.length > 0 ? filtered : items);
       setLoading(false);
     }
   }, [rawOpportunities, user?.branch]);

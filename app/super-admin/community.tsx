@@ -28,6 +28,8 @@ import {
 } from '@/services/supabaseService';
 import { isValidDriveUrl, convertDriveUrlToImageUrl, extractDriveFileId } from '@/utils/googleDrive';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { safeBack } from '@/utils/navigation';
 
 const CATEGORIES = [
   'General',
@@ -56,9 +58,15 @@ export default function SuperAdminCommunityScreen() {
   const [category, setCategory] = useState('Technology');
   const [tagsInput, setTagsInput] = useState('');
   const [driveUrl, setDriveUrl] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
   const [pinned, setPinned] = useState(false);
   const [featured, setFeatured] = useState(false);
-  const [status, setStatus] = useState<'Published' | 'Draft' | 'Archived'>('Published');
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [scheduledDateTime, setScheduledDateTime] = useState<Date>(new Date(Date.now() + 86400000));
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [scheduledDate, setScheduledDate] = useState('');
+  const [status, setStatus] = useState<'Published' | 'Draft' | 'Scheduled' | 'Archived'>('Published');
   const [submitting, setSubmitting] = useState(false);
   const [contentFit, setContentFit] = useState<'cover' | 'contain'>('cover');
 
@@ -73,9 +81,18 @@ export default function SuperAdminCommunityScreen() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
-      const filterCategory = activeTab === 'All' || activeTab === 'Published' || activeTab === 'Draft' ? 'All' : activeTab;
+      const isCustomTab = ['All', 'Published', 'Draft', 'Scheduled', 'Featured Spotlight', 'Featured', 'Pinned'].includes(activeTab);
+      const filterCategory = isCustomTab ? 'All' : activeTab;
       const data = await getCommunityPosts(0, 50, filterCategory);
-      setPosts(data || []);
+      let list = data || [];
+      if (activeTab === 'Scheduled') {
+        list = list.filter((p: any) => p.is_scheduled || p.status === 'Scheduled' || p.status === 'scheduled');
+      } else if (activeTab === 'Featured Spotlight' || activeTab === 'Featured') {
+        list = list.filter((p: any) => p.featured);
+      } else if (activeTab === 'Pinned') {
+        list = list.filter((p: any) => p.pinned);
+      }
+      setPosts(list);
     } catch (e) {
       console.error('Error loading community posts:', e);
     } finally {
@@ -84,32 +101,67 @@ export default function SuperAdminCommunityScreen() {
   };
 
   const handleOpenCreateModal = () => {
+    const defaultDate = new Date(Date.now() + 86400000);
+    defaultDate.setHours(10, 0, 0, 0);
     setEditingPostId(null);
     setTitle('');
     setDescription('');
     setCategory('Technology');
     setTagsInput('polytechnic, tech, feedx');
     setDriveUrl('');
+    setVideoUrl('');
     setPinned(false);
     setFeatured(false);
+    setIsScheduled(false);
+    setScheduledDateTime(defaultDate);
+    setScheduledDate(defaultDate.toISOString());
     setStatus('Published');
     setModalVisible(true);
   };
 
   const handleOpenEditModal = (item: any) => {
+    const parsedDate = item.scheduled_at ? new Date(item.scheduled_at) : new Date(Date.now() + 86400000);
     setEditingPostId(item.id);
     setTitle(item.title || '');
     setDescription(item.description || item.caption || '');
     setCategory(item.category || 'Technology');
     setTagsInput(Array.isArray(item.tags) ? item.tags.join(', ') : '');
     setDriveUrl(item.drive_url || item.image_url || '');
+    setVideoUrl(item.video_url || item.media_url || '');
     setPinned(!!item.pinned);
     setFeatured(!!item.featured);
+    setIsScheduled(!!item.is_scheduled || item.status === 'Scheduled' || item.status === 'scheduled');
+    setScheduledDateTime(parsedDate);
+    setScheduledDate(parsedDate.toISOString());
     setStatus(item.status || 'Published');
     setModalVisible(true);
   };
 
-  const handleSubmit = async (submitStatus: 'Published' | 'Draft') => {
+  const handleDateChange = (event: any, selected?: Date) => {
+    setShowDatePicker(false);
+    if (selected) {
+      const next = new Date(scheduledDateTime);
+      next.setFullYear(selected.getFullYear());
+      next.setMonth(selected.getMonth());
+      next.setDate(selected.getDate());
+      setScheduledDateTime(next);
+      setScheduledDate(next.toISOString());
+    }
+  };
+
+  const handleTimeChange = (event: any, selected?: Date) => {
+    setShowTimePicker(false);
+    if (selected) {
+      const next = new Date(scheduledDateTime);
+      next.setHours(selected.getHours());
+      next.setMinutes(selected.getMinutes());
+      next.setSeconds(0);
+      setScheduledDateTime(next);
+      setScheduledDate(next.toISOString());
+    }
+  };
+
+  const handleSubmit = async (submitStatus: 'Published' | 'Draft' | 'Scheduled') => {
     if (!title.trim()) {
       return Alert.alert('Validation Error', 'Post Title is required.');
     }
@@ -130,16 +182,22 @@ export default function SuperAdminCommunityScreen() {
         .map((t) => t.trim())
         .filter(Boolean);
 
+      const finalScheduled = submitStatus === 'Scheduled' || isScheduled;
       const payload = {
         title: title.trim(),
         description: description.trim(),
         caption: description.trim(),
         category,
         drive_url: driveUrl.trim(),
+        image_url: driveUrl.trim() || undefined,
+        video_url: videoUrl.trim() || undefined,
+        post_type: videoUrl.trim() ? 'video' : (driveUrl.trim() ? 'image' : 'text'),
         tags: tagsArray,
         pinned,
         featured,
-        status: submitStatus,
+        status: finalScheduled ? 'Scheduled' : submitStatus,
+        is_scheduled: finalScheduled,
+        scheduled_at: finalScheduled ? (scheduledDate || new Date(Date.now() + 86400000).toISOString()) : null,
         author_name: user?.full_name || 'FEEDX Admin',
         author_role: 'Super Admin',
         created_by: user?.id,
@@ -150,7 +208,12 @@ export default function SuperAdminCommunityScreen() {
         Alert.alert('Success', 'Post updated successfully.');
       } else {
         await createCommunityPostAdmin(payload);
-        Alert.alert('Success', `Post ${submitStatus === 'Draft' ? 'saved as Draft' : 'published successfully'}.`);
+        Alert.alert(
+          'Success',
+          finalScheduled
+            ? `Post scheduled for ${scheduledDate || 'selected date'}.`
+            : `Post ${submitStatus === 'Draft' ? 'saved as Draft' : 'published successfully'}.`
+        );
       }
 
       setModalVisible(false);
@@ -181,52 +244,107 @@ export default function SuperAdminCommunityScreen() {
   };
 
   const handleTogglePin = async (item: any) => {
+    const previousState = !!item.pinned;
+    const newState = !previousState;
+    setPosts(prev => prev.map(p => p.id === item.id ? { ...p, pinned: newState } : p));
     try {
-      await updateCommunityPostAdmin(item.id, { pinned: !item.pinned });
-      fetchPosts();
+      await updateCommunityPostAdmin(item.id, { pinned: newState });
+      Alert.alert(
+        newState ? 'Post Pinned! 📌' : 'Pin Removed',
+        newState
+          ? `"${item.title || 'Post'}" is now pinned to the absolute top of the student community feed.`
+          : `"${item.title || 'Post'}" is unpinned.`
+      );
     } catch (e: any) {
-      Alert.alert('Error', e.message);
+      setPosts(prev => prev.map(p => p.id === item.id ? { ...p, pinned: previousState } : p));
+      Alert.alert('Action Failed', e.message || 'Could not update pin status.');
     }
   };
 
   const handleToggleFeature = async (item: any) => {
+    const previousState = !!item.featured;
+    const newState = !previousState;
+    // Optimistic update keeps the post immediately visible and responsive without re-fetching screen flash
+    setPosts(prev => prev.map(p => p.id === item.id ? { ...p, featured: newState } : p));
     try {
-      await updateCommunityPostAdmin(item.id, { featured: !item.featured });
-      fetchPosts();
+      await updateCommunityPostAdmin(item.id, { featured: newState });
+      Alert.alert(
+        newState ? 'Post Featured! 🌟' : 'Spotlight Removed',
+        newState
+          ? `"${item.title || 'Post'}" is now featured as a Spotlight item at the top of the student community feed with a gold badge.`
+          : `"${item.title || 'Post'}" will now appear in regular chronological order.`
+      );
     } catch (e: any) {
-      Alert.alert('Error', e.message);
+      // Revert on error
+      setPosts(prev => prev.map(p => p.id === item.id ? { ...p, featured: previousState } : p));
+      Alert.alert('Action Failed', e.message || 'Could not update starred status.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => safeBack('/super-admin')}>
           <Feather name="arrow-left" size={22} color="#FFF" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>Community Manager</Text>
-          <Text style={styles.headerSub}>Google Drive Architecture Console</Text>
+          <Text style={styles.headerSub}>Publish, Feature & Moderate Posts</Text>
         </View>
         <TouchableOpacity style={styles.createBtn} onPress={handleOpenCreateModal}>
           <Feather name="plus" size={20} color="#FFF" />
         </TouchableOpacity>
       </View>
 
-      {/* Filter Tabs */}
-      <View style={styles.tabRow}>
-        {['All', 'Pinned', 'Featured', 'Technology', 'Placements', 'Innovation'].map((t) => (
-          <TouchableOpacity
-            key={t}
-            style={[styles.tabChip, activeTab === t && styles.tabChipActive]}
-            onPress={() => setActiveTab(t)}
-          >
-            <Text style={[styles.tabChipText, activeTab === t && styles.tabChipTextActive]}>{t}</Text>
-          </TouchableOpacity>
-        ))}
+      {/* Spotlight & Pin Feature Explanation Banner */}
+      <View style={styles.spotlightBanner}>
+        <MaterialCommunityIcons name="information" size={18} color="#38BDF8" />
+        <Text style={styles.spotlightBannerText}>
+          <Text style={{ fontWeight: '800', color: '#38BDF8' }}>📌 Pin:</Text> Sticks post to top of feed.  
+          <Text style={{ fontWeight: '800', color: '#F59E0B' }}> 🌟 Spotlight:</Text> Awards gold badge and prioritizes next in feed.
+        </Text>
+      </View>
+
+      {/* Horizontally Scrollable Filter Tabs */}
+      <View style={styles.tabScrollWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.tabScrollContent}
+        >
+          {['All', 'Pinned', 'Featured Spotlight', 'Scheduled', ...CATEGORIES].map((t) => {
+            const isActive = activeTab === t;
+            return (
+              <TouchableOpacity
+                key={t}
+                style={[styles.tabChip, isActive && styles.tabChipActive]}
+                onPress={() => setActiveTab(t)}
+                activeOpacity={0.7}
+              >
+                {t === 'Pinned' && (
+                  <MaterialCommunityIcons
+                    name="pin"
+                    size={14}
+                    color={isActive ? '#FFF' : '#38BDF8'}
+                    style={{ marginRight: 4 }}
+                  />
+                )}
+                {t === 'Featured Spotlight' && (
+                  <MaterialCommunityIcons
+                    name="star"
+                    size={14}
+                    color={isActive ? '#FFF' : '#F59E0B'}
+                    style={{ marginRight: 4 }}
+                  />
+                )}
+                <Text style={[styles.tabChipText, isActive && styles.tabChipTextActive]}>{t}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
 
       {/* Posts List */}
@@ -253,15 +371,15 @@ export default function SuperAdminCommunityScreen() {
                   </View>
                   <View style={styles.badgeRow}>
                     {item.pinned && (
-                      <View style={[styles.miniBadge, { backgroundColor: 'rgba(245,158,11,0.2)' }]}>
-                        <MaterialCommunityIcons name="pin" size={10} color="#F59E0B" />
-                        <Text style={[styles.miniBadgeText, { color: '#F59E0B' }]}>PINNED</Text>
+                      <View style={[styles.miniBadge, { backgroundColor: 'rgba(56, 189, 248, 0.15)', borderWidth: 1, borderColor: 'rgba(56, 189, 248, 0.4)' }]}>
+                        <MaterialCommunityIcons name="pin" size={11} color="#38BDF8" />
+                        <Text style={[styles.miniBadgeText, { color: '#38BDF8' }]}>PINNED</Text>
                       </View>
                     )}
                     {item.featured && (
-                      <View style={[styles.miniBadge, { backgroundColor: 'rgba(59,130,246,0.2)' }]}>
-                        <Feather name="star" size={10} color="#3B82F6" />
-                        <Text style={[styles.miniBadgeText, { color: '#3B82F6' }]}>FEATURED</Text>
+                      <View style={[styles.miniBadge, { backgroundColor: 'rgba(245, 158, 11, 0.15)', borderWidth: 1, borderColor: 'rgba(245, 158, 11, 0.4)' }]}>
+                        <MaterialCommunityIcons name="star" size={11} color="#F59E0B" />
+                        <Text style={[styles.miniBadgeText, { color: '#F59E0B' }]}>SPOTLIGHT</Text>
                       </View>
                     )}
                   </View>
@@ -277,11 +395,52 @@ export default function SuperAdminCommunityScreen() {
                 <View style={styles.cardFooter}>
                   <Text style={styles.authorText}>By {item.author_name || 'Admin'}</Text>
                   <View style={styles.actionGroup}>
-                    <TouchableOpacity style={styles.iconAction} onPress={() => handleTogglePin(item)}>
-                      <MaterialCommunityIcons name={item.pinned ? "pin" : "pin-outline"} size={16} color={item.pinned ? '#F59E0B' : 'rgba(255,255,255,0.4)'} />
+                    {/* Pin Action Button */}
+                    <TouchableOpacity
+                      style={[
+                        styles.pinActionBtn,
+                        item.pinned && styles.pinActionBtnActive,
+                      ]}
+                      onPress={() => handleTogglePin(item)}
+                      activeOpacity={0.7}
+                    >
+                      <MaterialCommunityIcons
+                        name={item.pinned ? 'pin' : 'pin-outline'}
+                        size={14}
+                        color={item.pinned ? '#38BDF8' : 'rgba(255,255,255,0.6)'}
+                      />
+                      <Text
+                        style={[
+                          styles.pinActionText,
+                          item.pinned && { color: '#38BDF8', fontWeight: '800' },
+                        ]}
+                      >
+                        {item.pinned ? 'Pinned' : 'Pin'}
+                      </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.iconAction} onPress={() => handleToggleFeature(item)}>
-                      <Feather name="star" size={16} color={item.featured ? '#3B82F6' : 'rgba(255,255,255,0.4)'} />
+
+                    {/* Spotlight / Feature Action Button */}
+                    <TouchableOpacity
+                      style={[
+                        styles.featureActionBtn,
+                        item.featured && styles.featureActionBtnActive,
+                      ]}
+                      onPress={() => handleToggleFeature(item)}
+                      activeOpacity={0.7}
+                    >
+                      <MaterialCommunityIcons
+                        name={item.featured ? 'star' : 'star-outline'}
+                        size={14}
+                        color={item.featured ? '#F59E0B' : 'rgba(255,255,255,0.6)'}
+                      />
+                      <Text
+                        style={[
+                          styles.featureActionText,
+                          item.featured && { color: '#F59E0B', fontWeight: '800' },
+                        ]}
+                      >
+                        {item.featured ? 'Spotlight' : 'Feature'}
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.iconAction} onPress={() => handleOpenEditModal(item)}>
                       <Feather name="edit-3" size={16} color={COLORS.primary} />
@@ -335,6 +494,19 @@ export default function SuperAdminCommunityScreen() {
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
+              </View>
+
+              {/* Video URL Input */}
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>VIDEO URL / YOUTUBE STREAM (OPTIONAL)</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Paste YouTube, MP4, Vimeo, or Loom video link..."
+                  placeholderTextColor="rgba(255,255,255,0.3)"
+                  value={videoUrl}
+                  onChangeText={setVideoUrl}
+                  autoCapitalize="none"
+                />
               </View>
 
               {/* Google Drive URL Input */}
@@ -435,32 +607,144 @@ export default function SuperAdminCommunityScreen() {
                 />
               </View>
 
-              {/* Toggles */}
+              {/* Schedule Post Toggle */}
               <View style={styles.toggleRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleTitle}>Pin to Top</Text>
-                  <Text style={styles.toggleSub}>Keep post pinned at top of community feed.</Text>
+                  <Text style={styles.toggleTitle}>📅 Schedule Post Release</Text>
+                  <Text style={styles.toggleSub}>Publish automatically at a future date/time.</Text>
                 </View>
-                <Switch value={pinned} onValueChange={setPinned} trackColor={{ false: '#1E293B', true: '#F59E0B' }} />
+                <Switch value={isScheduled} onValueChange={setIsScheduled} trackColor={{ false: '#1E293B', true: '#10B981' }} />
               </View>
 
+              {isScheduled && (
+                <View style={[styles.formGroup, { marginTop: 8 }]}>
+                  <Text style={[styles.label, { color: '#10B981', marginBottom: 8 }]}>
+                    📅 SCHEDULED PUBLISH DATE & TIME
+                  </Text>
+                  <View style={{ flexDirection: 'row', gap: 10 }}>
+                    {/* Date Picker Button */}
+                    <TouchableOpacity
+                      style={styles.pickerBtn}
+                      activeOpacity={0.8}
+                      onPress={() => setShowDatePicker(true)}
+                    >
+                      <View style={styles.pickerIconWrap}>
+                        <Feather name="calendar" size={18} color="#10B981" />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.pickerSubLabel}>Release Date</Text>
+                        <Text style={styles.pickerValueText}>
+                          {scheduledDateTime.toLocaleDateString(undefined, {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </Text>
+                      </View>
+                      <Feather name="chevron-down" size={16} color="rgba(255,255,255,0.4)" />
+                    </TouchableOpacity>
+
+                    {/* Time Picker Button */}
+                    <TouchableOpacity
+                      style={styles.pickerBtn}
+                      activeOpacity={0.8}
+                      onPress={() => setShowTimePicker(true)}
+                    >
+                      <View style={styles.pickerIconWrap}>
+                        <Feather name="clock" size={18} color="#10B981" />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.pickerSubLabel}>Release Time</Text>
+                        <Text style={styles.pickerValueText}>
+                          {scheduledDateTime.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true,
+                          })}
+                        </Text>
+                      </View>
+                      <Feather name="chevron-down" size={16} color="rgba(255,255,255,0.4)" />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Scheduled Summary Badge */}
+                  <View style={styles.scheduledSummaryBadge}>
+                    <Feather name="check-circle" size={13} color="#10B981" />
+                    <Text style={styles.scheduledSummaryText}>
+                      Will automatically publish on{' '}
+                      {scheduledDateTime.toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}{' '}
+                      at{' '}
+                      {scheduledDateTime.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                      })}
+                    </Text>
+                  </View>
+
+                  {showDatePicker && (
+                    <DateTimePicker
+                      value={scheduledDateTime}
+                      mode="date"
+                      display="default"
+                      minimumDate={new Date()}
+                      onChange={handleDateChange}
+                    />
+                  )}
+
+                  {showTimePicker && (
+                    <DateTimePicker
+                      value={scheduledDateTime}
+                      mode="time"
+                      display="default"
+                      onChange={handleTimeChange}
+                    />
+                  )}
+                </View>
+              )}
+
+              {/* Pin Post Toggle */}
               <View style={styles.toggleRow}>
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleTitle}>Feature Post</Text>
-                  <Text style={styles.toggleSub}>Highlight in featured banner list.</Text>
+                  <Text style={styles.toggleTitle}>📌 Pin Post to Top</Text>
+                  <Text style={styles.toggleSub}>Stick to the absolute top of the student community feed.</Text>
                 </View>
-                <Switch value={featured} onValueChange={setFeatured} trackColor={{ false: '#1E293B', true: '#3B82F6' }} />
+                <Switch value={pinned} onValueChange={setPinned} trackColor={{ false: '#1E293B', true: '#38BDF8' }} />
+              </View>
+
+              {/* Feature Post Toggle */}
+              <View style={styles.toggleRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.toggleTitle}>🌟 Spotlight Feature</Text>
+                  <Text style={styles.toggleSub}>Highlight with a gold badge in the community feed.</Text>
+                </View>
+                <Switch value={featured} onValueChange={setFeatured} trackColor={{ false: '#1E293B', true: '#F59E0B' }} />
               </View>
 
               {/* Action Buttons */}
               <View style={styles.modalActions}>
-                <TouchableOpacity
-                  style={[styles.modalSubmitBtn, { backgroundColor: '#3B82F6' }]}
-                  onPress={() => handleSubmit('Published')}
-                  disabled={submitting}
-                >
-                  <Text style={styles.modalSubmitText}>Publish Post</Text>
-                </TouchableOpacity>
+                {isScheduled ? (
+                  <TouchableOpacity
+                    style={[styles.modalSubmitBtn, { backgroundColor: '#10B981' }]}
+                    onPress={() => handleSubmit('Scheduled')}
+                    disabled={submitting}
+                  >
+                    <Text style={styles.modalSubmitText}>📅 Schedule Post</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.modalSubmitBtn, { backgroundColor: '#3B82F6' }]}
+                    onPress={() => handleSubmit('Published')}
+                    disabled={submitting}
+                  >
+                    <Text style={styles.modalSubmitText}>Publish Post Now</Text>
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   style={[styles.modalSubmitBtn, { backgroundColor: 'rgba(255,255,255,0.1)' }]}
@@ -483,10 +767,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
-    paddingHorizontal: 24,
+    paddingTop: Platform.OS === 'ios' ? 56 : 42,
+    paddingHorizontal: 20,
     paddingBottom: 16,
-    gap: 16,
+    gap: 14,
   },
   backBtn: {
     width: 44,
@@ -506,7 +790,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabRow: { flexDirection: 'row', paddingHorizontal: 24, gap: 8, marginBottom: 16 },
+  tabRow: { flexDirection: 'row', paddingHorizontal: 20, gap: 8, marginBottom: 16 },
+  tabScrollWrapper: { marginBottom: 16 },
+  tabScrollContent: { paddingHorizontal: 20, gap: 8, alignItems: 'center' },
   tabChip: {
     paddingHorizontal: 14,
     paddingVertical: 8,
@@ -514,6 +800,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.04)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tabChipActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   tabChipText: { color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: '600' },
@@ -522,7 +810,7 @@ const styles = StyleSheet.create({
   emptyText: { color: 'rgba(255,255,255,0.4)', fontSize: 14, marginTop: 12 },
   createFirstBtn: { marginTop: 16, paddingHorizontal: 20, paddingVertical: 10, backgroundColor: COLORS.primary, borderRadius: 12 },
   createFirstText: { color: '#FFF', fontWeight: '700' },
-  listContent: { paddingHorizontal: 24, paddingBottom: 40 },
+  listContent: { paddingHorizontal: 20, paddingBottom: 40 },
   postCard: { padding: 16, borderRadius: 16, marginBottom: 12 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
   categoryBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6, backgroundColor: 'rgba(96,165,250,0.1)' },
@@ -535,8 +823,67 @@ const styles = StyleSheet.create({
   cardImagePreview: { width: '100%', height: 160, borderRadius: 12, marginBottom: 12 },
   cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)' },
   authorText: { fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: '600' },
-  actionGroup: { flexDirection: 'row', gap: 12 },
+  actionGroup: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   iconAction: { padding: 4 },
+  pinActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  pinActionBtnActive: {
+    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+    borderColor: 'rgba(56, 189, 248, 0.4)',
+  },
+  pinActionText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.6)',
+  },
+  featureActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  featureActionBtnActive: {
+    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderColor: 'rgba(245, 158, 11, 0.4)',
+  },
+  featureActionText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: 'rgba(255,255,255,0.6)',
+  },
+  spotlightBanner: {
+    marginHorizontal: 24,
+    marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(245, 158, 11, 0.08)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.2)',
+  },
+  spotlightBannerText: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.7)',
+    flex: 1,
+    lineHeight: 16,
+  },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'flex-end' },
   modalContent: { backgroundColor: '#0F172A', borderTopLeftRadius: 24, borderTopRightRadius: 24, height: '85%', padding: 24 },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
@@ -560,4 +907,55 @@ const styles = StyleSheet.create({
   modalActions: { gap: 10, marginTop: 20, marginBottom: 40 },
   modalSubmitBtn: { height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   modalSubmitText: { color: '#FFF', fontSize: 14, fontWeight: '800' },
+  pickerBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.4)',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+  },
+  pickerIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pickerSubLabel: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: 'rgba(255,255,255,0.4)',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  pickerValueText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFF',
+    marginTop: 1,
+  },
+  scheduledSummaryBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.25)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  scheduledSummaryText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#10B981',
+    flex: 1,
+  },
 });

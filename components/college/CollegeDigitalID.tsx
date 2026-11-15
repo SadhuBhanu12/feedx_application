@@ -8,6 +8,8 @@ import { useTheme } from '@/context/ThemeContext';
 import { UserAvatar } from '@/components/ui/UserAvatar';
 import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
 
+import { resolveStandardFeedXId } from '@/services/idService';
+
 interface CollegeDigitalIDProps {
   user: any;
   profile: any;
@@ -18,11 +20,13 @@ export function CollegeDigitalID({ user, profile }: CollegeDigitalIDProps) {
   const router = useRouter();
 
   const studentName = profile?.full_name || user?.full_name || 'Student Name';
-  const rollNumber = profile?.roll_number || user?.roll_number || '21001-CSE-001';
-  const collegeName = profile?.college_name || user?.college_name || 'FeedX Polytechnic';
-  const branch = profile?.branch || user?.branch || 'Computer Science & Engineering';
+  const feedxId = profile?.feedx_id || user?.feedx_id || resolveStandardFeedXId(profile || user);
+  const rawReg = profile?.pin_number || user?.pin_number || profile?.roll_number || user?.roll_number || profile?.roll_no || user?.roll_no || profile?.student_id || user?.student_id;
+  const regNo = (rawReg && rawReg !== '21001-CSE-001' && rawReg !== 'PENDING') ? rawReg : feedxId;
+  const collegeName = profile?.college_name || user?.college_name || user?.colleges?.college_name || 'FEEDX Polytechnic';
+  const branch = profile?.branch || user?.branch || user?.branches?.branch_name || 'Computer Science & Engineering';
   const year = profile?.year || user?.year || '3rd Year';
-  const verificationStatus = profile?.verification_status || 'Verified';
+  const verificationStatus = profile?.verification_status || user?.identity_status || 'Verified';
 
   const isVerified = String(verificationStatus).toLowerCase() === 'verified';
 
@@ -63,13 +67,13 @@ export function CollegeDigitalID({ user, profile }: CollegeDigitalIDProps) {
               <Text style={styles.studentName} numberOfLines={1}>
                 {studentName}
               </Text>
-              <Text style={styles.rollNumberText}>
-                REG NO: <Text style={styles.rollVal}>{rollNumber}</Text>
+              <Text style={styles.rollNumberText} numberOfLines={1} ellipsizeMode="tail">
+                FEEDX ID: <Text style={styles.rollVal}>{feedxId}</Text>
               </Text>
-              <Text style={styles.metaSubText} numberOfLines={1}>
-                {branch} • {year}
+              <Text style={styles.metaSubText} numberOfLines={2}>
+                COLLEGE ID: {regNo} • {branch}
               </Text>
-              <Text style={styles.collegeNameText} numberOfLines={1}>
+              <Text style={styles.collegeNameText} numberOfLines={2}>
                 {collegeName}
               </Text>
             </View>
@@ -117,6 +121,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flex: 1,
+    marginRight: 8,
   },
   cardBrandTitle: {
     fontSize: 10,
@@ -137,6 +143,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
+    flexShrink: 0,
   },
   verifiedBadgeText: {
     fontSize: 9,
@@ -191,6 +198,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    flex: 1,
+    marginRight: 8,
   },
   tapNotice: {
     fontSize: 10,
@@ -201,6 +210,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
+    flexShrink: 0,
   },
   viewBtnText: {
     fontSize: 11,

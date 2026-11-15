@@ -165,16 +165,16 @@ BEGIN
     WHERE student_id = p_student_id
     FOR UPDATE;
 
-    -- Calculate current streak transition
+    -- Calculate current streak transition with 2-day missed reset policy
     IF v_last_active = v_today THEN
-        v_new_streak := v_curr_streak; -- Already active today
+        v_new_streak := GREATEST(v_curr_streak, 1); -- Already active today: prevent duplicate increment
     ELSIF v_last_active = v_today - INTERVAL '1 day' THEN
-        v_new_streak := v_curr_streak + 1; -- Consecutive daily active
-    ELSIF v_last_active = v_today - INTERVAL '2 days' AND v_freeze_count > 0 THEN
-        v_new_streak := v_curr_streak; -- Streak freeze used
-        v_freeze_count := v_freeze_count - 1;
+        v_new_streak := COALESCE(v_curr_streak, 0) + 1; -- Consecutive daily active
+    ELSIF v_last_active = v_today - INTERVAL '2 days' THEN
+        v_new_streak := COALESCE(v_curr_streak, 0) + 1; -- 1 missed calendar day: streak maintained, increment on return
     ELSE
-        v_new_streak := 1; -- Streak broken, restart
+        -- 2 or more consecutive missed calendar days (>= 3 days difference): reset to Day 1
+        v_new_streak := 1;
     END IF;
 
     -- Streak milestone bonuses (e.g., 7 days = +5 extra coins)
@@ -294,17 +294,13 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ==============================================================================
--- SEED DATA: REWARD TIERS (5, 10, 20, 30, 40, 50, 1000 COINS)
+-- SEED DATA: REWARD TIERS (5, 10, 20, 30, 40, 50 COINS)
 -- ==============================================================================
 INSERT INTO public.reward_catalog (title, description, coin_cost, category, stock, is_active)
 VALUES
     ('FEEDX Verified Learner Certificate', 'Official verified digital learner certificate signed by FEEDX.', 5, 'certificate', -1, true),
-    ('Excellence Certificate + ₹100 Gift Card', 'FEEDX Excellence Certificate paired with a ₹100 digital shopping gift card.', 10, 'gift_card', 100, true),
-    ('₹500 Gift Card + FEEDX Merchandise', '₹500 Amazon/Flipkart gift card with FEEDX notebook & sticker bundle.', 20, 'merchandise', 50, true),
-    ('Premium Learning Bundle & Pass', 'Exclusive access to premium skill modules, workshops & event passes.', 30, 'bundle', 30, true),
-    ('FEEDX Ambassador Badge + Hoodie', 'Official FEEDX Campus Ambassador Badge & premium custom hoodie.', 40, 'merchandise', 20, true),
-    ('Annual Excellence Award + Grand Prize', 'Annual FEEDX Excellence Trophy, certificate & premium tech prize.', 50, 'ticket', 10, true),
-    ('1 Gram 24K Real Physical Gold Coin 🪙', 'Redeem 1,000 FEEDX Gold Coins for an official certified 1 Gram 24K Physical Gold Coin delivered directly to your doorstep!', 1000, 'real_gold', 5, true)
+    ('FEEDX Academic Excellence Certificate', 'Official FEEDX Academic Excellence Certificate with Gold Seal.', 10, 'certificate', -1, true),
+    ('Annual FEEDX Excellence Award', 'Annual FEEDX Excellence Trophy, certificate & special recognition.', 50, 'award', 10, true)
 ON CONFLICT DO NOTHING;
 -- ==============================================================================
 -- DEDICATED DAILY TASK COMPLETIONS TABLE (IDEMPOTENT LOGICAL UNIQUE CONSTRAINT)

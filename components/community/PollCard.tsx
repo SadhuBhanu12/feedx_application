@@ -8,9 +8,10 @@ import { fetchPollDetails, submitPollVote } from '@/services/supabaseService';
 import { supabase } from '@/lib/supabase';
 import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
 
-interface PollCardProps {
+export interface PollCardProps {
   poll: any;
-  studentId: string;
+  studentId?: string;
+  currentUserId?: string;
   onVoteComplete?: () => void;
 }
 
@@ -52,7 +53,8 @@ function OptionProgressBar({ percentage, isSelected, text, count }: { percentage
   );
 }
 
-export function PollCard({ poll: initialPoll, studentId, onVoteComplete }: PollCardProps) {
+export function PollCard({ poll: initialPoll, studentId, currentUserId, onVoteComplete }: PollCardProps) {
+  const activeUserId = studentId || currentUserId || '';
   const { colors, isDark } = useTheme();
   const { refreshGamification } = useGamification();
 
@@ -67,7 +69,7 @@ export function PollCard({ poll: initialPoll, studentId, onVoteComplete }: PollC
   const loadPollData = async () => {
     if (!pollId) return;
     try {
-      const data = await fetchPollDetails(pollId, studentId);
+      const data = await fetchPollDetails(pollId, activeUserId);
       if (data) {
         setPollDetails(data);
         if (data.student_votes) {
@@ -83,14 +85,20 @@ export function PollCard({ poll: initialPoll, studentId, onVoteComplete }: PollC
 
   useEffect(() => {
     loadPollData();
-  }, [pollId, studentId]);
+  }, [pollId, activeUserId]);
 
-  // Real-time listener for vote count changes
+  // Real-time listener for vote count and poll status changes
   useEffect(() => {
     if (!pollId) return;
     const channel = supabase
-      .channel(`poll_votes_${pollId}`)
+      .channel(`poll_votes_${pollId}_${Date.now()}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_votes', filter: `poll_id=eq.${pollId}` }, () => {
+        loadPollData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'polls', filter: `id=eq.${pollId}` }, () => {
+        loadPollData();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_options', filter: `poll_id=eq.${pollId}` }, () => {
         loadPollData();
       })
       .subscribe();
@@ -116,7 +124,7 @@ export function PollCard({ poll: initialPoll, studentId, onVoteComplete }: PollC
   };
 
   const handleVoteSubmit = async () => {
-    if (!studentId) {
+    if (!activeUserId) {
       Alert.alert('Authentication Required', 'Please sign in to vote.');
       return;
     }
@@ -133,7 +141,7 @@ export function PollCard({ poll: initialPoll, studentId, onVoteComplete }: PollC
       const updated = await submitPollVote({
         poll_id: pollId,
         option_ids: selectedOptionIds,
-        student_id: studentId,
+        student_id: activeUserId,
       });
 
       if (updated) {

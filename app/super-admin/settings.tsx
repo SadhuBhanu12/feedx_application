@@ -93,7 +93,7 @@ export default function SuperAdminSettings() {
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <LinearGradient colors={['#0F172A', '#000000']} style={StyleSheet.absoluteFillObject} />
+        <LinearGradient colors={['#0F172A', '#000000']} style={StyleSheet.absoluteFill} />
         <ActivityIndicator size="large" color="#3B82F6" />
       </View>
     );
@@ -101,7 +101,7 @@ export default function SuperAdminSettings() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -224,13 +224,6 @@ export default function SuperAdminSettings() {
             </View>
             <View style={styles.itemDivider} />
 
-            {/* Innovations */}
-            <View style={styles.toggleRow}>
-              <Text style={styles.toggleTitle}>Innovation Submissions Hub</Text>
-              <Switch value={!!settings.innovation_hub_enabled} onValueChange={() => handleToggle('innovation_hub_enabled')} trackColor={{ false: '#1E293B', true: '#3B82F6' }} thumbColor="#FFF" />
-            </View>
-            <View style={styles.itemDivider} />
-
             {/* Events */}
             <View style={styles.toggleRow}>
               <Text style={styles.toggleTitle}>Campus Events & Feedback</Text>
@@ -322,8 +315,8 @@ export default function SuperAdminSettings() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 70 : 50, paddingBottom: 20 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingBottom: 20 },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.03)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginRight: 15 },
   headerTitle: { fontSize: 24, fontWeight: '900', color: '#FFF' },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 120 },

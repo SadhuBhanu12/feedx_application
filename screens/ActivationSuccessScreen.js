@@ -20,130 +20,211 @@ import { COLORS, SHADOWS } from '@/constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
-function AnimatedBackground() {
+function AnimatedAmbientGlow() {
   const pulse = useSharedValue(1);
-  const rotation = useSharedValue(0);
 
   useEffect(() => {
     pulse.value = withRepeat(
-      withSequence(withTiming(1.2, { duration: 3000 }), withTiming(1, { duration: 3000 })),
+      withSequence(
+        withTiming(1.2, { duration: 3500, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1, { duration: 3500, easing: Easing.inOut(Easing.ease) })
+      ),
       -1,
       true
     );
-    rotation.value = withRepeat(
-      withTiming(360, { duration: 25000, easing: Easing.linear }),
-      -1,
-      false
-    );
   }, []);
 
-  const glowStyle1 = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }, { rotate: `${rotation.value}deg` }],
-    opacity: interpolate(pulse.value, [1, 1.2], [0.2, 0.4]),
+  const glowStyleTop = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value }],
+    opacity: interpolate(pulse.value, [1, 1.2], [0.18, 0.32]),
   }));
 
-  const glowStyle2 = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }, { rotate: `-${rotation.value}deg` }],
-    opacity: interpolate(pulse.value, [1, 1.2], [0.15, 0.3]),
+  const glowStyleBottom = useAnimatedStyle(() => ({
+    transform: [{ scale: pulse.value }],
+    opacity: interpolate(pulse.value, [1, 1.2], [0.14, 0.26]),
   }));
 
   return (
-    <View style={StyleSheet.absoluteFill}>
-      <Animated.View style={[styles.glowBlob, { top: -height * 0.1, left: -width * 0.2, backgroundColor: COLORS.success, width: width * 0.8, height: width * 0.8 }, glowStyle1]} />
-      <Animated.View style={[styles.glowBlob, { bottom: -height * 0.1, right: -width * 0.2, backgroundColor: COLORS.primaryGlow || COLORS.primary, width: width * 0.8, height: width * 0.8 }, glowStyle2]} />
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <Animated.View
+        style={[
+          styles.glowOrb,
+          {
+            top: -height * 0.12,
+            left: -width * 0.18,
+            backgroundColor: '#10B981',
+            width: width * 0.9,
+            height: width * 0.9,
+          },
+          glowStyleTop,
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.glowOrb,
+          {
+            bottom: -height * 0.14,
+            right: -width * 0.22,
+            backgroundColor: '#3B82F6',
+            width: width * 0.95,
+            height: width * 0.95,
+          },
+          glowStyleBottom,
+        ]}
+      />
     </View>
   );
 }
 
 export default function ActivationSuccessScreen() {
   const router = useRouter();
-  
+
   const checkScale = useSharedValue(0);
-  const ringScale = useSharedValue(0.5);
-  const ringOpacity = useSharedValue(1);
+  const ringScale = useSharedValue(0.6);
+  const ringOpacity = useSharedValue(0.9);
 
   useEffect(() => {
-    checkScale.value = withDelay(300, withSpring(1, { damping: 14, stiffness: 100 }));
-    
-    ringScale.value = withDelay(400, withRepeat(
-      withTiming(2.2, { duration: 2000, easing: Easing.out(Easing.ease) }),
-      -1,
-      false
-    ));
-    
-    ringOpacity.value = withDelay(400, withRepeat(
-      withTiming(0, { duration: 2000, easing: Easing.out(Easing.ease) }),
-      -1,
-      false
-    ));
+    checkScale.value = withDelay(
+      200,
+      withSpring(1, { damping: 12, stiffness: 120 })
+    );
+
+    ringScale.value = withDelay(
+      350,
+      withRepeat(
+        withTiming(1.9, { duration: 2200, easing: Easing.out(Easing.ease) }),
+        -1,
+        false
+      )
+    );
+
+    ringOpacity.value = withDelay(
+      350,
+      withRepeat(
+        withTiming(0, { duration: 2200, easing: Easing.out(Easing.ease) }),
+        -1,
+        false
+      )
+    );
   }, []);
 
-  const checkStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: checkScale.value }]
+  const checkAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkScale.value }],
   }));
 
-  const animatedRingStyle = useAnimatedStyle(() => ({
+  const ringAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: ringScale.value }],
     opacity: ringOpacity.value,
   }));
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={COLORS.gradientHome || ['#000000', '#0a0a0a']} style={StyleSheet.absoluteFill} />
-      <AnimatedBackground />
+      <LinearGradient
+        colors={['#030712', '#0B0F19', '#020617']}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      <AnimatedAmbientGlow />
 
       <View style={styles.content}>
-        <Animated.View entering={FadeInDown.duration(800).springify()} style={styles.card}>
-          <View style={styles.glassContainer}>
-            
-            <View style={styles.iconWrapper}>
-              <Animated.View style={[styles.rippleRing, animatedRingStyle]} />
-              <Animated.View style={[styles.badge, checkStyle]}>
-                <LinearGradient colors={[COLORS.success, '#059669']} style={styles.badgeGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
-                  <Feather name="check" size={44} color="#FFF" />
-                </LinearGradient>
+        <Animated.View
+          entering={FadeInDown.duration(700).springify()}
+          style={styles.card}
+        >
+          {/* Card Border Highlight Gradient */}
+          <LinearGradient
+            colors={['rgba(255,255,255,0.16)', 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.06)']}
+            style={styles.cardBorderGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          >
+            <View style={styles.innerCard}>
+              
+              {/* Top Animated Success Check Badge */}
+              <View style={styles.badgeContainer}>
+                <Animated.View style={[styles.pulseRing, ringAnimatedStyle]} />
+                <Animated.View style={[styles.badgeShadow, checkAnimatedStyle]}>
+                  <LinearGradient
+                    colors={['#10B981', '#059669', '#047857']}
+                    style={styles.badgeCircle}
+                    start={{ x: 0.1, y: 0 }}
+                    end={{ x: 0.9, y: 1 }}
+                  >
+                    <Feather name="check" size={40} color="#FFFFFF" />
+                  </LinearGradient>
+                </Animated.View>
+              </View>
+
+              {/* Status Pill Badge */}
+              <Animated.View entering={FadeInUp.delay(300).duration(500)} style={styles.statusPill}>
+                <Feather name="shield" size={12} color="#10B981" />
+                <Text style={styles.statusPillText}>SECURITY UPDATE COMPLETED</Text>
               </Animated.View>
-            </View>
 
-            <Animated.Text entering={FadeInUp.delay(400).duration(600)} style={styles.title}>
-              ✅ Password Updated Successfully
-            </Animated.Text>
-            
-            <Animated.Text entering={FadeInUp.delay(550).duration(600)} style={styles.subtitle}>
-              Your password has been updated successfully. You can now log in using your new password.
-            </Animated.Text>
+              {/* Title & Subtitle */}
+              <Animated.Text entering={FadeInUp.delay(400).duration(600)} style={styles.title}>
+                Password Updated
+              </Animated.Text>
 
-            <Animated.View entering={FadeInUp.delay(700).duration(600)} style={styles.detailsBox}>
-              <View style={styles.detailRow}>
-                <View style={styles.iconBox}>
-                  <Ionicons name="shield-checkmark" size={18} color={COLORS.success} />
+              <Animated.Text entering={FadeInUp.delay(500).duration(600)} style={styles.subtitle}>
+                Your account password has been updated securely. You can now sign in using your new credentials.
+              </Animated.Text>
+
+              {/* Security Status Checklist */}
+              <Animated.View entering={FadeInUp.delay(650).duration(600)} style={styles.securityBox}>
+                <View style={styles.securityRow}>
+                  <View style={[styles.iconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.15)' }]}>
+                    <Ionicons name="shield-checkmark" size={18} color="#10B981" />
+                  </View>
+                  <View style={styles.securityTextWrap}>
+                    <Text style={styles.securityTitle}>End-to-End Encryption</Text>
+                    <Text style={styles.securitySub}>Bcrypt salted hash stored securely</Text>
+                  </View>
+                  <View style={styles.verifiedTag}>
+                    <Feather name="check" size={11} color="#10B981" />
+                    <Text style={styles.verifiedTagText}>Active</Text>
+                  </View>
                 </View>
-                <Text style={styles.detailText}>Password Encrypted</Text>
-              </View>
-              <View style={styles.detailDivider} />
-              <View style={styles.detailRow}>
-                <View style={styles.iconBox}>
-                  <Ionicons name="checkmark-circle" size={18} color={COLORS.success} />
-                </View>
-                <Text style={styles.detailText}>Identity Verified</Text>
-              </View>
-            </Animated.View>
 
-            <Animated.View entering={FadeInUp.delay(850).duration(600)} style={{ width: '100%' }}>
-              <TouchableOpacity style={styles.cta} onPress={() => router.replace('/login')} activeOpacity={0.85}>
-                <LinearGradient 
-                  colors={COLORS.gradientPrimary || ['#3b82f6', '#2563eb']} 
-                  style={styles.ctaGradient}
-                  start={{ x: 0, y: 0 }} 
-                  end={{ x: 1, y: 1 }}
+                <View style={styles.securityDivider} />
+
+                <View style={styles.securityRow}>
+                  <View style={[styles.iconWrap, { backgroundColor: 'rgba(59, 130, 246, 0.15)' }]}>
+                    <Ionicons name="sync" size={17} color="#60A5FA" />
+                  </View>
+                  <View style={styles.securityTextWrap}>
+                    <Text style={styles.securityTitle}>Sessions Refreshed</Text>
+                    <Text style={styles.securitySub}>Temporary tokens revoked</Text>
+                  </View>
+                  <View style={[styles.verifiedTag, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.25)' }]}>
+                    <Feather name="check" size={11} color="#60A5FA" />
+                    <Text style={[styles.verifiedTagText, { color: '#60A5FA' }]}>Verified</Text>
+                  </View>
+                </View>
+              </Animated.View>
+
+              {/* Action Button */}
+              <Animated.View entering={FadeInUp.delay(800).duration(600)} style={styles.actionWrap}>
+                <TouchableOpacity
+                  style={styles.cta}
+                  onPress={() => router.replace('/login')}
+                  activeOpacity={0.85}
                 >
-                  <Text style={styles.ctaText}>Return to Login</Text>
-                  <Feather name="arrow-right" size={20} color="#FFF" style={{ marginLeft: 8 }} />
-                </LinearGradient>
-              </TouchableOpacity>
-            </Animated.View>
+                  <LinearGradient
+                    colors={COLORS.gradientPrimary || ['#3B82F6', '#2563EB']}
+                    style={styles.ctaGradient}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  >
+                    <Text style={styles.ctaText}>Continue to Sign In</Text>
+                    <Feather name="arrow-right" size={18} color="#FFF" style={styles.ctaIcon} />
+                  </LinearGradient>
+                </TouchableOpacity>
+              </Animated.View>
 
-          </View>
+            </View>
+          </LinearGradient>
         </Animated.View>
       </View>
     </View>
@@ -151,148 +232,204 @@ export default function ActivationSuccessScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#000',
+  container: {
+    flex: 1,
+    backgroundColor: '#030712',
   },
-  glowBlob: { 
-    position: 'absolute', 
-    borderRadius: 999, 
-    opacity: 0.3,
+  glowOrb: {
+    position: 'absolute',
+    borderRadius: 999,
   },
-  content: { 
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    padding: 24,
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 22,
     zIndex: 10,
   },
   card: {
     width: '100%',
     maxWidth: 400,
-    borderRadius: 32,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    backgroundColor: 'rgba(20,20,20,0.5)',
+    borderRadius: 30,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 20 },
-    shadowOpacity: 0.6,
-    shadowRadius: 30,
-    elevation: 15,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 18 },
+        shadowOpacity: 0.65,
+        shadowRadius: 28,
+      },
+      android: {
+        elevation: 16,
+      },
+    }),
   },
-  glassContainer: {
-    padding: 32,
+  cardBorderGradient: {
+    padding: 1.5,
+    borderRadius: 30,
+  },
+  innerCard: {
+    backgroundColor: 'rgba(15, 23, 42, 0.82)',
+    borderRadius: 28.5,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.03)',
   },
-  iconWrapper: {
-    width: 120,
-    height: 120,
+  badgeContainer: {
+    width: 110,
+    height: 110,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 18,
   },
-  rippleRing: {
+  pulseRing: {
     position: 'absolute',
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.5)',
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: 'rgba(16, 185, 129, 0.18)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(16, 185, 129, 0.45)',
   },
-  badge: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: COLORS.success,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: COLORS.success,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 12,
-    overflow: 'hidden',
+  badgeShadow: {
+    width: 78,
+    height: 78,
+    borderRadius: 39,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#10B981',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.5,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
   },
-  badgeGradient: {
+  badgeCircle: {
     width: '100%',
     height: '100%',
+    borderRadius: 39,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  title: { 
-    color: '#FFF', 
-    fontSize: 26, 
-    fontWeight: '900', 
-    textAlign: 'center', 
-    marginBottom: 12,
-    letterSpacing: -0.5,
-  },
-  subtitle: { 
-    color: 'rgba(255,255,255,0.6)', 
-    fontSize: 14,
-    textAlign: 'center', 
-    lineHeight: 22, 
-    marginBottom: 32,
-    paddingHorizontal: 8,
-  },
-  detailsBox: {
-    width: '100%',
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 32,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
-  },
-  detailRow: {
+  statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.28)',
+    marginBottom: 12,
   },
-  iconBox: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+  statusPillText: {
+    color: '#10B981',
+    fontSize: 10.5,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+  },
+  title: {
+    color: '#FFFFFF',
+    fontSize: 27,
+    fontWeight: '900',
+    textAlign: 'center',
+    letterSpacing: -0.6,
+    marginBottom: 8,
+  },
+  subtitle: {
+    color: 'rgba(255, 255, 255, 0.65)',
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 21,
+    marginBottom: 24,
+    paddingHorizontal: 4,
+  },
+  securityBox: {
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.035)',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 26,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  securityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  iconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  detailText: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 14,
-    fontWeight: '600',
-    letterSpacing: 0.3,
+  securityTextWrap: {
+    flex: 1,
   },
-  detailDivider: {
+  securityTitle: {
+    color: '#FFFFFF',
+    fontSize: 13.5,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
+  securitySub: {
+    color: 'rgba(255, 255, 255, 0.45)',
+    fontSize: 11.5,
+    marginTop: 1,
+  },
+  verifiedTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3.5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.28)',
+  },
+  verifiedTagText: {
+    color: '#10B981',
+    fontSize: 10.5,
+    fontWeight: '800',
+    letterSpacing: 0.4,
+  },
+  securityDivider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
     width: '100%',
     marginVertical: 12,
   },
-  cta: { 
-    width: '100%', 
-    height: 56, 
-    borderRadius: 18, 
+  actionWrap: {
+    width: '100%',
+  },
+  cta: {
+    width: '100%',
+    height: 56,
+    borderRadius: 16,
     overflow: 'hidden',
-    shadowColor: COLORS.primary || '#3b82f6',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
+    ...SHADOWS.glow(COLORS.primary || '#3B82F6'),
   },
-  ctaGradient: { 
-    flex: 1, 
+  ctaGradient: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center', 
-    justifyContent: 'center' 
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
-  ctaText: { 
-    color: '#FFF', 
-    fontWeight: '800', 
+  ctaText: {
+    color: '#FFFFFF',
+    fontWeight: '800',
     fontSize: 16,
-    letterSpacing: 0.5,
+    letterSpacing: 0.4,
+  },
+  ctaIcon: {
+    marginLeft: 2,
   },
 });

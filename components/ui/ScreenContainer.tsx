@@ -38,7 +38,7 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      <LinearGradient colors={gradientColors as any} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={gradientColors as any} style={StyleSheet.absoluteFill} />
       <StatusBar style={statusBarStyle} />
 
       <KeyboardAvoidingView

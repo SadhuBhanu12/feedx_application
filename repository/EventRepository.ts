@@ -17,18 +17,42 @@ export class EventRepository extends BaseRepository {
     return this.execute(async (signal) => {
       return supabase
         .from('events')
-        .select('id, title, description, venue, event_date, banner_url, status, start_time, created_at')
-        .eq('status', 'Published')
+        .select('*')
         .order('created_at', { ascending: false })
         .abortSignal(signal as any);
     }, 'Fetch Events');
+  }
+
+  public static async getSuperadminEvents() {
+    return this.execute(async (signal) => {
+      return supabase
+        .from('events')
+        .select('*')
+        .is('college_id', null)
+        .order('created_at', { ascending: false })
+        .abortSignal(signal as any);
+    }, 'Fetch Superadmin Events');
+  }
+
+  public static async getCollegeEvents(collegeId?: string) {
+    return this.execute(async (signal) => {
+      let query = supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .abortSignal(signal as any);
+      if (collegeId) {
+        query = query.eq('college_id', collegeId);
+      }
+      return query;
+    }, 'Fetch College Events');
   }
 
   public static async getEventById(id: string) {
     return this.execute(async (signal) => {
       return supabase
         .from('events')
-        .select('id, title, description, venue, event_date, start_time, banner_url, status, created_at, college_id')
+        .select('*')
         .eq('id', id)
         .abortSignal(signal as any)
         .maybeSingle();
@@ -39,7 +63,7 @@ export class EventRepository extends BaseRepository {
     return this.execute(async (signal) => {
       let query = supabase
         .from('events')
-        .select('id, title, description, venue, event_date, banner_url, status, start_time, created_at, college_id')
+        .select('*')
         .order('created_at', { ascending: false })
         .abortSignal(signal as any);
         
@@ -130,7 +154,7 @@ export class EventRepository extends BaseRepository {
   public static async getStudentRegistrations(studentId: string) {
     return this.execute(async (signal) => {
       return supabase.from('event_registrations')
-        .select('id, status, registration_number, attendance, attendance_status, branch, event_qr, feedx_id, created_at, events(id, title, venue, event_date, start_time, banner_url)')
+        .select('id, status, registration_number, attendance, attendance_status, branch, event_qr, feedx_id, created_at, events(*)')
         .eq('student_id', studentId)
         .order('created_at', { ascending: false })
         .abortSignal(signal as any);

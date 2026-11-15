@@ -9,12 +9,12 @@ import {
   ScrollView,
   Alert,
   AppState,
+  ActivityIndicator,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ButtonLoading } from '@/components/ui/Loaders';
 import { COLORS, SHADOWS } from '@/constants/theme';
 import { INNOVATION_CATEGORIES } from './InnovationCategories';
 
@@ -423,7 +423,7 @@ export default function InnovationSubmissionWizard({
   return (
     <Modal visible={visible} animationType="slide" transparent={false} onRequestClose={onClose}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+        {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
         {/* Floating Draft Saved Toast */}
         {draftSavedToast && (
@@ -985,7 +985,7 @@ export default function InnovationSubmissionWizard({
                     colors={!isStep5Valid ? ['#475569', '#334155'] : ['#10B981', '#059669']}
                     style={styles.nextGradient}
                   >
-                    {submitting ? <ButtonLoading color="#FFF" /> : (
+                    {submitting ? <ActivityIndicator size="small" color="#FFF" /> : (
                       <>
                         <Text style={styles.nextBtnText}>Submit Proposal</Text>
                         <Feather name="check" size={16} color="#FFF" style={{ marginLeft: 4 }} />

@@ -94,7 +94,7 @@ export const OPPORTUNITY_FEED = [
     id: 'of3',
     type: 'Event',
     title: 'Career Fair 2025',
-    company: 'FeedX Network',
+    company: 'FEEDX Network',
     location: 'Coimbatore',
     stipend: 'Free Entry',
     deadline: 'Jul 20',

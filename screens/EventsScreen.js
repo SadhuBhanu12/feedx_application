@@ -17,23 +17,31 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { COLORS } from '@/constants/theme';
 import { SkeletonLoader } from '@/components/ui/Loaders';
 import { useTheme } from '@/context/ThemeContext';
+import PressableCard from '@/components/ui/PressableCard';
 
 const CATEGORIES = ['All', 'Workshop', 'Hackathon', 'Seminar', 'Fest'];
 const MODES = ['All', 'Online', 'Offline'];
 
+const FEEDX_EVENT_FALLBACK = require('@/assets/images/logo.jpg');
+
 const EventCard = React.memo(function EventCard({ item, index, router, isRegistered }) {
-  const pct = item.capacity ? Math.round((item.registered / item.capacity) * 100) : 0;
+  const capacity = Number(item.capacity || item.max_participants || 100);
+  const registeredCount = Number(item.registered || 0);
+  const pct = capacity > 0 ? Math.min(100, Math.round((registeredCount / capacity) * 100)) : 0;
   const isOnline = !!item.meeting_link;
 
   return (
     <Animated.View entering={FadeInDown.delay(Math.min(index, 6) * 40).springify()} style={styles.cardContainer}>
-      <TouchableOpacity 
-        activeOpacity={0.9} 
+      <PressableCard 
+        scaleTo={0.98} 
+        haptic={false}
         onPress={() => safeNavigate(router, '/event-detail', { id: item.id })}
         style={styles.card}
+        contentStyle={styles.cardInner}
       >
         <OptimizedImage 
-          source={item.image_url || `https://images.unsplash.com/photo-1540575861501-7ad060e39fe1?q=80&w=1000&auto=format&fit=crop`} 
+          source={item.image_url || item.banner_url || item.poster_url || item.image || item.cover_image || FEEDX_EVENT_FALLBACK} 
+          fallbackSource={FEEDX_EVENT_FALLBACK}
           style={styles.poster}
           contentFit="cover"
         />
@@ -73,19 +81,19 @@ const EventCard = React.memo(function EventCard({ item, index, router, isRegiste
                  </View>
                  <View style={styles.metaItem}>
                     <Feather name="users" size={12} color="rgba(255,255,255,0.4)" />
-                    <Text style={styles.metaText}>{item.registered || 0} Joined</Text>
+                    <Text style={styles.metaText}>{registeredCount} Joined</Text>
                  </View>
               </View>
            </View>
 
            <View style={styles.progressSection}>
               <View style={styles.barContainer}>
-                 <View style={[styles.barFill, { width: `${Math.min(100, pct)}%`, backgroundColor: pct > 80 ? '#EF4444' : '#3B82F6' }]} />
+                 <View style={[styles.barFill, { width: `${Math.max(pct > 0 ? 5 : 0, Math.min(100, pct))}%`, backgroundColor: pct > 80 ? '#EF4444' : '#3B82F6' }]} />
               </View>
               <Text style={styles.capacityText}>{pct}% Booked</Text>
            </View>
         </View>
-      </TouchableOpacity>
+      </PressableCard>
     </Animated.View>
   );
 });
@@ -181,7 +189,7 @@ export default function EventsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#070A13', '#0F172A', '#131C31']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#070A13', '#0F172A', '#131C31']} style={StyleSheet.absoluteFill} />}
       
       {/* Header */}
       <View style={styles.header}>
@@ -321,9 +329,10 @@ const styles = StyleSheet.create({
   divider: { width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 4 },
   listContent: { paddingHorizontal: 24, paddingBottom: 120 },
   cardContainer: { marginBottom: 20, height: 350 },
-  card: { flex: 1, borderRadius: 24, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.01)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.04)' },
-  poster: { ...StyleSheet.absoluteFillObject },
-  cardOverlay: { ...StyleSheet.absoluteFillObject },
+  card: { flex: 1, height: '100%', borderRadius: 24, overflow: 'hidden', backgroundColor: '#0F172A', borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
+  cardInner: { width: '100%', height: '100%', position: 'relative' },
+  poster: { ...StyleSheet.absoluteFill },
+  cardOverlay: { ...StyleSheet.absoluteFill },
   registeredBadge: { position: 'absolute', top: 16, left: 16, zIndex: 2, flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(16, 185, 129, 0.15)', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: 'rgba(16, 185, 129, 0.3)' },
   registeredText: { color: '#10B981', fontSize: 10, fontWeight: '800' },
   cardContent: { flex: 1, padding: 20, justifyContent: 'flex-end' },

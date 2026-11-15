@@ -17,6 +17,7 @@ import { fetchAdminPolls, closePollAdmin, deletePollAdmin } from '@/services/sup
 import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
 import { useUser } from '@/context/UserContext';
 import { CreatePollModal } from '@/components/community/CreatePollModal';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminPollsScreen() {
   const { colors, isDark } = useTheme();
@@ -42,6 +43,24 @@ export default function AdminPollsScreen() {
 
   useEffect(() => {
     loadPolls();
+
+    const channelName = `admin_polls_realtime_${Date.now()}`;
+    const channel = supabase
+      .channel(channelName)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'polls' }, () => {
+        loadPolls();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_options' }, () => {
+        loadPolls();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'poll_votes' }, () => {
+        loadPolls();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleClosePoll = async (pollId: string) => {

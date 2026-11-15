@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 
+import { useUser } from '@/context/UserContext';
+
 const { width } = Dimensions.get('window');
 
 interface CertificateModalProps {
@@ -28,14 +30,21 @@ export default function CertificateModal({
   visible,
   onClose,
   certificateType = 'verified_learner',
-  studentName = 'BHANU PRAKASH',
+  studentName,
   certificateId,
   issueDate,
 }: CertificateModalProps) {
-  const certId = certificateId || `FEEDX-${certificateType === 'excellence' ? 'EXC' : 'VL'}-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-  const dateStr = issueDate || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
+  const { user } = useUser();
   const isExcellence = certificateType === 'excellence' || certificateType.toLowerCase().includes('excellence');
+  const typeCode = isExcellence ? 'EX' : 'VL';
+
+  // Dynamic resilient student name extraction
+  const rawName = studentName || user?.full_name || user?.name || user?.user_metadata?.full_name || 'BHANU PRAKASH';
+  const resolvedStudentName = String(rawName).trim() || 'BHANU PRAKASH';
+
+  // Format ID according to official standard: FX-[TYPE]-[UNIQUE NUMBER]
+  const certId = certificateId || `FX-${typeCode}-001`;
+  const dateStr = issueDate || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   const TARGET_WIDTH = width - 32;
   const CERT_DESIGN_WIDTH = 640;
@@ -102,7 +111,7 @@ export default function CertificateModal({
 
                     {/* Recipient Name Area with Solid Underline */}
                     <View style={styles.nameLineContainer}>
-                      <Text style={styles.recipientNameText}>{studentName.toUpperCase()}</Text>
+                      <Text style={styles.recipientNameText}>{resolvedStudentName.toUpperCase()}</Text>
                       <View style={styles.nameUnderline} />
                     </View>
 
@@ -129,10 +138,9 @@ export default function CertificateModal({
                         <Text style={styles.footerBold}>FEEDX POLYTECHNIC COMMUNITY</Text>
                       </View>
 
-                      <View style={styles.certIdPill}>
-                        <FontAwesome5 name="shield-alt" size={12} color="#FDE047" style={{ marginRight: 5 }} />
-                        <Text style={styles.certIdPillLabel}>CERTIFICATE ID: </Text>
-                        <Text style={styles.certIdPillValue}>{certId}</Text>
+                      <View style={{ alignItems: 'flex-end' }}>
+                        <Text style={styles.footerLabel}>Certificate ID:</Text>
+                        <Text style={[styles.footerIdText, { color: '#0B0C30', fontWeight: '900' }]}>{certId}</Text>
                       </View>
                     </View>
 
@@ -164,7 +172,7 @@ export default function CertificateModal({
 
                     {/* Recipient Name */}
                     <View style={styles.verifiedNameContainer}>
-                      <Text style={styles.recipientNameText}>{studentName.toUpperCase()}</Text>
+                      <Text style={styles.recipientNameText}>{resolvedStudentName.toUpperCase()}</Text>
                       <View style={styles.nameUnderline} />
                     </View>
 

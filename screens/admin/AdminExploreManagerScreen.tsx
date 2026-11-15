@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,28 @@ import { LinearGradient } from 'expo-linear-gradient';
 import GlassCard from '@/components/ui/GlassCard';
 import FeedXIcon from '@/components/ui/FeedXIcon';
 import { useTheme } from '@/context/ThemeContext';
+import { useUser } from '@/context/UserContext';
 import { rf, rs } from '@/constants/responsive';
 import { supabase } from '@/lib/supabase';
 
 export default function AdminExploreManagerScreen() {
   const { colors, isDark } = useTheme();
+  const { user } = useUser();
   const router = useRouter();
+
+  const role = String(user?.role || '').trim().toLowerCase();
+  const isAdmin = ['admin', 'super_admin', 'inst_admin', 'college_admin', 'campus_admin'].includes(role);
+
+  useEffect(() => {
+    if (!user || !isAdmin) {
+      Alert.alert('Access Denied', 'Administrative privileges required.');
+      router.replace('/(tabs)');
+    }
+  }, [user, isAdmin, router]);
+
+  if (!user || !isAdmin) {
+    return null;
+  }
 
   const [title, setTitle] = useState('');
   const [branch, setBranch] = useState('CSE');
@@ -69,7 +85,7 @@ export default function AdminExploreManagerScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>

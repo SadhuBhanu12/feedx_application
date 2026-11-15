@@ -1,4 +1,6 @@
 import { useUser } from '@/context/UserContext';
+import { useGamification } from '@/context/GamificationContext';
+import { getCalendarDateString } from '@/services/gamificationService';
 import { supabase } from '@/lib/supabase';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
@@ -72,6 +74,7 @@ function TaskItem({ task, onToggle, index }) {
 
 export default function TasksScreen() {
   const { user } = useUser();
+  const { triggerReward, refreshGamification } = useGamification();
   const queryClient = useQueryClient();
   const { data: serverTasks, isLoading: loading } = useTasksQuery(user?.id);
   
@@ -88,6 +91,8 @@ export default function TasksScreen() {
   }, [serverTasks]);
 
   const handleToggleTask = async (id, newStatus) => {
+    const taskItem = tasks.find(t => t.id === id);
+
     // Optimistic Update
     setTasks(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
     
@@ -95,6 +100,24 @@ export default function TasksScreen() {
       await requestQueue.enqueue('UPDATE_TASK_STATUS', { id, status: newStatus });
       queryClient.invalidateQueries({ queryKey: ['tasks', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard', user?.id] });
+
+      // If task marked as Completed, award task completion tokens & trigger celebration popup!
+      if (newStatus === 'Completed' && user?.id && triggerReward) {
+        const todayDate = getCalendarDateString();
+        const refId = `task_desk_${id}_${todayDate}`;
+        try {
+          await triggerReward({
+            userId: user.id,
+            activityType: 'daily_task',
+            points: 20,
+            referenceId: refId,
+            activityName: taskItem?.title ? `Task: ${taskItem.title}` : 'Task Desk Mission Completed',
+          });
+          await refreshGamification();
+        } catch (rewardErr) {
+          console.warn('[TasksScreen] Task reward trigger warning:', rewardErr);
+        }
+      }
     } catch (e) {
       console.warn('Toggle task failed, reverting:', e);
       // Revert optimistic update
@@ -138,7 +161,7 @@ export default function TasksScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />
 
       <View style={styles.header}>
         <View>

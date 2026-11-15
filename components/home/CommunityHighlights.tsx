@@ -36,7 +36,7 @@ export function CommunityHighlights({ communityHighlight }: CommunityHighlightsP
     );
   }
 
-  const authorName = communityHighlight.author_name || 'FeedX Student';
+  const authorName = communityHighlight.author_name || 'FEEDX Student';
   const postTitle = communityHighlight.title || communityHighlight.caption || 'Community Post';
   const postDesc = communityHighlight.caption || communityHighlight.description || '';
   const timeText = communityHighlight.created_at
@@ -254,5 +254,17 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 11,
     fontWeight: '700',
+  },
+  reactionCapsule: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 14,
+    gap: 6,
+  },
+  reactionCountText: {
+    fontSize: 11,
+    fontWeight: '800',
   },
 });

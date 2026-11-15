@@ -100,6 +100,11 @@ BEGIN
         v_semester := NEW.semester_number;
     END IF;
 
+    -- Guard: If student does not exist (parent record was deleted or is being deleted), skip sync
+    IF NOT EXISTS (SELECT 1 FROM public.students WHERE id = v_student_id) THEN
+        RETURN NULL;
+    END IF;
+
     -- A. Calculate and update Semester GPA
     SELECT COALESCE(SUM(credits), 0), COALESCE(SUM(credits * grade_point), 0)
     INTO v_total_credits, v_total_points

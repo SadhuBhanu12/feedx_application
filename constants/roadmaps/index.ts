@@ -285,7 +285,7 @@ export const CAREER_ROADMAPS: Record<string, CareerRoadmap> = {
       }
     ],
     projects: [
-      { name: 'FeedX LMS Platform', description: 'Fullstack learning management portal with video streaming.', tech: ['Next.js', 'Prisma', 'Tailwind'] }
+      { name: 'FEEDX LMS Platform', description: 'Fullstack learning management portal with video streaming.', tech: ['Next.js', 'Prisma', 'Tailwind'] }
     ],
     certifications: ['AWS Certified Solutions Architect'],
     interviewPrep: ['End-to-end data flow', 'Client vs Server state synchronization', 'CORS & Security headers'],

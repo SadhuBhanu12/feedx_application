@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FEEDX — Complete Technical Architecture & Engineering Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-dark: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --secondary: #0F172A;
+      --accent: #F59E0B;
+      --accent-light: #FEF3C7;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --code-bg: #0F172A;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.65;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 56px 64px;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid var(--border);
+    }
+
+    .header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 28px;
+      margin-bottom: 40px;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge-primary { background: var(--primary-light); color: var(--primary); }
+    .badge-accent { background: var(--accent-light); color: #B45309; }
+    .badge-dark { background: #E2E8F0; color: #334155; }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--secondary);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+      padding: 16px;
+      background: #F8FAFC;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .meta-item strong {
+      color: var(--secondary);
+      display: block;
+      margin-bottom: 2px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--secondary);
+      margin-top: 48px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+
+    p { margin-bottom: 16px; color: #334155; }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 20px;
+      color: #334155;
+    }
+
+    li { margin-bottom: 8px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0 28px 0;
+      font-size: 14px;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: var(--secondary);
+      text-align: left;
+      padding: 12px 14px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+      color: #334155;
+    }
+
+    tr:nth-child(even) { background-color: #FAFAFA; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: #F1F5F9;
+      color: #0F172A;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #E2E8F0;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: #F8FAFC;
+      padding: 20px 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 18px 0 24px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    .callout {
+      padding: 18px 22px;
+      border-left: 4px solid var(--primary);
+      background: var(--primary-light);
+      border-radius: 0 8px 8px 0;
+      margin: 24px 0;
+      font-size: 14px;
+    }
+
+    .callout-title {
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .btn-print {
+      display: inline-block;
+      float: right;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-print:hover { background: var(--primary-dark); }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+      .btn-print { display: none; }
+      pre { white-space: pre-wrap; word-break: break-all; }
+      h2 { page-break-before: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+    <div class="badge-bar">
+      <span class="badge badge-primary">Technical Documentation</span>
+      <span class="badge badge-accent">Production Ready</span>
+      <span class="badge badge-dark">Version 1.2.0</span>
+    </div>
+    <h1>FEEDX — Complete Technical Architecture & Specification</h1>
+    <p>Comprehensive engineering reference covering frontend, backend, security model, administrative hierarchy, schema definitions, and Phase 2 roadmap.</p>
+    
+    <div class="meta-grid">
+      <div class="meta-item">
+        <strong>Repository</strong>
+        SadhuBhanu12/feedx2 (Main)
+      </div>
+      <div class="meta-item">
+        <strong>Mobile Client</strong>
+        Expo SDK 54 / React Native 0.81.5
+      </div>
+      <div class="meta-item">
+        <strong>Backend & Database</strong>
+        Supabase Cloud (PostgreSQL 15+)
+      </div>
+      <div class="meta-item">
+        <strong>Cloudinary CDN</strong>
+        kctzl9wq (community_uploads)
+      </div>
+    </div>
+  </div>
+
+  <h2>1. Frontend & Client Platform</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technology</th>
+        <th>Version / Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Mobile Runtime</strong></td>
+        <td>React Native</td>
+        <td><code>0.81.5</code> (New Architecture Enabled)</td>
+      </tr>
+      <tr>
+        <td><strong>Application Framework</strong></td>
+        <td>Expo SDK</td>
+        <td><code>~54.0.35</code></td>
+      </tr>
+      <tr>
+        <td><strong>Navigation Engine</strong></td>
+        <td>Expo Router v6</td>
+        <td><code>~6.0.24</code> (File-based, typed routing)</td>
+      </tr>
+      <tr>
+        <td><strong>Languages</strong></td>
+        <td>TypeScript & React</td>
+        <td>TypeScript <code>5.9.2</code>, React <code>19.1.0</code></td>
+      </tr>
+      <tr>
+        <td><strong>State & Cache</strong></td>
+        <td>TanStack Query & Zustand</td>
+        <td>React Query <code>5.101.2</code>, Zustand <code>5.0.14</code></td>
+      </tr>
+      <tr>
+        <td><strong>Storage Layer</strong></td>
+        <td>MMKV & AsyncStorage</td>
+        <td><code>react-native-mmkv 4.3.2</code>, <code>@react-native-async-storage/async-storage</code></td>
+      </tr>
+      <tr>
+        <td><strong>List Virtualization</strong></td>
+        <td>FlashList</td>
+        <td><code>@shopify/flash-list 2.0.2</code></td>
+      </tr>
+      <tr>
+        <td><strong>Animation & Motion</strong></td>
+        <td>Reanimated v4</td>
+        <td><code>react-native-reanimated ~4.1.1</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. Backend, Database & Cloud Infrastructure</h2>
+  <ul>
+    <li><strong>Primary BaaS:</strong> <strong>Supabase</strong> with managed PostgreSQL 15+, automated connection pooling, WebSocket Realtime replication, and row-level access rules.
+      <br>Endpoint: <code>https://ktontqbfcinzqvalxyqd.supabase.co</code></li>
+    <li><strong>Serverless Compute (Supabase Edge Functions):</strong> Running on Deno to execute privileged tasks:
+      <ul>
+        <li><code>check-login-eligibility</code>: Verifies user existence and activation state.</li>
+        <li><code>verify-identity</code>: Matches student PIN & DOB against pre-seeded college rosters with IP lockout.</li>
+        <li><code>complete-activation</code>: Sets encrypted password directly in <code>auth.users</code> via secure RPC.</li>
+        <li><code>send-notification</code>: Dispatches targeted push alerts filtered by college, branch, or year.</li>
+        <li><code>validate-internship</code>: Validates student application eligibility.</li>
+        <li><code>create-student</code>: Secure administrative roster enrollment.</li>
+      </ul>
+    </li>
+    <li><strong>Static & Media Delivery:</strong> <strong>Cloudinary CDN</strong> (Cloud: <code>kctzl9wq</code>, Preset: <code>community_uploads</code>) for fast distributed delivery and compression of user avatars, project images, and attachments.</li>
+    <li><strong>External Integrations:</strong> Google Apps Script bridge for bi-directional sheet syncing.</li>
+  </ul>
+
+  <h2>3. Login & Authentication Method</h2>
+  <ul>
+    <li><strong>Dual Identifiers:</strong> Supports login via <strong>Roll Number</strong> (e.g. <code>23001-CM-001</code>) or standard <strong>Email address</strong>. Roll numbers are dynamically resolved against the <code>students</code> table.</li>
+    <li><strong>Zero-Trust Student Onboarding:</strong>
+      <ol>
+        <li>College imports student roster (Roll Number, PIN Number, DOB, Branch, Year).</li>
+        <li>On first login, the student enters PIN + Date of Birth at <code>/first-time-login</code>.</li>
+        <li>Security gate enforces a max of 5 failed attempts per IP, locking out offenders for 15 minutes.</li>
+        <li>Upon validation, a single-use 32-byte cryptographic token (15-min lifespan) is created.</li>
+        <li>Student chooses a secure password (8+ chars, upper, lower, number, symbol) at <code>/create-password</code>.</li>
+        <li>System reconciles auth accounts and activates the profile.</li>
+      </ol>
+    </li>
+    <li><strong>Session Lifecycle:</strong> Handled via <code>UserContext.tsx</code> with background token pause to eliminate clock drift and complete cache cleanup upon logout.</li>
+  </ul>
+
+  <h2>4. Administrative Hierarchy & Panel Access</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>App Route</th>
+        <th>Key Responsibilities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Super Admin</strong></td>
+        <td><code>/super-admin</code></td>
+        <td>Multi-college onboarding, admin user provisioning, platform telemetry, global maintenance mode toggle, kill switch, community moderation.</td>
+      </tr>
+      <tr>
+        <td><strong>College Admin</strong></td>
+        <td><code>/(tabs)/admin</code></td>
+        <td>Student registry management, bulk CSV roster upload, password resets, notification broadcast hub, placement/internship hub, timetable scheduler, attendance logs, event ticketing with QR scanner.</td>
+      </tr>
+      <tr>
+        <td><strong>Student User</strong></td>
+        <td><code>/(tabs)</code></td>
+        <td>Home dashboard, academic notes, class schedule, attendance tracker, community feed, daily challenges, quizzes, gold coin wallet, digital ID card.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>5. Hosting & Deployment Setup</h2>
+  <ul>
+    <li><strong>Mobile Build Engine:</strong> <strong>Expo Application Services (EAS)</strong> (Project ID: <code>6a4bbad8-112e-4e58-93fe-37a61a28b37d</code>).</li>
+    <li><strong>Android Distribution:</strong> Package: <code>com.bhanu121245.feedx</code> (Version <code>1.2.0</code>, VersionCode <code>5</code>). Pre-built standalone release APK available in repo root: <code>feedx-release.apk</code> (135.9 MB).</li>
+    <li><strong>iOS Distribution:</strong> Bundle ID: <code>com.bhanu121245.feedx</code> (TestFlight & App Store ready).</li>
+    <li><strong>Database & Edge Hosting:</strong> Supabase AWS cloud infrastructure with automatic failover and daily backups.</li>
+  </ul>
+
+  <h2>6. Source Code Repository & Backups</h2>
+  <ul>
+    <li><strong>GitHub Repository:</strong> <a href="https://github.com/SadhuBhanu12/feedx2.git" target="_blank">https://github.com/SadhuBhanu12/feedx2.git</a></li>
+    <li><strong>Production Branch:</strong> <code>Main</code></li>
+    <li><strong>Local Work Directory:</strong> <code>c:\Users\BHANU\Downloads\feedx-main</code></li>
+    <li><strong>DDL & Seed Backups:</strong> Master database script in <code>supabase/complete_setup_unified.sql</code> (1,425 lines) and curriculum database in <code>FEEDX_Complete_Quick_Learn_Quiz_Content_Library.pdf</code>.</li>
+  </ul>
+
+  <h2>7. Database Structure & Core Tables</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>Primary Tables</th>
+        <th>Key Fields & Features</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Tenancy & Hierarchy</strong></td>
+        <td><code>colleges</code>, <code>branches</code>, <code>academic_years</code>, <code>sections</code></td>
+        <td>Institution codes, branch names, semesters, department structures.</td>
+      </tr>
+      <tr>
+        <td><strong>Identity & Roles</strong></td>
+        <td><code>users</code>, <code>students</code>, <code>admins</code></td>
+        <td>Auth ID links, roll numbers, full names, roles, pins, date of birth, FEEDX ID.</td>
+      </tr>
+      <tr>
+        <td><strong>Academic Operations</strong></td>
+        <td><code>timetables</code>, <code>attendance</code>, <code>resources</code>, <code>tasks</code></td>
+        <td>Class schedules, subject attendance counters, downloadable PDF notes, assignments.</td>
+      </tr>
+      <tr>
+        <td><strong>Careers & Placements</strong></td>
+        <td><code>opportunities</code>, <code>opportunity_applications</code></td>
+        <td>Job listings, internships, student resumes, application statuses.</td>
+      </tr>
+      <tr>
+        <td><strong>Events & Community</strong></td>
+        <td><code>events</code>, <code>event_registrations</code>, <code>community_posts</code>, <code>issues</code></td>
+        <td>Event schedules, QR entry tokens, discussion board, grievance resolution tickets.</td>
+      </tr>
+      <tr>
+        <td><strong>Gamification Engine</strong></td>
+        <td><code>daily_streaks</code>, <code>student_wallets</code>, <code>daily_quizzes</code>, <code>quiz_questions</code>, <code>student_quiz_attempts</code></td>
+        <td>Engagement streak tracker, gold coins, daily timed micro-quizzes, XP leaderboards.</td>
+      </tr>
+      <tr>
+        <td><strong>Security & Audit</strong></td>
+        <td><code>activation_sessions</code>, <code>activation_attempts</code>, <code>settings</code></td>
+        <td>15-minute activation tokens, brute-force logs, global maintenance flags.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>8. Security Architecture</h2>
+  <ul>
+    <li><strong>Row-Level Security (RLS):</strong> Enabled on every PostgreSQL table to isolate student records and enforce tenant isolation for college administrators.</li>
+    <li><strong>Key Tiering:</strong> Client is limited to <code>EXPO_PUBLIC_SUPABASE_ANON_KEY</code>; elevated administrative mutations run inside Deno Edge Functions via <code>SERVICE_ROLE_KEY</code>.</li>
+    <li><strong>Anti-Brute Force Protection:</strong> 5 failed activation attempts trigger an automatic 15-minute lock on that IP/identifier.</li>
+    <li><strong>Cryptographic Tokens:</strong> 32-byte cryptographically secure random tokens with a 15-minute lifespan for password initialization.</li>
+    <li><strong>Remote Maintenance Mode:</strong> Real-time kill switch managed via the <code>settings</code> table with admin bypass.</li>
+  </ul>
+
+  <h2>9. Quick Build & Deployment Instructions</h2>
+  <pre><code># 1. Install dependencies
+npm install
+
+# 2. Configure .env file with Supabase & Cloudinary credentials
+# EXPO_PUBLIC_SUPABASE_URL=...
+# EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+# EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME=...
+
+# 3. Start development server
+npx expo start
+
+# 4. Build standalone APK via EAS (Android Preview)
+eas build -p android --profile preview
+
+# 5. Build production Play Store App Bundle (AAB)
+eas build -p android --profile production</code></pre>
+
+  <h2>10. Technical Debt & Phase 2 Roadmap</h2>
+  <div class="callout">
+    <div class="callout-title">Immediate Pre-Release Action</div>
+    Hoist conditionally called hooks in <code>app/(tabs)/_layout.tsx</code> to satisfy React Hook rules of execution.
+  </div>
+  <ul>
+    <li><strong>Milestone 1: Native Push Notifications:</strong> Integrate Firebase Cloud Messaging (FCM) & Apple APNs for background broadcast notifications.</li>
+    <li><strong>Milestone 2: Offline Mutation Sync:</strong> Local SQLite queue to allow offline task and attendance updates that sync automatically upon reconnecting.</li>
+    <li><strong>Milestone 3: Digital ID Card Wallet Export:</strong> High-resolution vector PDF export and Apple/Google Wallet integration for student ID cards.</li>
+    <li><strong>Milestone 4: AI Career Copilot:</strong> Connect <code>AIRoadmapScreen.tsx</code> to LLMs for personalized study and interview prep paths.</li>
+    <li><strong>Milestone 5: Direct Faculty Chat:</strong> End-to-end messaging channels between students and mentors.</li>
+  </ul>
+
+  <div class="footer">
+    FEEDX Polytechnic Operating System &copy; 2026 Core Engineering Team. All rights reserved.
+  </div>
+</div>
+
+</body>
+</html>

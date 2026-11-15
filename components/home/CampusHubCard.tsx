@@ -15,7 +15,7 @@ export function CampusHubCard({ dashboard }: CampusHubCardProps) {
   const router = useRouter();
 
   const profile = dashboard?.profile || {};
-  const collegeName = profile.college_name || 'FeedX Polytechnic';
+  const collegeName = profile.college_name || 'FEEDX Polytechnic';
   const location = profile.college_location || 'Campus Space';
 
   return (

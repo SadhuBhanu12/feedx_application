@@ -12,18 +12,19 @@ import {
   Dimensions,
   Modal,
   BackHandler,
+  Image,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
+import { useRouter } from 'expo-router';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { useUser } from '@/context/UserContext';
 import { supabase } from '@/lib/supabase';
 import { uploadSupportAttachment, getIssueTimeline, addIssueTimelineEntry, submitSupportSuggestion, submitSupportFeedback, ensurePublicProfile, withTimeout } from '@/services/supabaseService';
+import { downloadOrOpenFile } from '@/services/downloadService';
 import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp, SlideInRight } from 'react-native-reanimated';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ButtonLoading, SkeletonLoader, InlineLoader } from '@/components/ui/Loaders';
 import { validateText } from '@/utils/validation';
 import FeedbackModal from '@/components/ui/FeedbackModal';
 import GlassCard from '@/components/ui/GlassCard';
@@ -32,8 +33,10 @@ import { useTheme } from '@/context/ThemeContext';
 const { width } = Dimensions.get('window');
 
 const REPORT_CATEGORIES = [
-  'Academic', 'Faculty', 'Infrastructure', 'Facilities', 'Scholarship',
-  'Transport', 'Hostel', 'Library', 'Laboratory', 'Internet/Wi-Fi', 'Examination', 'Abuse & Harassment', 'Other'
+  'Anti-Ragging',
+  'Harassment',
+  'Girls-Related Safety',
+  'Other Serious Campus Issue',
 ];
 
 const SUGGESTION_CATEGORIES = [
@@ -41,7 +44,7 @@ const SUGGESTION_CATEGORIES = [
 ];
 
 const FEEDBACK_CATEGORIES = [
-  'Academics', 'Faculty', 'Facilities', 'Campus Placements', 'Library', 'Events', 'Hostel'
+  'Department & Curriculum', 'Faculty & Teaching', 'Laboratory & Equipment', 'Campus Facilities', 'Placements & Training'
 ];
 
 const FAQS = [
@@ -85,6 +88,11 @@ export default function SupportScreen() {
   const [generatedId, setGeneratedId] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Validation error states
+  const [issueTitleError, setIssueTitleError] = useState('');
+  const [issueDescError, setIssueDescError] = useState('');
+  const [issueLocError, setIssueLocError] = useState('');
+
   // Form states - Suggestion
   const [suggTitle, setSuggTitle] = useState('');
   const [suggCategory, setSuggCategory] = useState('Academics');
@@ -101,6 +109,10 @@ export default function SupportScreen() {
   // Search & Filter in My Reports
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+
+  // Error & Feedback Modal State
+  const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     fetchUserData();
@@ -136,43 +148,47 @@ export default function SupportScreen() {
     }
   }, [viewMode]);
 
+  const handleBackNavigation = () => {
+    if (viewMode === 'report_details') {
+      setViewMode('report_category');
+      return;
+    }
+    if (viewMode === 'report_review') {
+      setViewMode('report_details');
+      return;
+    }
+    if (viewMode === 'details') {
+      setViewMode('my_reports');
+      return;
+    }
+    if (viewMode !== 'home') {
+      setViewMode('home');
+      return;
+    }
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
+
   useEffect(() => {
     const onBackPress = () => {
       if (viewMode === 'home') {
-        return false;
+        if (router.canGoBack()) {
+          router.back();
+          return true;
+        }
+        router.replace('/(tabs)');
+        return true;
       }
-      
-      if (viewMode === 'report_category') {
-        if (params?.mode === 'report') {
-          router.back();
-        } else {
-          setViewMode('home');
-        }
-      } else if (viewMode === 'my_reports') {
-        if (params?.mode === 'my_reports') {
-          router.back();
-        } else {
-          setViewMode('home');
-        }
-      } else if (viewMode === 'report_details') {
-        setViewMode('report_category');
-      } else if (viewMode === 'report_review') {
-        setViewMode('report_details');
-      } else if (viewMode === 'details') {
-        setViewMode('my_reports');
-      } else {
-        if (params?.mode) {
-          router.back();
-        } else {
-          setViewMode('home');
-        }
-      }
+      handleBackNavigation();
       return true;
     };
 
     const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => subscription.remove();
-  }, [viewMode, params]);
+  }, [viewMode]);
 
   useEffect(() => {
     if (!selectedItem?.id) return;
@@ -221,18 +237,59 @@ export default function SupportScreen() {
 
   const pickAttachment = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({ type: ['image/*', 'application/pdf'], copyToCacheDirectory: true, multiple: true });
+      if (attachments.length >= 3) {
+        Alert.alert('Limit Reached', 'Maximum 3 photos allowed. Please remove an existing photo to attach a new one.');
+        return;
+      }
+      const result = await DocumentPicker.getDocumentAsync({ type: ['image/*'], copyToCacheDirectory: true, multiple: true });
       if (result.canceled) return;
-      setAttachments((prev) => [...prev, ...(result.assets || [])].slice(0, 3));
+      const validAssets = (result.assets || []).filter(a => a && a.uri);
+      const remainingSlots = 3 - attachments.length;
+      if (validAssets.length > remainingSlots) {
+        Alert.alert('Limit Applied', `Only ${remainingSlots} photo(s) added. Maximum 3 photos allowed.`);
+      }
+      setAttachments((prev) => [...prev, ...validAssets.slice(0, remainingSlots)]);
     } catch (e) {
       Alert.alert('Attachment Error', e.message || 'Could not pick file.');
     }
   };
 
+  const removeAttachment = (indexToRemove) => {
+    setAttachments((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
   const [expandedFaqIndex, setExpandedFaqIndex] = useState(null);
 
-  // Feedback/Error Modal state
-  const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
+  const handleReviewTicket = () => {
+    setIssueTitleError('');
+    setIssueDescError('');
+    setIssueLocError('');
+
+    let hasError = false;
+    const titleCheck = validateText(issueTitle, { min: 5, max: 100, fieldName: 'Issue Title' });
+    if (!titleCheck.isValid) {
+      setIssueTitleError(titleCheck.error || 'Please enter an issue title (min 5 characters).');
+      hasError = true;
+    }
+
+    const descCheck = validateText(issueDesc, { min: 15, max: 1000, fieldName: 'Issue Description' });
+    if (!descCheck.isValid) {
+      setIssueDescError(descCheck.error || 'Please enter a detailed description (min 15 characters).');
+      hasError = true;
+    }
+
+    if (!issueLoc.trim()) {
+      setIssueLocError('Please specify the campus location / area.');
+      hasError = true;
+    }
+
+    if (hasError) {
+      Alert.alert('Validation Error', 'Please complete all required fields with valid details before reviewing your ticket.');
+      return;
+    }
+
+    setViewMode('report_review');
+  };
 
   const handleIssueSubmit = async () => {
     const titleCheck = validateText(issueTitle, { min: 5, max: 100, fieldName: 'Issue Title' });
@@ -256,7 +313,17 @@ export default function SupportScreen() {
 
       const randomNum = String(Math.floor(100 + Math.random() * 90000)).padStart(5, '0');
       const issueId = `FEEDX-GR-2026-${randomNum}`;
-      const studentCollegeId = user?.college_id || user?.user_metadata?.college_id || null;
+      let studentCollegeId = user?.college_id || user?.institution_id || user?.user_metadata?.college_id || null;
+      if (!studentCollegeId && user?.id) {
+        try {
+          const { data: stRec } = await supabase.from('students').select('college_id').or(`id.eq.${user.id},user_id.eq.${user.id}`).maybeSingle();
+          studentCollegeId = stRec?.college_id || null;
+          if (!studentCollegeId) {
+            const { data: uRec } = await supabase.from('users').select('college_id').eq('id', user.id).maybeSingle();
+            studentCollegeId = uRec?.college_id || null;
+          }
+        } catch (_) {}
+      }
 
       const newPayload = {
         id: issueId,
@@ -293,7 +360,23 @@ export default function SupportScreen() {
       await fetchUserData();
       setViewMode('success');
     } catch (e) {
-      setErrorModal({ visible: true, title: 'Submission Failed', message: e.message || 'Network error occurred while submitting grievance.' });
+      let errTitle = 'Submission Failed';
+      let errMsg = e?.message || 'An unexpected issue occurred while submitting grievance.';
+      const rawMsg = String(e?.message || '').toLowerCase();
+      if (rawMsg.includes('network request failed') || rawMsg.includes('failed to fetch') || rawMsg.includes('is not connected')) {
+        errTitle = 'Connection Error';
+        errMsg = 'Could not reach server. Please check your network connection and try again.';
+      } else if (rawMsg.includes('timeout') || rawMsg.includes('timed out')) {
+        errTitle = 'Connection Timeout';
+        errMsg = 'The server took too long to respond. Please try submitting again.';
+      } else if (rawMsg.includes('jwt') || rawMsg.includes('auth') || rawMsg.includes('session')) {
+        errTitle = 'Authentication Error';
+        errMsg = 'Your session has expired. Please re-login and submit again.';
+      } else {
+        errTitle = 'Submission Notice';
+        errMsg = e?.message || 'Could not complete grievance submission. Please retry.';
+      }
+      setErrorModal({ visible: true, title: errTitle, message: errMsg });
     } finally {
       setLoading(false);
     }
@@ -577,42 +660,21 @@ export default function SupportScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0B0F19', '#0F172A', '#131C31']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0B0F19', '#0F172A', '#131C31']} style={StyleSheet.absoluteFill} />}
 
       {/* Header bar */}
       <View style={[styles.topNav, { borderBottomColor: colors.border, backgroundColor: colors.background }]}>
-        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]} onPress={() => {
-          if (viewMode === 'home') {
-            router.back();
-          } else if (viewMode === 'report_category') {
-            if (params?.mode === 'report') {
-              router.back();
-            } else {
-              setViewMode('home');
-            }
-          } else if (viewMode === 'my_reports') {
-            if (params?.mode === 'my_reports') {
-              router.back();
-            } else {
-              setViewMode('home');
-            }
-          } else if (viewMode === 'report_details') {
-            setViewMode('report_category');
-          } else if (viewMode === 'report_review') {
-            setViewMode('report_details');
-          } else if (viewMode === 'details') {
-            setViewMode('my_reports');
-          } else {
-            if (params?.mode) {
-              router.back();
-            } else {
-              setViewMode('home');
-            }
-          }
-        }}>
-          <Feather name={(viewMode === 'home' || (params?.mode && (viewMode === 'report_category' || viewMode === 'my_reports'))) ? 'arrow-left' : 'chevron-left'} size={24} color={colors.textPrimary} />
+        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]} onPress={handleBackNavigation} activeOpacity={0.7}>
+          <Feather name={viewMode === 'home' ? 'arrow-left' : 'chevron-left'} size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Grievance & Feedback</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary, fontWeight: '900' }]}>
+          {viewMode === 'suggestion' ? 'Submit Suggestion' :
+           viewMode === 'feedback' ? 'Share Campus Feedback' :
+           viewMode === 'report_category' || viewMode === 'report_details' || viewMode === 'report_review' ? 'Report Issue' :
+           viewMode === 'my_reports' ? 'My Reports & Tickets' :
+           viewMode === 'details' ? 'Ticket Details' :
+           'Grievance & Support Desk'}
+        </Text>
         <View style={{ width: 44 }} />
       </View>
 
@@ -621,66 +683,92 @@ export default function SupportScreen() {
         {/* VIEW: HOME SCREEN */}
         {viewMode === 'home' && (
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-            {/* 3D Header Illustration area */}
+            {/* Serious Support Header Illustration area */}
             <Animated.View entering={FadeInDown.duration(500).springify()} style={styles.heroSection}>
-              <LinearGradient colors={['rgba(59, 130, 246, 0.15)', 'rgba(99, 102, 241, 0.05)']} style={styles.heroGradient}>
+              <LinearGradient colors={isDark ? ['rgba(239, 68, 68, 0.2)', 'rgba(185, 28, 28, 0.08)'] : ['#FEE2E2', '#FEF2F2']} style={styles.heroGradient}>
                 <View style={styles.heroText}>
-                  <Text style={styles.heroTitle}>Student Grievance</Text>
-                  <Text style={styles.heroDesc}>Report college issues, submit suggestions, share feedback.</Text>
+                  <Text style={[styles.heroTitle, { color: isDark ? '#FFF' : '#7F1D1D' }]}>Campus Support Desk</Text>
+                  <Text style={[styles.heroDesc, { color: isDark ? 'rgba(255,255,255,0.7)' : '#991B1B' }]}>
+                    Strict safety grievance reporting, suggestions, and campus feedback.
+                  </Text>
                 </View>
-                <MaterialCommunityIcons name="shield-lock-open-outline" size={80} color="rgba(59, 130, 246, 0.25)" style={styles.heroIllustration} />
+                <MaterialCommunityIcons name="shield-alert-outline" size={76} color={isDark ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'} style={styles.heroIllustration} />
               </LinearGradient>
             </Animated.View>
 
             {/* Main Categories 3D Cards */}
             <View style={styles.actionGrid}>
-              <TouchableOpacity style={styles.actionCard} onPress={() => setViewMode('report_category')}>
-                <View style={[styles.iconWrap, { backgroundColor: 'rgba(239, 68, 68, 0.12)', borderColor: 'rgba(239, 68, 68, 0.25)' }]}>
+              <TouchableOpacity
+                style={[styles.actionCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                onPress={() => setViewMode('report_category')}
+                activeOpacity={0.85}
+              >
+                <View style={[styles.iconWrap, { backgroundColor: 'rgba(239, 68, 68, 0.12)', borderColor: 'rgba(239, 68, 68, 0.3)' }]}>
                   <Feather name="alert-triangle" size={24} color="#EF4444" />
                 </View>
-                <Text style={styles.cardTitle}>Report an Issue</Text>
-                <Text style={styles.cardDesc}>Report problems related to academics, facilities, hostels, transport, etc.</Text>
+                <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>Report an Issue (Strict Scope)</Text>
+                <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
+                  Priority focus: Ragging, harassment, girls-related safety, or critical campus concerns.
+                </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.actionCard} onPress={() => setViewMode('suggestion')}>
-                <View style={[styles.iconWrap, { backgroundColor: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.25)' }]}>
-                  <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color="#F59E0B" />
-                </View>
-                <Text style={styles.cardTitle}>Submit a Suggestion</Text>
-                <Text style={styles.cardDesc}>Share creative ideas that can improve overall campus experience.</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.actionCard} onPress={() => setViewMode('feedback')}>
-                <View style={[styles.iconWrap, { backgroundColor: 'rgba(59, 130, 246, 0.12)', borderColor: 'rgba(59, 130, 246, 0.25)' }]}>
+              <TouchableOpacity
+                style={[styles.actionCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                onPress={() => setViewMode('feedback')}
+                activeOpacity={0.85}
+              >
+                <View style={[styles.iconWrap, { backgroundColor: 'rgba(59, 130, 246, 0.12)', borderColor: 'rgba(59, 130, 246, 0.3)' }]}>
                   <Feather name="message-square" size={24} color="#3B82F6" />
                 </View>
-                <Text style={styles.cardTitle}>Share Your Feedback</Text>
-                <Text style={styles.cardDesc}>Help improve your campus by sharing your experience and valuable feedback.</Text>
+                <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>Submit Feedback</Text>
+                <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
+                  Share your general academic, facility, or campus experience with the administration.
+                </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.actionCard} onPress={() => setViewMode('my_reports')}>
-                <View style={[styles.iconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.25)' }]}>
+              <TouchableOpacity
+                style={[styles.actionCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                onPress={() => setViewMode('suggestion')}
+                activeOpacity={0.85}
+              >
+                <View style={[styles.iconWrap, { backgroundColor: 'rgba(245, 158, 11, 0.12)', borderColor: 'rgba(245, 158, 11, 0.3)' }]}>
+                  <MaterialCommunityIcons name="lightbulb-on-outline" size={24} color="#F59E0B" />
+                </View>
+                <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>Submit a Suggestion</Text>
+                <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
+                  Propose constructive ideas to improve polytechnic academic or campus life.
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.actionCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+                onPress={() => setViewMode('my_reports')}
+                activeOpacity={0.85}
+              >
+                <View style={[styles.iconWrap, { backgroundColor: 'rgba(16, 185, 129, 0.12)', borderColor: 'rgba(16, 185, 129, 0.3)' }]}>
                   <Feather name="list" size={24} color="#10B981" />
                 </View>
-                <Text style={styles.cardTitle}>My Reports</Text>
-                <Text style={styles.cardDesc}>Track the resolution status of all your logs and responses.</Text>
+                <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>My Reports & Tickets</Text>
+                <Text style={[styles.cardDesc, { color: colors.textSecondary }]}>
+                  Track the real-time resolution timeline and institutional updates for all your tickets.
+                </Text>
               </TouchableOpacity>
             </View>
 
             {/* Warning Card */}
-            <View style={styles.warningCard}>
+            <View style={[styles.warningCard, { backgroundColor: isDark ? 'rgba(245, 158, 11, 0.08)' : '#FFFBEB', borderColor: isDark ? 'rgba(245, 158, 11, 0.25)' : '#FDE68A' }]}>
               <View style={styles.warningHeader}>
                 <Feather name="alert-circle" size={20} color="#F59E0B" />
-                <Text style={styles.warningTitle}>Submission Guidelines & Policy</Text>
+                <Text style={styles.warningTitle}>Submission Guidelines & Confidentiality</Text>
               </View>
-              <Text style={styles.warningText}>
-                Please submit only genuine grievances, suggestions, or feedback. False, abusive, duplicate, or misleading submissions may delay the grievance resolution process.
+              <Text style={[styles.warningText, { color: isDark ? 'rgba(255,255,255,0.7)' : '#92400E' }]}>
+                All submissions are encrypted and handled with strict confidentiality. For serious issues, your anonymity is protected if selected.
               </Text>
             </View>
 
             {/* Accordion FAQ Section */}
             <View style={styles.faqSection}>
-              <Text style={styles.sectionHeading}>Frequently Asked Questions</Text>
+              <Text style={[styles.sectionHeading, { color: colors.textPrimary }]}>Frequently Asked Questions</Text>
               {FAQS.map((faq, i) => {
                 const isExpanded = expandedFaqIndex === i;
                 return (
@@ -689,13 +777,13 @@ export default function SupportScreen() {
                     activeOpacity={0.8}
                     onPress={() => setExpandedFaqIndex(isExpanded ? null : i)}
                   >
-                    <GlassCard style={styles.faqCard}>
+                    <GlassCard style={[styles.faqCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
                       <View style={styles.faqHeaderRow}>
-                        <Text style={styles.faqQuestion}>{faq.q}</Text>
-                        <Feather name={isExpanded ? 'chevron-up' : 'chevron-down'} size={18} color="#3B82F6" />
+                        <Text style={[styles.faqQuestion, { color: colors.primary }]}>{faq.q}</Text>
+                        <Feather name={isExpanded ? 'chevron-up' : 'chevron-down'} size={18} color={colors.primary} />
                       </View>
                       {isExpanded && (
-                        <Text style={styles.faqAnswer}>{faq.a}</Text>
+                        <Text style={[styles.faqAnswer, { color: colors.textSecondary, borderTopColor: colors.border }]}>{faq.a}</Text>
                       )}
                     </GlassCard>
                   </TouchableOpacity>
@@ -708,21 +796,46 @@ export default function SupportScreen() {
         {/* VIEW: REPORT ISSUE STEP 1 */}
         {viewMode === 'report_category' && (
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <View style={styles.formHero}>
-              <Text style={styles.formHeroTitle}>Step 1: Select Category</Text>
-              <Text style={styles.formHeroSub}>Pick the domain matching your issue:</Text>
+            {/* Prominent Strict Scope Banner (Point 8 / 16) */}
+            <View style={[styles.strictScopeNotice, { backgroundColor: isDark ? 'rgba(239, 68, 68, 0.15)' : '#FEF2F2', borderColor: isDark ? 'rgba(239, 68, 68, 0.4)' : '#F87171' }]}>
+              <View style={styles.strictScopeHeader}>
+                <MaterialCommunityIcons name="alert-decagram" size={22} color="#EF4444" />
+                <Text style={[styles.strictScopeTitle, { color: isDark ? '#FCA5A5' : '#B91C1C' }]}>
+                  Strict Safety Scope Notice
+                </Text>
+              </View>
+              <Text style={[styles.strictScopeText, { color: isDark ? '#FECACA' : '#991B1B' }]}>
+                Important: Currently, the Issue Submission system strictly focuses on serious concerns requiring immediate institutional action:
+                {'\n'}• 1. Ragging & Bullying
+                {'\n'}• 2. Harassment & Abuse
+                {'\n'}• 3. Girls-Related Concerns & Safety
+                {'\n'}• 4. Other Serious Campus Issues
+                {'\n\n'}Apart from these critical categories, non-urgent matters should be submitted through the Feedback and Suggestion forms.
+              </Text>
             </View>
+
+            <View style={styles.formHero}>
+              <Text style={[styles.formHeroTitle, { color: colors.textPrimary }]}>Step 1: Select Issue Domain</Text>
+              <Text style={[styles.formHeroSub, { color: colors.textMuted }]}>Select the safety domain matching your concern:</Text>
+            </View>
+
             <View style={styles.categoryGrid}>
               {REPORT_CATEGORIES.map((cat) => (
                 <TouchableOpacity
                   key={cat}
-                  style={[styles.catSelectBtn, issueCategory === cat && styles.catSelectBtnActive]}
+                  style={[
+                    styles.catSelectBtn,
+                    { backgroundColor: colors.card, borderColor: colors.cardBorder },
+                    issueCategory === cat && { backgroundColor: isDark ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.1)', borderColor: '#EF4444', borderWidth: 1.5 },
+                  ]}
                   onPress={() => {
                     setIssueCategory(cat);
                     setViewMode('report_details');
                   }}
                 >
-                  <Text style={[styles.catSelectText, issueCategory === cat && styles.catSelectTextActive]}>{cat}</Text>
+                  <Text style={[styles.catSelectText, { color: colors.textPrimary }, issueCategory === cat && { color: '#EF4444', fontWeight: '900' }]}>
+                    {cat}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -737,18 +850,24 @@ export default function SupportScreen() {
               <Text style={styles.formHeroSub}>Category: {issueCategory}</Text>
             </View>
 
-            <View style={styles.inputCard}>
+            <View style={[styles.inputCard, issueTitleError ? { borderColor: '#EF4444' } : {}]}>
               <Text style={styles.inputLabel}>ISSUE TITLE *</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Briefly state the issue..."
                 placeholderTextColor="rgba(255,255,255,0.2)"
                 value={issueTitle}
-                onChangeText={setIssueTitle}
+                onChangeText={(t) => {
+                  setIssueTitle(t);
+                  if (issueTitleError) setIssueTitleError('');
+                }}
               />
+              {issueTitleError ? (
+                <Text style={styles.inlineErrorText}>{issueTitleError}</Text>
+              ) : null}
             </View>
 
-            <View style={[styles.inputCard, { minHeight: 120 }]}>
+            <View style={[styles.inputCard, { minHeight: 120 }, issueDescError ? { borderColor: '#EF4444' } : {}]}>
               <Text style={styles.inputLabel}>DESCRIPTION *</Text>
               <TextInput
                 style={[styles.textInput, { flex: 1, textAlignVertical: 'top', paddingVertical: 10 }]}
@@ -756,19 +875,31 @@ export default function SupportScreen() {
                 placeholderTextColor="rgba(255,255,255,0.2)"
                 multiline
                 value={issueDesc}
-                onChangeText={setIssueDesc}
+                onChangeText={(t) => {
+                  setIssueDesc(t);
+                  if (issueDescError) setIssueDescError('');
+                }}
               />
+              {issueDescError ? (
+                <Text style={styles.inlineErrorText}>{issueDescError}</Text>
+              ) : null}
             </View>
 
-            <View style={styles.inputCard}>
+            <View style={[styles.inputCard, issueLocError ? { borderColor: '#EF4444' } : {}]}>
               <Text style={styles.inputLabel}>LOCATION / CAMPUS AREA *</Text>
               <TextInput
                 style={styles.textInput}
                 placeholder="Specify building, floor, room number, or campus area..."
                 placeholderTextColor="rgba(255,255,255,0.2)"
                 value={issueLoc}
-                onChangeText={setIssueLoc}
+                onChangeText={(t) => {
+                  setIssueLoc(t);
+                  if (issueLocError) setIssueLocError('');
+                }}
               />
+              {issueLocError ? (
+                <Text style={styles.inlineErrorText}>{issueLocError}</Text>
+              ) : null}
             </View>
 
             {/* Toggle Anonymous */}
@@ -790,29 +921,43 @@ export default function SupportScreen() {
             </View>
 
             {/* Attach photos */}
-            <View style={styles.attachmentSection}>
-              <TouchableOpacity style={styles.attachBtn} onPress={pickAttachment}>
-                <Feather name="camera" size={18} color="#FFF" />
-                <Text style={styles.attachBtnText}>Attach Photos ({attachments.length}/3)</Text>
-              </TouchableOpacity>
-              <View style={styles.attachmentPreviewRow}>
-                {attachments.map((file, idx) => (
-                  <View key={idx} style={styles.attachmentBubble}>
-                    <Text style={styles.attachmentBubbleText} numberOfLines={1}>{file.name}</Text>
-                  </View>
-                ))}
+            <View style={styles.formAttachmentSection}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <Text style={styles.inputLabel}>ATTACH EVIDENCE PHOTOS (MAX 3)</Text>
+                <Text style={{ fontSize: 11, fontWeight: '800', color: attachments.length >= 3 ? '#EF4444' : '#10B981' }}>
+                  {attachments.length}/3 selected
+                </Text>
               </View>
+
+              {attachments.length < 3 && (
+                <TouchableOpacity style={styles.attachBtn} onPress={pickAttachment}>
+                  <Feather name="camera" size={18} color="#FFF" />
+                  <Text style={styles.attachBtnText}>
+                    {attachments.length === 0 ? 'Attach Photos (Max 3)' : `Add Another Photo (${attachments.length}/3)`}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {attachments.length > 0 && (
+                <View style={styles.photoThumbGrid}>
+                  {attachments.map((file, idx) => (
+                    <View key={idx} style={styles.photoThumbBox}>
+                      <Image source={{ uri: file.uri }} style={styles.photoThumbImg} />
+                      <TouchableOpacity style={styles.photoRemoveBadge} onPress={() => removeAttachment(idx)}>
+                        <Feather name="x" size={12} color="#FFF" />
+                      </TouchableOpacity>
+                      <View style={styles.photoIndexBadge}>
+                        <Text style={styles.photoIndexText}>{idx + 1}/3</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
             </View>
 
-            <TouchableOpacity style={styles.submitBtn} onPress={() => {
-              if (!issueTitle.trim() || !issueDesc.trim()) {
-                Alert.alert('Required', 'Please fill in Title and Description.');
-                return;
-              }
-              setViewMode('report_review');
-            }}>
-              <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.submitGradient}>
-                <Text style={styles.submitBtnText}>Next: Review Ticket</Text>
+            <TouchableOpacity style={styles.submitBtn} onPress={handleReviewTicket} activeOpacity={0.8}>
+              <LinearGradient colors={['#EF4444', '#DC2626']} style={styles.submitGradient}>
+                <Text style={styles.submitBtnText}>Next: Review Ticket →</Text>
               </LinearGradient>
             </TouchableOpacity>
           </ScrollView>
@@ -843,9 +988,30 @@ export default function SupportScreen() {
                 </>
               ) : null}
 
+              {attachments.length > 0 && (
+                <>
+                  <Text style={styles.reviewHeading}>Attached Photos ({attachments.length}/3)</Text>
+                  <View style={styles.photoThumbGrid}>
+                    {attachments.map((file, idx) => (
+                      <View key={idx} style={styles.photoThumbBox}>
+                        <Image source={{ uri: file.uri }} style={styles.photoThumbImg} />
+                        <TouchableOpacity style={styles.photoRemoveBadge} onPress={() => removeAttachment(idx)}>
+                          <Feather name="x" size={12} color="#FFF" />
+                        </TouchableOpacity>
+                        <View style={styles.photoIndexBadge}>
+                          <Text style={styles.photoIndexText}>{idx + 1}/3</Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                </>
+              )}
+
               <Text style={styles.reviewHeading}>Identity Privacy Notice</Text>
-              <Text style={styles.reviewConfidentialityText}>
-                Your identity will remain confidential and will not be shared with your institution while reviewing this report.
+              <Text style={[styles.reviewConfidentialityText, { color: issueAnonymous ? '#F472B6' : '#60A5FA' }]}>
+                {issueAnonymous
+                  ? '🛡️ Anonymous Mode Active: Your identity, student profile, and contact details are completely hidden and stripped before storing in the database. Only your report description and evidence photos will be shared with authorized administrators.'
+                  : '🔓 Public Mode Active: Your verified student profile (Name, Department, Academic Year, and Contact Details) will be visible to institutional coordinators to enable direct communication and swift on-campus resolution.'}
               </Text>
 
               <Text style={[styles.reviewVal, { color: issueAnonymous ? '#EC4899' : '#10B981', fontWeight: '800', marginTop: 8 }]}>
@@ -854,8 +1020,8 @@ export default function SupportScreen() {
             </GlassCard>
 
             <TouchableOpacity style={styles.submitBtn} onPress={handleIssueSubmit} disabled={loading}>
-              <LinearGradient colors={['#10B981', '#059669']} style={styles.submitGradient}>
-                {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.submitBtnText}>Submit Report</Text>}
+              <LinearGradient colors={['#EF4444', '#DC2626']} style={styles.submitGradient}>
+                {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.submitBtnText}>Submit Grievance Report</Text>}
               </LinearGradient>
             </TouchableOpacity>
           </ScrollView>
@@ -955,6 +1121,15 @@ export default function SupportScreen() {
               <LinearGradient colors={['#F59E0B', '#D97706']} style={styles.submitGradient}>
                 {loading ? <ButtonLoading color="#FFF" /> : <Text style={styles.submitBtnText}>Submit Suggestion</Text>}
               </LinearGradient>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.cancelBtn, { borderColor: isDark ? colors.cardBorder : '#E2E8F0', marginTop: 10 }]} 
+              onPress={handleBackNavigation}
+              activeOpacity={0.7}
+            >
+              <Feather name="arrow-left" size={15} color={colors.textSecondary} style={{ marginRight: 6 }} />
+              <Text style={[styles.cancelBtnText, { color: colors.textSecondary }]}>Cancel & Return to Support Desk</Text>
             </TouchableOpacity>
 
             <Text style={styles.bottomNoteText}>
@@ -1097,6 +1272,15 @@ export default function SupportScreen() {
                   )}
                 </LinearGradient>
               </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={[styles.cancelBtn, { borderColor: isDark ? colors.cardBorder : '#E2E8F0', marginTop: 10 }]} 
+                onPress={handleBackNavigation}
+                activeOpacity={0.7}
+              >
+                <Feather name="arrow-left" size={15} color={colors.textSecondary} style={{ marginRight: 6 }} />
+                <Text style={[styles.cancelBtnText, { color: colors.textSecondary }]}>Cancel & Return to Support Desk</Text>
+              </TouchableOpacity>
             </Animated.View>
           </ScrollView>
         )}
@@ -1105,17 +1289,21 @@ export default function SupportScreen() {
         {viewMode === 'feedback_success' && (
           <View style={styles.successContainer}>
             <Animated.View entering={FadeInUp.springify()} style={styles.successIconCircle}>
-              <LinearGradient colors={['rgba(59, 130, 246, 0.2)', 'rgba(37, 99, 235, 0.1)']} style={StyleSheet.absoluteFillObject} />
+              <LinearGradient colors={['rgba(59, 130, 246, 0.2)', 'rgba(37, 99, 235, 0.1)']} style={StyleSheet.absoluteFill} />
               <Feather name="heart" size={54} color="#60A5FA" />
             </Animated.View>
 
-            <Animated.Text entering={FadeInDown.delay(100).springify()} style={styles.successTitle}>
-              🎉 Feedback Submitted!
-            </Animated.Text>
+            <Animated.View entering={FadeInDown.delay(100).springify()}>
+              <Text style={styles.successTitle}>
+                🎉 Feedback Submitted!
+              </Text>
+            </Animated.View>
             
-            <Animated.Text entering={FadeInDown.delay(200).springify()} style={styles.successSub}>
-              Thank you for sharing your experience. Your feedback helps make campus life better for everyone.
-            </Animated.Text>
+            <Animated.View entering={FadeInDown.delay(200).springify()}>
+              <Text style={styles.successSub}>
+                Thank you for sharing your experience. Your feedback helps make campus life better for everyone.
+              </Text>
+            </Animated.View>
 
             <Animated.View entering={FadeInDown.delay(300).springify()} style={{ width: '100%' }}>
               <TouchableOpacity style={styles.successDoneBtn} onPress={() => setViewMode('home')}>
@@ -1257,17 +1445,37 @@ export default function SupportScreen() {
                 {selectedItem.attachment_urls && selectedItem.attachment_urls.length > 0 ? (
                   <View style={styles.attachmentSection}>
                     <Text style={styles.attachmentHeader}>Attachments ({selectedItem.attachment_urls.length})</Text>
-                    <View style={styles.attachmentList}>
+                    <View style={styles.attachmentGrid}>
                       {selectedItem.attachment_urls.map((url, index) => {
-                        const fileName = url.split('/').pop() || `Attachment_${index + 1}`;
+                        const isImg = /\.(jpg|jpeg|png|webp|gif)($|\?)/i.test(url) || url.includes('image') || url.includes('uploads') || url.includes('support-attachments');
+                        const fileName = url.split('/').pop()?.split('?')[0] || `Attachment_${index + 1}`;
                         return (
                           <TouchableOpacity
                             key={index}
-                            style={styles.attachmentItem}
-                            onPress={() => Alert.alert('Attachment', `Attachment URL: ${url}`)}
+                            style={styles.attachmentCard}
+                            activeOpacity={0.8}
+                            onPress={() => {
+                              if (isImg) {
+                                setPreviewImage(url);
+                              } else {
+                                downloadOrOpenFile(url, fileName, 'Attachment');
+                              }
+                            }}
                           >
-                            <Feather name="file" size={14} color="#60A5FA" />
-                            <Text style={styles.attachmentText} numberOfLines={1}>{fileName}</Text>
+                            {isImg ? (
+                              <Image source={{ uri: url }} style={styles.attachmentThumb} resizeMode="cover" />
+                            ) : (
+                              <View style={styles.attachmentFileIcon}>
+                                <Feather name="file-text" size={22} color="#60A5FA" />
+                              </View>
+                            )}
+                            <View style={styles.attachmentMeta}>
+                              <Text style={styles.attachmentFileName} numberOfLines={1}>{fileName}</Text>
+                              <Text style={styles.attachmentActionSub}>
+                                {isImg ? '🔍 Tap to view photo' : '📥 Tap to open file'}
+                              </Text>
+                            </View>
+                            <Feather name={isImg ? 'maximize-2' : 'download'} size={15} color="#94A3B8" />
                           </TouchableOpacity>
                         );
                       })}
@@ -1370,18 +1578,36 @@ export default function SupportScreen() {
                 </GlassCard>
               </View>
 
-              {/* Discussion Board / Comments Section */}
+              {/* Discussion Board / Two-Way Chat with College Admin */}
               <View style={styles.commentSection}>
-                <Text style={styles.sectionHeading}>Discussion Board</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <MaterialCommunityIcons 
+                      name={selectedItem.status === 'resolved' ? 'lock-outline' : 'chat-processing-outline'} 
+                      size={18} 
+                      color={selectedItem.status === 'resolved' ? '#10B981' : '#60A5FA'} 
+                    />
+                    <Text style={styles.sectionHeading}>
+                      {selectedItem.status === 'resolved' ? 'Resolved Chat History' : 'Live Chat with College Admin'}
+                    </Text>
+                  </View>
+                  <View style={[styles.statusTag, { backgroundColor: selectedItem.status === 'resolved' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(59, 130, 246, 0.15)' }]}>
+                    <Text style={[styles.statusTagText, { color: selectedItem.status === 'resolved' ? '#10B981' : '#60A5FA' }]}>
+                      {selectedItem.status === 'resolved' ? '🔒 Resolved' : '🟢 Active Session'}
+                    </Text>
+                  </View>
+                </View>
 
                 <View style={styles.commentThread}>
                   {comments.length === 0 ? (
-                    <Text style={styles.noCommentsText}>No follow-up messages yet. Start the conversation below.</Text>
+                    <Text style={styles.noCommentsText}>
+                      No messages exchanged yet. Send a follow-up message to your College Admin below.
+                    </Text>
                   ) : (
                     comments.map((entry, idx) => {
                       const isUser = entry.note.startsWith('User:') || entry.actor_id === user.id;
                       const commentText = entry.note.replace(/^(User:|Admin:)\s*/i, '');
-                      const senderName = isUser ? 'You' : 'Admin';
+                      const senderName = isUser ? 'You' : 'College Admin';
 
                       return (
                         <View key={idx} style={[styles.commentBubbleContainer, isUser ? styles.commentUserAlign : styles.commentAdminAlign]}>
@@ -1398,16 +1624,27 @@ export default function SupportScreen() {
                   )}
                 </View>
 
-                <TextInput
-                  style={styles.commentInput}
-                  placeholder="Send a follow-up comment..."
-                  placeholderTextColor="rgba(255,255,255,0.3)"
-                  value={newComment}
-                  onChangeText={setNewComment}
-                />
-                <TouchableOpacity style={styles.sendCommentBtn} onPress={handleAddComment}>
-                  <Text style={styles.sendCommentBtnText}>Add Comment</Text>
-                </TouchableOpacity>
+                {selectedItem.status !== 'resolved' ? (
+                  <>
+                    <TextInput
+                      style={styles.commentInput}
+                      placeholder="Type a follow-up message to College Admin..."
+                      placeholderTextColor="rgba(255,255,255,0.3)"
+                      value={newComment}
+                      onChangeText={setNewComment}
+                    />
+                    <TouchableOpacity style={styles.sendCommentBtn} onPress={handleAddComment}>
+                      <Text style={styles.sendCommentBtnText}>Send Message</Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: 'rgba(16, 185, 129, 0.1)', padding: 10, borderRadius: 10, marginTop: 10 }}>
+                    <Feather name="check-circle" size={14} color="#10B981" />
+                    <Text style={{ fontSize: 11, color: '#10B981', fontWeight: '700', flex: 1 }}>
+                      This grievance has been resolved and closed by your College Admin. Chat session is archived.
+                    </Text>
+                  </View>
+                )}
               </View>
             </ScrollView>
           );
@@ -1463,6 +1700,34 @@ export default function SupportScreen() {
                 </Text>
               </View>
             </GlassCard>
+          </View>
+        </Modal>
+
+        {/* Full-Screen Image Preview Modal */}
+        <Modal
+          visible={Boolean(previewImage)}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setPreviewImage(null)}
+        >
+          <View style={styles.imageViewerOverlay}>
+            <View style={styles.imageViewerHeader}>
+              <TouchableOpacity onPress={() => setPreviewImage(null)} style={styles.imageViewerBtn}>
+                <Ionicons name="close" size={26} color="#FFFFFF" />
+              </TouchableOpacity>
+              <Text style={styles.imageViewerTitle}>Attachment Preview</Text>
+              <TouchableOpacity
+                onPress={() => previewImage && downloadOrOpenFile(previewImage, 'attachment.png', 'Attachment')}
+                style={styles.imageViewerBtn}
+              >
+                <Feather name="download" size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.imageViewerContent}>
+              {previewImage ? (
+                <Image source={{ uri: previewImage }} style={styles.fullPreviewImg} resizeMode="contain" />
+              ) : null}
+            </View>
           </View>
         </Modal>
 
@@ -1522,8 +1787,29 @@ const styles = StyleSheet.create({
   sectionHeading: { fontSize: 14, fontWeight: '800', color: '#FFF', letterSpacing: 0.5, marginBottom: 8 },
   faqCard: { padding: 16, gap: 8, borderRadius: 16 },
   faqHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  faqQuestion: { fontSize: 13, fontWeight: '800', color: '#3B82F6', flex: 1, paddingRight: 10 },
-  faqAnswer: { fontSize: 12, color: 'rgba(255,255,255,0.65)', lineHeight: 18, marginTop: 6, paddingTop: 6, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.05)' },
+  strictScopeNotice: {
+    padding: 16,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    marginTop: 16,
+    marginBottom: 8,
+    gap: 8,
+  },
+  strictScopeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  strictScopeTitle: {
+    fontSize: 13.5,
+    fontWeight: '900',
+    letterSpacing: 0.2,
+  },
+  strictScopeText: {
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
   formHero: { marginTop: 20, marginBottom: 20, gap: 4 },
   formHeroTitle: { fontSize: 18, fontWeight: '900', color: '#FFF' },
   formHeroSub: { fontSize: 12, color: 'rgba(255,255,255,0.45)' },
@@ -1542,7 +1828,7 @@ const styles = StyleSheet.create({
   toggleBtn: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   toggleBtnOn: { backgroundColor: '#EF4444' },
   toggleBtnOff: { backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
-  attachmentSection: { gap: 10, marginBottom: 20 },
+  formAttachmentSection: { gap: 10, marginBottom: 20 },
   attachBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 40, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.04)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
   attachBtnText: { fontSize: 12, fontWeight: '800', color: '#FFF' },
   attachmentPreviewRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
@@ -1827,4 +2113,99 @@ const styles = StyleSheet.create({
   toggleKnobOn: { alignSelf: 'flex-end' },
   toggleKnobOff: { alignSelf: 'flex-start' },
   btnContentRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  photoThumbGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10 },
+  photoThumbBox: { width: 76, height: 76, borderRadius: 12, overflow: 'hidden', position: 'relative', borderWidth: 1, borderColor: 'rgba(255,255,255,0.15)', backgroundColor: 'rgba(0,0,0,0.3)' },
+  photoThumbImg: { width: '100%', height: '100%', borderRadius: 12 },
+  photoRemoveBadge: { position: 'absolute', top: 4, right: 4, width: 20, height: 20, borderRadius: 10, backgroundColor: 'rgba(239,68,68,0.9)', alignItems: 'center', justifyContent: 'center' },
+  photoIndexBadge: { position: 'absolute', bottom: 4, left: 4, paddingHorizontal: 4, paddingVertical: 1, borderRadius: 4, backgroundColor: 'rgba(0,0,0,0.7)' },
+  photoIndexText: { color: '#FFF', fontSize: 9, fontWeight: '800' },
+  inlineErrorText: { color: '#EF4444', fontSize: 11, fontWeight: '700', marginTop: 4, marginLeft: 2 },
+  attachmentGrid: {
+    gap: 10,
+    marginTop: 4,
+  },
+  attachmentCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    padding: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    gap: 12,
+  },
+  attachmentThumb: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  attachmentFileIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    backgroundColor: 'rgba(59, 130, 246, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  attachmentMeta: {
+    flex: 1,
+  },
+  attachmentFileName: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#FFF',
+    marginBottom: 2,
+  },
+  attachmentActionSub: {
+    fontSize: 11,
+    color: '#60A5FA',
+    fontWeight: '600',
+  },
+  imageViewerOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.95)',
+    justifyContent: 'space-between',
+  },
+  imageViewerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 54,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  imageViewerBtn: {
+    padding: 6,
+  },
+  imageViewerTitle: {
+    color: '#FFF',
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  imageViewerContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  fullPreviewImg: {
+    width: '100%',
+    height: '100%',
+  },
+  cancelBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 44,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+  },
+  cancelBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
 });

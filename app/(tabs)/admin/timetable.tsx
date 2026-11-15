@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useUser } from '@/context/UserContext';
 
 const TIMETABLE_FEATURES = [
   {
@@ -53,8 +55,16 @@ const TIMETABLE_FEATURES = [
 
 export default function AdminTimetableScreen() {
   const router = useRouter();
+  const { user } = useUser();
   const activeTab = 'timetable';
   const [notified, setNotified] = useState(false);
+
+  useEffect(() => {
+    if (user && user.role !== 'super_admin') {
+      Alert.alert('Permission Denied', 'Academic Roadmap is reserved for Super Administrators.');
+      router.replace('/(tabs)/admin');
+    }
+  }, [user]);
 
   const features = TIMETABLE_FEATURES;
 
@@ -70,7 +80,7 @@ export default function AdminTimetableScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       {/* Header */}
       <View style={styles.header}>
@@ -159,9 +169,9 @@ export default function AdminTimetableScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
+  container: { flex: 1, backgroundColor: '#020617' },
   header: {
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'ios' ? 56 : 42,
     paddingHorizontal: 20,
     paddingBottom: 16,
     flexDirection: 'row',

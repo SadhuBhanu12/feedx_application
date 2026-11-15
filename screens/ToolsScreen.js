@@ -122,7 +122,7 @@ export default function ToolsScreen() {
     { title: 'AI Career Assistant', description: 'Personalized guidance for placements and skills.', featureKey: 'ai_career_assistant' },
     { title: 'AI Resume Builder', description: 'Build ATS-ready resumes with smart suggestions.', featureKey: 'ai_resume_builder' },
     { title: 'AI Study Planner', description: 'Plan your semester with intelligent scheduling.', featureKey: 'ai_study_planner' },
-    { title: 'FX-Bot', description: 'Your FeedX campus assistant chatbot.', featureKey: 'fx_bot' },
+    { title: 'FX-Bot', description: 'Your FEEDX campus assistant chatbot.', featureKey: 'fx_bot' },
   ];
 
   return (

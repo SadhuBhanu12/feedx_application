@@ -17,7 +17,7 @@ import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { saListAdmins, saCreateAdminUser, adminResetUserPassword, saListColleges } from '@/services/supabaseService';
+import { saListAdmins, saCreateAdminUser, saListColleges } from '@/services/supabaseService';
 import { validateEmail, validatePhone, validateText, validatePassword } from '@/utils/validation';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
@@ -192,6 +192,9 @@ export default function AdminsManager() {
 
     setActionLoading(true);
     try {
+      const collegeIdToPass = (role === 'inst_admin' || role === 'admin') && selectedCollege ? selectedCollege.id : null;
+      const collegeNameToPass = selectedCollege?.college_name || selectedCollege?.name || null;
+
       if (isEditing && selectedAdmin) {
         // Edit User details
         const { error: userError } = await supabase
@@ -201,6 +204,10 @@ export default function AdminsManager() {
             email: email.trim(),
             phone: phone.trim() || null,
             role: role,
+            college_id: collegeIdToPass,
+            college_name: collegeNameToPass,
+            department: (role === 'inst_admin' || role === 'admin') ? 'Campus Administration' : 'Executive Administration',
+            branch: null,
             updated_at: new Date().toISOString()
           })
           .eq('id', selectedAdmin.id);
@@ -213,42 +220,65 @@ export default function AdminsManager() {
           .upsert({
             id: selectedAdmin.id,
             name: fullName.trim(),
+            admin_name: fullName.trim(),
             email: email.trim(),
             role: role,
-            institution_id: (role === 'inst_admin' || role === 'admin') && selectedCollege ? selectedCollege.id : null
+            institution_id: collegeIdToPass,
+            college_id: collegeIdToPass,
+            department: (role === 'inst_admin' || role === 'admin') ? 'Campus Administration' : 'Executive Administration'
           });
 
         if (adminError) throw adminError;
-        Alert.alert('Success', 'Admin profile updated.');
+
+        // Immediate local state update for zero lag
+        setAdmins(prev => prev.map(a => a.id === selectedAdmin.id ? {
+          ...a,
+          full_name: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+          role: role,
+          admins: collegeIdToPass ? [{
+            institution_id: collegeIdToPass,
+            colleges: {
+              college_name: collegeNameToPass || '',
+              college_code: selectedCollege?.college_code || ''
+            }
+          }] : []
+        } : a));
+
+        Alert.alert('Success', 'Admin profile and college assignment updated.');
         setModalVisible(false);
       } else {
         // Create new Admin
-        const collegeIdToPass = (role === 'inst_admin' || role === 'admin') && selectedCollege ? selectedCollege.id : null;
         const newUserId = await saCreateAdminUser(email.trim(), password.trim(), fullName.trim(), role, collegeIdToPass);
         
-        // Also set phone number if provided
-        if (phone.trim() && newUserId) {
-          await supabase.from('users').update({ phone: phone.trim() }).eq('id', newUserId);
-        }
-        
-        // Ensure they show up in the admins registry
+        // Also update details in users and admins tables
         if (newUserId) {
-          const { error: insertError } = await supabase.from('admins').upsert({
+          await supabase.from('users').update({ 
+            phone: phone.trim() || null,
+            college_id: collegeIdToPass,
+            college_name: collegeNameToPass,
+            department: (role === 'inst_admin' || role === 'admin') ? 'Campus Administration' : 'Executive Administration',
+            branch: null,
+            is_active: true
+          }).eq('id', newUserId);
+
+          await supabase.from('admins').upsert({
             id: newUserId,
             name: fullName.trim(),
+            admin_name: fullName.trim(),
             email: email.trim(),
             role: role,
-            institution_id: collegeIdToPass
+            institution_id: collegeIdToPass,
+            college_id: collegeIdToPass,
+            department: (role === 'inst_admin' || role === 'admin') ? 'Campus Administration' : 'Executive Administration'
           });
-          if (insertError) {
-             console.warn("Could not upsert into admins table:", insertError);
-          }
         }
         
-        Alert.alert('Success', `${role.toUpperCase()} registered successfully.`);
+        Alert.alert('Success', `${role.toUpperCase()} registered and assigned successfully.`);
         setModalVisible(false);
       }
-      fetchAdminsAndColleges();
+      await fetchAdminsAndColleges();
     } catch (err: any) {
       Alert.alert('Action Failed', err.message);
     } finally {
@@ -258,22 +288,28 @@ export default function AdminsManager() {
 
   const handleDeleteAdmin = (adminId: string, name: string) => {
     Alert.alert(
-      'Remove Administrator',
-      `Are you sure you want to permanently delete ${name}? This action is irreversible.`,
+      'Permanently Delete Administrator',
+      `Are you sure you want to permanently remove ${name}? This action cannot be undone and deletes their account and administrative permissions.`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Remove User',
+          text: 'Permanently Delete',
           style: 'destructive',
           onPress: async () => {
             setLoading(true);
             try {
+              // Delete from both admins and users
+              await supabase.from('admins').delete().eq('id', adminId);
               const { error } = await supabase.from('users').delete().eq('id', adminId);
               if (error) throw error;
-              Alert.alert('Deleted', 'Admin removed successfully.');
+
+              // Immediate local state update
+              setAdmins(prev => prev.filter(a => a.id !== adminId));
+
+              Alert.alert('Deleted Successfully', `Administrator ${name} has been removed.`);
               fetchAdminsAndColleges();
             } catch (err: any) {
-              Alert.alert('Failed to remove admin', err.message);
+              Alert.alert('Deletion Failed', err.message);
             } finally {
               setLoading(false);
             }
@@ -283,74 +319,49 @@ export default function AdminsManager() {
     );
   };
 
-  const handleToggleSuspend = async (admin: AdminRecord) => {
-    const newStatus = !admin.is_active;
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('users')
-        .update({ is_active: newStatus })
-        .eq('id', admin.id);
-      if (error) throw error;
-      Alert.alert('Success', `Admin status set to: ${newStatus ? 'Active' : 'Suspended'}`);
-      fetchAdminsAndColleges();
-    } catch (e: any) {
-      Alert.alert('Failed to update status', e.message);
-    } finally {
-      setLoading(false);
-    }
+  const handleToggleSuspend = (admin: AdminRecord) => {
+    const isCurrentlyActive = admin.is_active !== false;
+    const targetStatus = !isCurrentlyActive;
+    Alert.alert(
+      isCurrentlyActive ? 'Suspend Administrator Account' : 'Reactivate Administrator Account',
+      isCurrentlyActive
+        ? `Are you sure you want to suspend ${admin.full_name || 'this administrator'}?\n\nSuspended administrators cannot sign in or access any college command deck features until reactivated.`
+        : `Reactivate access for ${admin.full_name || 'this administrator'}?\n\nThey will immediately regain administrative privileges.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: isCurrentlyActive ? 'Suspend Account' : 'Reactivate',
+          style: isCurrentlyActive ? 'destructive' : 'default',
+          onPress: async () => {
+            setLoading(true);
+            try {
+              const { error } = await supabase
+                .from('users')
+                .update({ is_active: targetStatus })
+                .eq('id', admin.id);
+              if (error) throw error;
+
+              await supabase.from('admins').update({ is_active: targetStatus }).eq('id', admin.id);
+
+              // Immediate local state update
+              setAdmins(prev => prev.map(a => a.id === admin.id ? { ...a, is_active: targetStatus } : a));
+
+              Alert.alert('Status Updated', `Administrator ${admin.full_name || ''} has been ${targetStatus ? 'reactivated' : 'suspended'}.`);
+              fetchAdminsAndColleges();
+            } catch (e: any) {
+              Alert.alert('Status Update Failed', e.message);
+            } finally {
+              setLoading(false);
+            }
+          }
+        }
+      ]
+    );
   };
 
   const handleOpenDetails = (admin: AdminRecord) => {
     setActiveDetailsAdmin(admin);
     setDetailsModalVisible(true);
-  };
-
-  const handleResetPassword = (adminId: string, name: string) => {
-    Alert.alert(
-      'Reset Admin Password',
-      `Enter a new custom password or reset it to the default date of birth for ${name}?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Default DOB Reset',
-          style: 'destructive',
-          onPress: async () => {
-            setLoading(true);
-            try {
-              await adminResetUserPassword(adminId, undefined);
-              Alert.alert('Success', 'Password has been reset to default DOB.');
-            } catch (e: any) {
-              Alert.alert('Reset Failed', e.message);
-            } finally {
-              setLoading(false);
-            }
-          }
-        },
-        {
-          text: 'Custom Password',
-          onPress: () => {
-            Alert.prompt(
-              'New Password',
-              'Enter the new custom password:',
-              async (newPass) => {
-                if (!newPass || !newPass.trim()) return;
-                setLoading(true);
-                try {
-                  await adminResetUserPassword(adminId, newPass.trim());
-                  Alert.alert('Success', 'Custom password applied.');
-                } catch (e: any) {
-                  Alert.alert('Failed', e.message);
-                } finally {
-                  setLoading(false);
-                }
-              },
-              'plain-text'
-            );
-          }
-        }
-      ]
-    );
   };
 
   const renderItem = ({ item, index }: { item: AdminRecord; index: number }) => {
@@ -403,13 +414,6 @@ export default function AdminsManager() {
 
             <View style={styles.actionRow}>
               <TouchableOpacity 
-                style={[styles.actionBtn, { backgroundColor: 'rgba(245, 158, 11, 0.05)' }]} 
-                onPress={() => handleResetPassword(item.id, item.full_name || 'Admin')}
-              >
-                <Feather name="key" size={15} color="#F59E0B" />
-              </TouchableOpacity>
-
-              <TouchableOpacity 
                 style={[styles.actionBtn, { backgroundColor: 'rgba(59, 130, 246, 0.05)' }]} 
                 onPress={() => handleOpenEdit(item)}
               >
@@ -438,7 +442,7 @@ export default function AdminsManager() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0B0F19', '#020408']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -675,8 +679,8 @@ export default function AdminsManager() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#020408' },
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 70 : 50, paddingBottom: 15 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingBottom: 15 },
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(255,255,255,0.03)', alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
   headerTitle: { fontSize: 24, fontWeight: '900', color: '#FFF', letterSpacing: -0.5 },
   headerSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: '600', marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 },

@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/context/ThemeContext';
 import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
+import PressableCard from '@/components/ui/PressableCard';
 
 interface TodayOverviewProps {
   dashboard: any;
@@ -31,7 +32,7 @@ export function TodayOverview({ dashboard, todayClassesCount = 0 }: TodayOvervie
       color: dashboard?.hasAttendanceData 
         ? ((dashboard?.overallAttendance || 0) < 75 ? '#EF4444' : '#10B981')
         : '#64748B',
-      route: '/(tabs)/attendance',
+      route: '/(tabs)/academics',
     },
     {
       id: 'classes',
@@ -60,24 +61,25 @@ export function TodayOverview({ dashboard, todayClassesCount = 0 }: TodayOvervie
   ];
 
   return (
-    <Animated.View entering={FadeInUp.duration(400).delay(100).springify()} style={styles.container}>
+    <Animated.View entering={FadeInUp.duration(300).delay(100)} style={styles.container}>
       <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Today&apos;s Overview</Text>
       <View style={styles.grid}>
         {cards.map((card) => (
-          <TouchableOpacity
+          <PressableCard
             key={card.id}
-            style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+            style={{ flex: 1 }}
             onPress={() => router.push(card.route as any)}
-            activeOpacity={0.75}
           >
-            <View style={[styles.iconBox, { backgroundColor: card.color + '15' }]}>
-              <Feather name={card.icon as any} size={18} color={card.color} />
+            <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
+              <View style={[styles.iconBox, { backgroundColor: card.color + '15' }]}>
+                <Feather name={card.icon as any} size={18} color={card.color} />
+              </View>
+              <Text style={[styles.cardValue, { color: colors.textPrimary }]} numberOfLines={1}>
+                {card.value}
+              </Text>
+              <Text style={[styles.cardLabel, { color: colors.textMuted }]}>{card.label}</Text>
             </View>
-            <Text style={[styles.cardValue, { color: colors.textPrimary }]} numberOfLines={1}>
-              {card.value}
-            </Text>
-            <Text style={[styles.cardLabel, { color: colors.textMuted }]}>{card.label}</Text>
-          </TouchableOpacity>
+          </PressableCard>
         ))}
       </View>
     </Animated.View>
@@ -99,7 +101,6 @@ const styles = StyleSheet.create({
     gap: SPACING.xs,
   },
   card: {
-    flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 8,
     borderRadius: RADIUS.lg,
@@ -127,3 +128,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default TodayOverview;

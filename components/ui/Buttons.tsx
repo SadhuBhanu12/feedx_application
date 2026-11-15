@@ -17,6 +17,8 @@ interface ButtonProps {
   title: string;
   onPress: () => void;
   loading?: boolean;
+  success?: boolean;
+  successTitle?: string;
   disabled?: boolean;
   icon?: keyof typeof Feather.glyphMap;
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
@@ -26,10 +28,20 @@ interface ButtonProps {
   accessibilityLabel?: string;
 }
 
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { MOTION_DURATIONS, MOTION_EASINGS, MOTION_SCALE } from '@/constants/motion';
+
 export const PrimaryButton: React.FC<ButtonProps> = ({
   title,
   onPress,
   loading = false,
+  success = false,
+  successTitle,
   disabled = false,
   icon,
   variant = 'primary',
@@ -42,16 +54,53 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   const isGhost = variant === 'ghost';
   const isSecondary = variant === 'secondary';
 
-  const gradientColors = isDanger
+  const scale = useSharedValue(1);
+
+  const handlePressIn = () => {
+    if (disabled || loading || success) return;
+    scale.value = withTiming(MOTION_SCALE.buttonPress, {
+      duration: MOTION_DURATIONS.micro,
+      easing: MOTION_EASINGS.press,
+    });
+  };
+
+  const handlePressOut = () => {
+    if (disabled || loading || success) return;
+    scale.value = withTiming(1, {
+      duration: MOTION_DURATIONS.micro,
+      easing: MOTION_EASINGS.standard,
+    });
+  };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const gradientColors = success
+    ? ['#10B981', '#059669']
+    : isDanger
     ? ['#EF4444', '#DC2626']
     : isSecondary
     ? ['rgba(255,255,255,0.06)', 'rgba(255,255,255,0.03)']
     : [COLORS.primary, '#D97706'];
 
+  const displayTitle = success ? (successTitle || `${title} ✓`) : title;
+
   const content = (
     <View style={styles.contentRow}>
       {loading ? (
         <ActivityIndicator color="#FFFFFF" size="small" style={styles.spinner} />
+      ) : success ? (
+        <>
+          <Feather name="check-circle" size={18} color="#FFFFFF" style={styles.icon} />
+          <Text
+            style={[styles.btnText, textStyle]}
+            numberOfLines={1}
+            allowFontScaling={true}
+          >
+            {displayTitle}
+          </Text>
+        </>
       ) : (
         <>
           {icon && <Feather name={icon} size={18} color="#FFFFFF" style={styles.icon} />}
@@ -68,41 +117,54 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   );
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disabled || loading}
-      activeOpacity={0.85}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel || title}
-      accessibilityState={{ disabled: disabled || loading }}
+    <Animated.View
       style={[
         styles.touchable,
         fullWidth && styles.fullWidth,
-        (disabled || loading) && styles.disabled,
+        (disabled || loading) && !success && styles.disabled,
+        animatedStyle,
         style,
       ]}
     >
-      {isGhost || isSecondary ? (
-        <View style={[styles.gradientBtn, isGhost ? styles.ghostContainer : styles.secondaryContainer]}>
-          {content}
-        </View>
-      ) : (
-        <LinearGradient
-          colors={gradientColors as any}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.gradientBtn}
-        >
-          {content}
-        </LinearGradient>
-      )}
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={disabled || loading || success}
+        activeOpacity={0.7}
+        delayPressIn={0}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel || displayTitle}
+        accessibilityState={{ disabled: disabled || loading }}
+        style={styles.touchableInner}
+      >
+        {isGhost || isSecondary ? (
+          <View style={[styles.gradientBtn, isGhost ? styles.ghostContainer : styles.secondaryContainer]}>
+            {content}
+          </View>
+        ) : (
+          <LinearGradient
+            colors={gradientColors as any}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.gradientBtn}
+          >
+            {content}
+          </LinearGradient>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   touchable: {
     minHeight: 48,
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+  touchableInner: {
+    width: '100%',
     borderRadius: 14,
     overflow: 'hidden',
   },

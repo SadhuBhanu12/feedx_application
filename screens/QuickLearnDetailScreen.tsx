@@ -18,6 +18,8 @@ import { useTheme } from '@/context/ThemeContext';
 import { useGamification } from '@/context/GamificationContext';
 import { rf, rs } from '@/constants/responsive';
 import { exploreService, QuickLearnLesson } from '@/services/exploreService';
+import { getCalendarDateString } from '@/services/gamificationService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { supabase } from '@/lib/supabase';
 
@@ -51,7 +53,9 @@ export default function QuickLearnDetailScreen() {
   const { user, setUser } = useUser();
   const { colors, isDark } = useTheme();
   const { triggerActivity, refreshGamification } = useGamification();
-  const params = useLocalSearchParams<{ id?: string }>();
+  const params = useLocalSearchParams<{ id?: string; source?: string; isDaily?: string }>();
+  const isDailyMission = params.source === 'daily_mission' || params.isDaily === 'true';
+  const tokenRewardAmount = isDailyMission ? 50 : 10;
 
   const [lesson, setLesson] = useState<QuickLearnLesson | null>(null);
   const [questionsList, setQuestionsList] = useState<any[]>([]);
@@ -61,6 +65,7 @@ export default function QuickLearnDetailScreen() {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [completed, setCompleted] = useState<boolean>(false);
+  const isCompletingRef = React.useRef<boolean>(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [reviewIndex, setReviewIndex] = useState<number>(0);
   const [isReviewPhase, setIsReviewPhase] = useState<boolean>(false);
@@ -94,12 +99,6 @@ export default function QuickLearnDetailScreen() {
           if (progress?.completed) {
             if (isMounted) {
               setCompleted(true);
-              setSubmitted(true);
-              setIsCorrect(true);
-              const firstQuestion = data?.knowledge_checks?.[0] || data?.knowledge_check;
-              if (firstQuestion) {
-                setSelectedOption(firstQuestion.correct_option);
-              }
             }
           } else {
             // Fallback to local storage
@@ -107,12 +106,6 @@ export default function QuickLearnDetailScreen() {
             const localDone = require('@/store/storage').storage.getBoolean(localKey);
             if (localDone && isMounted) {
               setCompleted(true);
-              setSubmitted(true);
-              setIsCorrect(true);
-              const firstQuestion = data?.knowledge_checks?.[0] || data?.knowledge_check;
-              if (firstQuestion) {
-                setSelectedOption(firstQuestion.correct_option);
-              }
             }
           }
         } catch (dbErr) {
@@ -146,14 +139,38 @@ export default function QuickLearnDetailScreen() {
       const isLastInMain = !isReviewPhase && currentQuestionIndex === questionsList.length - 1 && wrongQueue.length === 0;
       const isLastInReview = isReviewPhase && reviewIndex === wrongQueue.length - 1;
 
-      if ((isLastInMain || isLastInReview) && !completed) {
+      if ((isLastInMain || isLastInReview) && !isCompletingRef.current) {
+        isCompletingRef.current = true;
         setCompleted(true);
-        const rewardAmount = lesson.fx_reward || 10;
+        const isDailyMission = params.source === 'daily_mission' || params.isDaily === 'true';
+        const rewardAmount = isDailyMission ? 50 : 10;
+        const activityType = isDailyMission ? 'home_daily_quick_learn' : 'explore_quick_learn';
+        const todayStr = getCalendarDateString();
+        const refId = isDailyMission 
+          ? `home_daily_quick_learn_${user?.id}_${todayStr}` 
+          : `explore_quick_learn_${lesson.id}_${user?.id}_${todayStr}`;
+
+        // Mark Today's Mission challenges completed in both global and user-scoped storage
+        try {
+          const globalKey = `@feedx_daily_challenges_${todayStr}`;
+          const userKey = user?.id ? `@feedx_daily_challenges_${user.id}_${todayStr}` : null;
+          const keysToUpdate = userKey ? [globalKey, userKey] : [globalKey];
+          for (const key of keysToUpdate) {
+            const raw = await AsyncStorage.getItem(key);
+            const parsed = raw ? JSON.parse(raw) : {};
+            parsed['resource_read'] = true;
+            parsed['home_daily_quick_learn'] = true;
+            parsed['explore_quick_learn'] = true;
+            parsed['daily_quick_learn'] = true;
+            await AsyncStorage.setItem(key, JSON.stringify(parsed));
+          }
+        } catch (_) {}
+
         await exploreService.completeLesson(user?.id || '', lesson.id, rewardAmount);
 
-        // Award FX tokens & XP in Gamification Context & Wallet
+        // Award tokens in Gamification Context & Wallet
         try {
-          await triggerActivity('resource_read', rewardAmount, rewardAmount, lesson.id);
+          await triggerActivity(activityType, rewardAmount, rewardAmount, refId);
           await refreshGamification();
         } catch (rewardErr) {
           console.warn('[QuickLearn] Failed to trigger activity:', rewardErr);
@@ -165,10 +182,10 @@ export default function QuickLearnDetailScreen() {
             ...user,
             xp_points: updatedXp,
             xp: updatedXp,
+            tokens: (user.tokens || 0) + rewardAmount,
           });
         }
-
-        Alert.alert('Congratulations! 🎉', `Lesson completed successfully! +${rewardAmount} FX Tokens added to your wallet.`);
+        // Celebratory point notification is handled exclusively by global RewardEarnedPopup
       }
     } else {
       // Re-append wrong question to wrongQueue for review at the end!
@@ -210,7 +227,7 @@ export default function QuickLearnDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -225,7 +242,7 @@ export default function QuickLearnDetailScreen() {
           <Text style={[styles.headerSub, { color: colors.textMuted }]}>{lesson.branch} • {lesson.difficulty} • {lesson.estimated_minutes} min</Text>
         </View>
         <View style={styles.fxTag}>
-          <Text style={styles.fxTagText}>+{lesson.fx_reward} FX</Text>
+          <Text style={styles.fxTagText}>+{tokenRewardAmount} Tokens</Text>
         </View>
       </View>
 
@@ -409,13 +426,13 @@ export default function QuickLearnDetailScreen() {
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.resultTitle, { color: isCorrect ? '#10B981' : '#EF4444' }]}>
                       {isCorrect 
-                        ? (!hasMoreQuestions ? `Correct! Lesson Completed 🎉 +${lesson.fx_reward} FX Awarded` : 'Correct! Well done.')
+                        ? (!hasMoreQuestions ? `Correct! Lesson Completed 🎉 +${tokenRewardAmount} Tokens Awarded` : 'Correct! Well done.')
                         : 'Incorrect. Added to your review queue at the end!'}
                     </Text>
                   </View>
                 </View>
 
-                {hasMoreQuestions && (
+                {hasMoreQuestions ? (
                   <TouchableOpacity style={[styles.submitBtn, { backgroundColor: isCorrect ? '#10B981' : '#3B82F6', marginTop: 4 }]} onPress={handleNextQuestion}>
                     <Text style={styles.submitBtnText}>
                       {!isReviewPhase && currentQuestionIndex === questionsList.length - 1 
@@ -423,12 +440,19 @@ export default function QuickLearnDetailScreen() {
                         : 'Next Question →'}
                     </Text>
                   </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.submitBtn, { backgroundColor: '#10B981', marginTop: 6 }]}
+                    onPress={() => router.back()}
+                  >
+                    <Text style={styles.submitBtnText}>Done & Return →</Text>
+                  </TouchableOpacity>
                 )}
               </View>
             )}
 
             {/* Detailed Concept Explanation Box */}
-            {(selectedOption !== null || submitted) && currentQuestion.explanation && (
+            {submitted && currentQuestion.explanation && (
               <View style={[styles.explanationCard, { backgroundColor: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)', marginTop: 14 }]}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                   <Ionicons name="information-circle" size={18} color="#3B82F6" />

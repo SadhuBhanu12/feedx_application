@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, ScrollView, Platform } from 'react-native';
 import { COLORS, FONT, RADIUS, SHADOWS, SPACING } from '@/constants/theme';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { uploadResourceFile } from '@/services/supabaseService';
@@ -46,6 +46,13 @@ export default function AdminCollegesScreen() {
   };
 
   const isCollegeAdmin = !!user?.college_id;
+
+  useEffect(() => {
+    if (user && user.role !== 'super_admin') {
+      Alert.alert('Permission Denied', 'College Profile management is reserved for Super Administrators.');
+      router.replace('/(tabs)/admin');
+    }
+  }, [user]);
 
   const loadItems = async () => {
     setLoading(true);
@@ -229,7 +236,7 @@ export default function AdminCollegesScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#1E293B']} style={StyleSheet.absoluteFill} />
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
@@ -284,8 +291,8 @@ export default function AdminCollegesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   headerText: { flex: 1 },
   headerTitle: { fontSize: 24, fontWeight: '900', color: '#FFF' },
   headerSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: 1 },
@@ -296,7 +303,7 @@ const styles = StyleSheet.create({
   label: { fontSize: 10, fontWeight: '700', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 },
   input: { height: 48, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 12, paddingHorizontal: 16, color: '#FFF', fontSize: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
   disabledInput: { backgroundColor: 'rgba(255,255,255,0.02)', opacity: 0.6 },
-  scrollContent: { padding: 24, paddingBottom: 120 },
+  scrollContent: { padding: 20, paddingBottom: 120 },
   inputGrid: { flexDirection: 'row', gap: 12, marginBottom: 16 },
   inputWrapper: { flex: 1 },
   uploadRow: { flexDirection: 'row', alignItems: 'center' },

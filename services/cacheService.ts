@@ -69,3 +69,4 @@ class CacheService {
 }
 
 export const memoryCache = new CacheService();
+export const cacheService = memoryCache;

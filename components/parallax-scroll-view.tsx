@@ -44,6 +44,8 @@ export default function ParallaxScrollView({
     };
   });
 
+  const schemeKey = colorScheme === 'dark' ? 'dark' : 'light';
+
   return (
     <Animated.ScrollView
       ref={scrollRef}
@@ -52,7 +54,7 @@ export default function ParallaxScrollView({
       <Animated.View
         style={[
           styles.header,
-          { backgroundColor: headerBackgroundColor[colorScheme] },
+          { backgroundColor: headerBackgroundColor[schemeKey] },
           headerAnimatedStyle,
         ]}>
         {headerImage}

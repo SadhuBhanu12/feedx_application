@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Dimensions, Linki
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { SkeletonLoader } from '@/components/ui/Loaders';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { safeBack } from '@/utils/navigation';
 import { supabase } from '@/lib/supabase';
 import { useUser } from '@/context/UserContext';
 import { toggleBookmark, isBookmarked, trackOpportunityApply, getUserAppliedOpportunityIds } from '@/services/supabaseService';
@@ -206,7 +207,7 @@ export default function OpportunityDetailScreen() {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.errorText}>Details not found</Text>
-        <TouchableOpacity style={styles.backBtnFallback} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtnFallback} onPress={() => safeBack('/(tabs)')}>
           <Text style={styles.backBtnText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -226,7 +227,7 @@ export default function OpportunityDetailScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Top Header */}
       <View style={[styles.header, { borderBottomColor: colors.border, backgroundColor: colors.background }]}>
-        <TouchableOpacity onPress={() => router.back()} style={[styles.iconBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
+        <TouchableOpacity onPress={() => safeBack('/(tabs)')} style={[styles.iconBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]}>
           <Feather name="chevron-left" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>

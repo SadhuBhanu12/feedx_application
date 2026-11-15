@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Platform, Linking } from 'react-native';
 import { SkeletonLoader } from '@/components/ui/Loaders';
-import { CalendarDays, Clock3, Users, CheckCircle } from 'lucide-react-native';
+import { CalendarDays, Clock3, Users, CheckCircle, Award, AlertCircle } from 'lucide-react-native';
 import { Feather } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { COLORS } from '@/constants/theme';
@@ -14,9 +15,12 @@ import GradientHeader from '@/components/ui/GradientHeader';
 import GlassCard from '@/components/ui/GlassCard';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
 
+const FEEDX_EVENT_FALLBACK = require('@/assets/images/logo.jpg');
+
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { user } = useUser();
   const [event, setEvent] = useState(null);
   const [registered, setRegistered] = useState(false);
@@ -103,13 +107,15 @@ export default function EventDetailScreen() {
     setLoading(true);
     try {
       setRegistered(true);
-      setEvent(prev => prev ? { ...prev, registered: (prev.registered || 0) + 1 } : prev);
+      setEvent(prev => prev ? { ...prev, registered: (Number(prev.registered) || 0) + 1 } : prev);
       await registerForEvent(event.id, user.id, user);
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      queryClient.invalidateQueries({ queryKey: ['event_registrations'] });
       await load();
       Alert.alert('Registered', 'You have successfully registered for this event.');
     } catch (e) {
       setRegistered(false);
-      setEvent(prev => prev ? { ...prev, registered: Math.max(0, (prev.registered || 1) - 1) } : prev);
+      setEvent(prev => prev ? { ...prev, registered: Math.max(0, (Number(prev.registered) || 1) - 1) } : prev);
       Alert.alert('Registration Failed', e.message || 'Unable to register.');
     } finally {
       setLoading(false);
@@ -128,12 +134,14 @@ export default function EventDetailScreen() {
           try {
             setRegistered(false);
             setRegistration(null);
-            setEvent(prev => prev ? { ...prev, registered: Math.max(0, (prev.registered || 1) - 1) } : prev);
+            setEvent(prev => prev ? { ...prev, registered: Math.max(0, (Number(prev.registered) || 1) - 1) } : prev);
             await cancelEventRegistration(event.id, user.id);
+            queryClient.invalidateQueries({ queryKey: ['events'] });
+            queryClient.invalidateQueries({ queryKey: ['event_registrations'] });
             await load();
           } catch (e) {
             setRegistered(true);
-            setEvent(prev => prev ? { ...prev, registered: (prev.registered || 0) + 1 } : prev);
+            setEvent(prev => prev ? { ...prev, registered: (Number(prev.registered) || 0) + 1 } : prev);
             Alert.alert('Error', e.message || 'Could not cancel registration.');
           } finally {
             setLoading(false);
@@ -169,8 +177,23 @@ export default function EventDetailScreen() {
     );
   }
 
-  const pct = event.capacity ? Math.round((event.registered / event.capacity) * 100) : 0;
-  const isFull = event.capacity && event.registered >= event.capacity;
+  const handleOpenExternalRegistration = () => {
+    const rawUrl = String(event?.registration_url || '').trim();
+    if (!rawUrl) {
+      Alert.alert('Notice', 'No registration link specified for this event.');
+      return;
+    }
+    const safeUrl = rawUrl.startsWith('http://') || rawUrl.startsWith('https://') ? rawUrl : `https://${rawUrl}`;
+    Linking.openURL(safeUrl).catch(() => {
+      Alert.alert('Unable to Open Link', 'The registration URL could not be opened on your device.');
+    });
+  };
+
+  const capacity = Number(event?.capacity || event?.max_participants || 100);
+  const registeredCount = Number(event?.registered || 0);
+  const pct = capacity > 0 ? Math.min(100, Math.round((registeredCount / capacity) * 100)) : 0;
+  const isFull = capacity > 0 && registeredCount >= capacity;
+  const isExternalEvent = Boolean(event.registration_url || event.event_source === 'external');
 
   return (
     <View style={styles.container}>
@@ -180,7 +203,8 @@ export default function EventDetailScreen() {
         {/* Cover Banner Image */}
         <View style={styles.bannerContainer}>
           <OptimizedImage 
-            source={event.image_url || 'https://images.unsplash.com/photo-1540575861501-7ad060e39fe1?q=80&w=1000&auto=format&fit=crop'} 
+            source={event.image_url || event.banner_url || event.poster_url || event.image || event.cover_image || FEEDX_EVENT_FALLBACK} 
+            fallbackSource={FEEDX_EVENT_FALLBACK}
             style={styles.bannerImage} 
             contentFit="cover"
           />
@@ -189,8 +213,15 @@ export default function EventDetailScreen() {
             style={styles.bannerOverlay} 
           />
           <View style={styles.titleContainer}>
-            <View style={styles.categoryBadge}>
-              <Text style={styles.categoryText}>{event.category || 'Workshop'}</Text>
+            <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', marginBottom: 6 }}>
+              <View style={styles.categoryBadge}>
+                <Text style={styles.categoryText}>{event.category || 'Workshop'}</Text>
+              </View>
+              {isExternalEvent && (
+                <View style={[styles.categoryBadge, { backgroundColor: 'rgba(245, 158, 11, 0.2)', borderColor: 'rgba(245, 158, 11, 0.4)', borderWidth: 1 }]}>
+                  <Text style={[styles.categoryText, { color: '#F59E0B' }]}>EXTERNAL OPPORTUNITY</Text>
+                </View>
+              )}
             </View>
             <Text style={styles.heroTitle}>{event.title}</Text>
           </View>
@@ -205,6 +236,7 @@ export default function EventDetailScreen() {
               <Text style={styles.meta}>{event.event_date || event.date || 'TBA'} {event.time ? `@ ${event.time}` : ''}</Text>
             </View>
           </View>
+
           <View style={[styles.row, { marginTop: 14 }]}>
             <Clock3 size={18} color={COLORS.primary} />
             <View style={styles.metaTextContainer}>
@@ -212,14 +244,46 @@ export default function EventDetailScreen() {
               <Text style={styles.meta}>{event.venue || 'TBA'} ({event.location || 'Offline'})</Text>
             </View>
           </View>
+
           <View style={[styles.row, { marginTop: 14 }]}>
             <Users size={18} color={COLORS.primary} />
             <View style={styles.metaTextContainer}>
-              <Text style={styles.metaLabel}>PARTICIPATION CAPACITY</Text>
-              <Text style={styles.meta}>{event.registered || 0} / {event.capacity || '∞'} Registrations ({pct}% full)</Text>
+              <Text style={styles.metaLabel}>ORGANIZED BY</Text>
+              <Text style={styles.meta}>{event.organizer_name || event.organizer || 'FEEDX'}</Text>
             </View>
           </View>
+
+          {event.registration_deadline ? (
+            <View style={[styles.row, { marginTop: 14 }]}>
+              <AlertCircle size={18} color="#F59E0B" />
+              <View style={styles.metaTextContainer}>
+                <Text style={[styles.metaLabel, { color: '#F59E0B' }]}>REGISTRATION DEADLINE</Text>
+                <Text style={[styles.meta, { color: '#F59E0B', fontWeight: '700' }]}>{event.registration_deadline}</Text>
+              </View>
+            </View>
+          ) : null}
+
+          {!isExternalEvent && (
+            <View style={[styles.row, { marginTop: 14 }]}>
+              <Users size={18} color={COLORS.primary} />
+              <View style={styles.metaTextContainer}>
+                <Text style={styles.metaLabel}>PARTICIPATION CAPACITY</Text>
+                <Text style={styles.meta}>{registeredCount} / {capacity} Registrations ({pct}% full)</Text>
+              </View>
+            </View>
+          )}
         </GlassCard>
+
+        {/* Eligibility Card */}
+        {event.eligibility ? (
+          <GlassCard style={styles.card}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+              <Award size={18} color="#10B981" />
+              <Text style={styles.heading}>Eligibility Criteria</Text>
+            </View>
+            <Text style={styles.copy}>{event.eligibility}</Text>
+          </GlassCard>
+        ) : null}
 
         {/* Description Card */}
         <GlassCard style={styles.card}>
@@ -227,8 +291,8 @@ export default function EventDetailScreen() {
           <Text style={styles.copy}>{event.description || 'Industry-led event focused on exposure, hiring opportunities, and practical career guidance for diploma students.'}</Text>
         </GlassCard>
 
-        {/* Registration Ticket / Actions (if already registered) */}
-        {registered && (
+        {/* Registration Ticket / Actions (if already registered internally) */}
+        {!isExternalEvent && registered && (
           <GlassCard style={[styles.card, { marginTop: 12 }]}>
             {(registration?.checked_in || registration?.attendance_status === 'present' || registration?.attendance === 'Present') ? (
               <View style={{ gap: 10 }}>
@@ -265,7 +329,7 @@ export default function EventDetailScreen() {
         )}
 
         {/* Admin Backdoor shortcut */}
-        {(user?.role === 'admin' || user?.role === 'super_admin' || user?.role === 'inst_admin') && (
+        {(user?.role === 'super_admin' || ((user?.role === 'admin' || user?.role === 'inst_admin') && event.college_id && event.college_id === user?.college_id)) && (
           <TouchableOpacity
             style={styles.adminDeckBtn}
             onPress={() => router.push(`/admin/organizer-dashboard?id=${event.id}`)}
@@ -291,23 +355,41 @@ export default function EventDetailScreen() {
               <Feather name="bookmark" size={22} color={bookmarked ? COLORS.primary : '#A1A1AA'} />
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[styles.registerBtn, (registered || isFull) && styles.registerBtnDone]}
-              onPress={handleRegister}
-              disabled={loading || registered || isFull}>
-              <LinearGradient
-                colors={registered ? COLORS.gradientSuccess : isFull ? ['#64748B', '#475569'] : COLORS.gradientPrimary}
-                style={styles.registerGradient}>
-                {registered ? (
-                  <>
-                    <CheckCircle size={18} color="#FFF" />
-                    <Text style={styles.registerText}>Registered</Text>
-                  </>
-                ) : (
-                  <Text style={styles.registerText}>{isFull ? 'Registration Full' : loading ? 'Registering...' : 'Register Now'}</Text>
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
+            {isExternalEvent ? (
+              <TouchableOpacity
+                style={styles.registerBtn}
+                onPress={handleOpenExternalRegistration}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={['#3B82F6', '#1D4ED8']}
+                  style={styles.registerGradient}
+                >
+                  <Feather name="external-link" size={18} color="#FFF" style={{ marginRight: 6 }} />
+                  <Text style={styles.registerText}>Register Now</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.registerBtn, (registered || isFull) && styles.registerBtnDone]}
+                onPress={handleRegister}
+                disabled={loading || registered || isFull}
+              >
+                <LinearGradient
+                  colors={registered ? COLORS.gradientSuccess : isFull ? ['#64748B', '#475569'] : COLORS.gradientPrimary}
+                  style={styles.registerGradient}
+                >
+                  {registered ? (
+                    <>
+                      <CheckCircle size={18} color="#FFF" />
+                      <Text style={styles.registerText}>Registered</Text>
+                    </>
+                  ) : (
+                    <Text style={styles.registerText}>{isFull ? 'Registration Full' : loading ? 'Registering...' : 'Register Now'}</Text>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Animated.View>
@@ -322,7 +404,7 @@ const styles = StyleSheet.create({
   
   bannerContainer: { width: '100%', height: 240, position: 'relative' },
   bannerImage: { width: '100%', height: '100%' },
-  bannerOverlay: { ...StyleSheet.absoluteFillObject },
+  bannerOverlay: { ...StyleSheet.absoluteFill },
   titleContainer: { position: 'absolute', bottom: 16, left: 16, right: 16 },
   categoryBadge: { alignSelf: 'flex-start', backgroundColor: COLORS.primary + '25', borderWidth: 1, borderColor: COLORS.primary + '50', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginBottom: 8 },
   categoryText: { color: COLORS.primary, fontSize: 10, fontWeight: '950', textTransform: 'uppercase', letterSpacing: 0.5 },

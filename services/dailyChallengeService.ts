@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase';
-import { awardActivity } from './gamificationService';
+import { awardActivity, fetchDailyStreak } from './gamificationService';
 
 export interface DailyChallenge {
   id: string;
@@ -105,22 +105,20 @@ export async function getAvailableChallenges(userId?: string): Promise<DailyChal
 // 3. Get Student Stats (Streak, XP, Level, Completed Count)
 export async function getStudentProgressStats(userId?: string): Promise<StudentProgressStats> {
   if (!userId) {
-    return { currentStreak: 7, longestStreak: 14, totalXp: 420, completedCount: 18, userLevel: 4 };
+    return { currentStreak: 1, longestStreak: 1, totalXp: 0, completedCount: 0, userLevel: 1 };
   }
 
   try {
-    const [streakRes, xpRes, progressRes] = await Promise.all([
-      supabase.from('student_streaks').select('current_streak, longest_streak').eq('student_id', userId).maybeSingle(),
-      supabase.from('xp_transactions').select('xp_amount').eq('student_id', userId),
+    const [streakData, progressRes] = await Promise.all([
+      fetchDailyStreak(userId),
       supabase.from('student_challenge_progress').select('id', { count: 'exact', head: true }).eq('student_id', userId),
     ]);
 
-    const currentStreak = streakRes.data?.current_streak || 7;
-    const longestStreak = streakRes.data?.longest_streak || 14;
-
-    const totalXp = (xpRes.data || []).reduce((acc, curr) => acc + (curr.xp_amount || 0), 420);
-    const completedCount = progressRes.count || 18;
-    const userLevel = Math.max(1, Math.floor(totalXp / 100));
+    const currentStreak = streakData?.current_streak || 1;
+    const longestStreak = streakData?.longest_streak || currentStreak;
+    const totalXp = streakData?.xp_points || 0;
+    const completedCount = progressRes?.count || 0;
+    const userLevel = Math.max(1, Math.floor(totalXp / 500) + 1);
 
     return {
       currentStreak,
@@ -130,7 +128,7 @@ export async function getStudentProgressStats(userId?: string): Promise<StudentP
       userLevel,
     };
   } catch (e) {
-    return { currentStreak: 7, longestStreak: 14, totalXp: 420, completedCount: 18, userLevel: 4 };
+    return { currentStreak: 1, longestStreak: 1, totalXp: 0, completedCount: 0, userLevel: 1 };
   }
 }
 

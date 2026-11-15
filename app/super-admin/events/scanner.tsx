@@ -75,7 +75,7 @@ export default function QRScannerScreen() {
       let response: any;
 
       try {
-        response = await verifyEventRegistrationQR(cleanToken, user);
+        response = await verifyEventRegistrationQR(cleanToken, user, eventId as string);
       } catch (e1) {
         response = await verifyQrAttendance(cleanToken, user?.id);
       }
@@ -116,7 +116,7 @@ export default function QRScannerScreen() {
           <Feather name="shield" size={40} color="#3B82F6" />
         </View>
         <Text style={styles.manualTitle}>Manual Ticket Check-in</Text>
-        <Text style={styles.manualDesc}>Enter the student&apos;s QR Token, FeedX ID, or Registration Number manually below:</Text>
+        <Text style={styles.manualDesc}>Enter the student&apos;s QR Token, FEEDX ID, or Registration Number manually below:</Text>
         
         <TextInput
           style={styles.input}
@@ -179,9 +179,9 @@ export default function QRScannerScreen() {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={StyleSheet.absoluteFillObject}>
+            <View style={StyleSheet.absoluteFill}>
               <CameraView 
-                style={StyleSheet.absoluteFillObject} 
+                style={StyleSheet.absoluteFill} 
                 facing="back"
                 onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
                 barcodeScannerSettings={{
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   frameCornerBottomRight: { position: 'absolute', bottom: 0, right: 0, width: 35, height: 35, borderColor: '#10B981', borderBottomWidth: 4, borderRightWidth: 4, borderBottomRightRadius: 16 },
   scannerLine: { width: '90%', height: 2, backgroundColor: '#10B981', position: 'absolute', top: '50%', alignSelf: 'center' },
 
-  resultContainer: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center', padding: 20, zIndex: 50 },
+  resultContainer: { ...StyleSheet.absoluteFill, justifyContent: 'center', alignItems: 'center', padding: 20, zIndex: 50 },
   resultBox: { width: '100%', backgroundColor: 'rgba(15, 23, 42, 0.96)', padding: 28, borderRadius: 28, alignItems: 'center', borderWidth: 2, borderColor: 'rgba(255,255,255,0.1)' },
   resultTitle: { fontSize: 22, fontWeight: '900', color: '#FFF', marginBottom: 8 },
   resultMessage: { fontSize: 14, color: 'rgba(255,255,255,0.8)', textAlign: 'center', marginBottom: 24, lineHeight: 22 },

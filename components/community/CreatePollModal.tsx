@@ -7,42 +7,54 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  ActivityIndicator,
   Alert,
-  Switch,
+  ActivityIndicator,
 } from 'react-native';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image as ExpoImage } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '@/context/ThemeContext';
-import { createCommunityPostAdmin, createCommunityPollPostAdmin, uploadCommunityImage } from '@/services/supabaseService';
-import { SPACING, FONT, RADIUS, SHADOWS } from '@/constants/theme';
-import { Image as ExpoImage } from 'expo-image';
+import { RADIUS, SPACING } from '@/constants/theme';
+import { useUser } from '@/context/UserContext';
+import {
+  createCommunityPollPostAdmin,
+  createCommunityPostAdmin,
+  uploadCommunityImage,
+} from '@/services/supabaseService';
 
 interface CreatePollModalProps {
   visible: boolean;
   onClose: () => void;
-  userId: string;
+  userId?: string;
   onPostCreated?: () => void;
 }
 
 export function CreatePollModal({ visible, onClose, userId, onPostCreated }: CreatePollModalProps) {
   const { colors, isDark } = useTheme();
+  const { user } = useUser();
+  const effectiveUserId = userId || user?.id;
 
-  const [postType, setPostType] = useState<'text' | 'image' | 'poll' | 'announcement'>('poll');
+  const [postType, setPostType] = useState<'text' | 'video' | 'image' | 'poll' | 'announcement'>('poll');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Polls');
+  const [videoUrl, setVideoUrl] = useState('');
 
   // Poll Fields
   const [question, setQuestion] = useState('');
-  const [pollOptions, setPollOptions] = useState<string[]>(['AI & Machine Learning', 'Web Development', 'Cloud Computing', 'Cybersecurity']);
+  const [pollOptions, setPollOptions] = useState<string[]>([
+    'AI & Machine Learning',
+    'Web Development',
+    'Cloud Computing',
+    'Cybersecurity',
+  ]);
   const [allowMultiple, setAllowMultiple] = useState(false);
   const [anonymousVoting, setAnonymousVoting] = useState(true);
   const [showResultsBeforeVote, setShowResultsBeforeVote] = useState(false);
   const [allowVoteChange, setAllowVoteChange] = useState(false);
   const [endDateDays, setEndDateDays] = useState('3'); // default 3 days poll
 
-  // Multi-Image Upload
+  // Multi-Image & Video Upload
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -99,6 +111,35 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
     }
   };
 
+  const handlePickVideo = async () => {
+    try {
+      const res = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: false,
+        quality: 0.8,
+      });
+
+      if (!res.canceled && res.assets && res.assets.length > 0) {
+        const uri = res.assets[0].uri;
+        setUploadingImage(true);
+        try {
+          const url = await uploadCommunityImage(userId, uri);
+          if (url) {
+            setVideoUrl(url);
+          } else {
+            setVideoUrl(uri);
+          }
+        } catch (e) {
+          setVideoUrl(uri);
+        }
+      }
+    } catch (err: any) {
+      Alert.alert('Video Selection Error', err?.message || 'Failed to select video.');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleRemoveImage = (index: number) => {
     setUploadedImages(uploadedImages.filter((_, idx) => idx !== index));
   };
@@ -140,7 +181,7 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
           allow_vote_change: allowVoteChange,
           ends_at: endsAt.toISOString(),
           category: category,
-          created_by: userId,
+          created_by: effectiveUserId,
           image_url: uploadedImages[0] || null,
           images: uploadedImages,
         });
@@ -155,22 +196,30 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
         setSubmitting(false);
       }
     } else {
-      if (!description.trim() && !title.trim()) {
-        Alert.alert('Validation Error', 'Please enter post title or content.');
+      if (!description.trim() && !title.trim() && !videoUrl.trim()) {
+        Alert.alert('Validation Error', 'Please enter post title, description or video link.');
         return;
       }
 
       setSubmitting(true);
       try {
-        await createCommunityPostAdmin({
-          title: title.trim() || description.slice(0, 50),
+        const payload: any = {
+          title: title.trim() || description.slice(0, 50) || 'Community Video',
           caption: description.trim(),
           category: category,
-          created_by: userId,
+          created_by: effectiveUserId,
           image_url: uploadedImages[0] || null,
           images: uploadedImages,
-          post_type: postType,
-        });
+          post_type: postType === 'video' || Boolean(videoUrl.trim()) ? 'video' : postType,
+        };
+
+        if (videoUrl.trim()) {
+          payload.video_url = videoUrl.trim();
+          payload.drive_url = videoUrl.trim();
+          payload.post_type = 'video';
+        }
+
+        await createCommunityPostAdmin(payload);
 
         Alert.alert('Success', 'Community Post published successfully!');
         resetForm();
@@ -188,6 +237,7 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
     setTitle('');
     setDescription('');
     setQuestion('');
+    setVideoUrl('');
     setPollOptions(['AI & Machine Learning', 'Web Development', 'Cloud Computing', 'Cybersecurity']);
     setUploadedImages([]);
     setAllowMultiple(false);
@@ -199,36 +249,47 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
   return (
     <Modal visible={visible} transparent={true} animationType="slide" onRequestClose={onClose}>
       <View style={styles.overlay}>
-        <View style={[styles.modalContent, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
+        <View style={[styles.modalContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
           {/* Header */}
           <View style={styles.header}>
-            <View style={styles.headerTitleGroup}>
-              <MaterialCommunityIcons name="poll" size={22} color={colors.primary} />
-              <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Superadmin Content Creator</Text>
-            </View>
-            <TouchableOpacity onPress={onClose}>
-              <Feather name="x" size={22} color={colors.textPrimary} />
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {postType === 'poll' ? 'Create Interactive Poll' : postType === 'video' ? 'Publish Video Post' : 'Create Community Post'}
+            </Text>
+            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+              <Feather name="x" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+          <ScrollView style={styles.scrollArea} showsVerticalScrollIndicator={false}>
             {/* Post Type Selector */}
             <View style={styles.typeSelectorRow}>
-              {(['poll', 'image', 'announcement', 'text'] as const).map((type) => {
+              {(['poll', 'video', 'image', 'announcement', 'text'] as const).map((type) => {
                 const isActive = postType === type;
                 return (
                   <TouchableOpacity
                     key={type}
                     style={[
                       styles.typePill,
-                      { backgroundColor: isActive ? colors.primary : isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                      {
+                        backgroundColor: isActive
+                          ? colors.primary
+                          : isDark
+                          ? 'rgba(255,255,255,0.05)'
+                          : 'rgba(0,0,0,0.05)',
+                      },
                     ]}
                     onPress={() => {
                       setPostType(type);
                       if (type === 'poll') setCategory('Polls');
+                      else if (type === 'video') setCategory('Innovation');
                     }}
                   >
-                    <Text style={[styles.typePillText, { color: isActive ? '#FFF' : colors.textSecondary }]}>
+                    <Text
+                      style={[
+                        styles.typePillText,
+                        { color: isActive ? '#FFF' : colors.textSecondary },
+                      ]}
+                    >
                       {type.toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -258,46 +319,78 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
                   multiline
                 />
 
-                <Text style={[styles.label, { color: colors.textPrimary }]}>Poll Options (Min 2)</Text>
+                {/* Poll Options */}
+                <Text style={[styles.label, { color: colors.textPrimary, marginTop: 12 }]}>
+                  Poll Options (Min 2, Max 8)
+                </Text>
                 {pollOptions.map((opt, idx) => (
-                  <View key={idx} style={styles.optionInputRow}>
+                  <View key={idx} style={styles.optionRow}>
+                    <Text style={[styles.optionIndex, { color: colors.textMuted }]}>{idx + 1}.</Text>
                     <TextInput
-                      style={[styles.input, { flex: 1, color: colors.textPrimary, borderColor: colors.border }]}
+                      style={[
+                        styles.optionInput,
+                        { color: colors.textPrimary, borderColor: colors.border },
+                      ]}
                       placeholder={`Option ${idx + 1}`}
                       placeholderTextColor={colors.textMuted}
                       value={opt}
-                      onChangeText={(txt) => handleOptionChange(txt, idx)}
+                      onChangeText={(text) => handleOptionChange(text, idx)}
                     />
                     {pollOptions.length > 2 && (
-                      <TouchableOpacity onPress={() => handleRemoveOption(idx)} style={styles.removeOptionBtn}>
-                        <Feather name="trash-2" size={18} color="#EF4444" />
+                      <TouchableOpacity
+                        onPress={() => handleRemoveOption(idx)}
+                        style={styles.removeOptionBtn}
+                      >
+                        <Feather name="trash-2" size={16} color="#EF4444" />
                       </TouchableOpacity>
                     )}
                   </View>
                 ))}
 
-                <TouchableOpacity style={[styles.addOptBtn, { borderColor: colors.primary }]} onPress={handleAddOption}>
-                  <Feather name="plus" size={16} color={colors.primary} />
-                  <Text style={[styles.addOptBtnText, { color: colors.primary }]}>Add Option</Text>
+                {pollOptions.length < 8 && (
+                  <TouchableOpacity style={styles.addOptionBtn} onPress={handleAddOption}>
+                    <Feather name="plus" size={16} color={colors.primary} />
+                    <Text style={[styles.addOptionText, { color: colors.primary }]}>Add Option</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            ) : postType === 'video' ? (
+              /* Video Post Fields */
+              <View style={styles.formSection}>
+                <Text style={[styles.label, { color: colors.textPrimary }]}>Title</Text>
+                <TextInput
+                  style={[styles.input, { color: colors.textPrimary, borderColor: colors.border }]}
+                  placeholder="Video Title..."
+                  placeholderTextColor={colors.textMuted}
+                  value={title}
+                  onChangeText={setTitle}
+                />
+
+                <Text style={[styles.label, { color: colors.textPrimary }]}>Video Link (Google Drive / YouTube / MP4)</Text>
+                <TextInput
+                  style={[styles.input, { color: colors.textPrimary, borderColor: colors.border }]}
+                  placeholder="https://drive.google.com/file/d/FILE_ID/view"
+                  placeholderTextColor={colors.textMuted}
+                  value={videoUrl}
+                  onChangeText={setVideoUrl}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+
+                <TouchableOpacity style={styles.uploadVideoBtn} onPress={handlePickVideo}>
+                  <Ionicons name="cloud-upload-outline" size={18} color="#3B82F6" />
+                  <Text style={styles.uploadVideoBtnText}>Select Video From Phone Gallery</Text>
                 </TouchableOpacity>
 
-                {/* Poll Configuration Toggles */}
-                <View style={styles.togglesGroup}>
-                  <View style={styles.toggleRow}>
-                    <Text style={[styles.toggleLabel, { color: colors.textSecondary }]}>Allow Multiple Answers</Text>
-                    <Switch value={allowMultiple} onValueChange={setAllowMultiple} />
-                  </View>
-
-                  <View style={styles.toggleRow}>
-                    <Text style={[styles.toggleLabel, { color: colors.textSecondary }]}>Anonymous Voting</Text>
-                    <Switch value={anonymousVoting} onValueChange={setAnonymousVoting} />
-                  </View>
-
-                  <View style={styles.toggleRow}>
-                    <Text style={[styles.toggleLabel, { color: colors.textSecondary }]}>Allow Vote Change</Text>
-                    <Switch value={allowVoteChange} onValueChange={setAllowVoteChange} />
-                  </View>
-                </View>
+                <Text style={[styles.label, { color: colors.textPrimary, marginTop: 12 }]}>Caption / Description</Text>
+                <TextInput
+                  style={[styles.input, { height: 80, color: colors.textPrimary, borderColor: colors.border }]}
+                  placeholder="Tell students about this video..."
+                  placeholderTextColor={colors.textMuted}
+                  value={description}
+                  onChangeText={setDescription}
+                  multiline
+                />
               </View>
             ) : (
               /* General Post Fields */
@@ -323,42 +416,65 @@ export function CreatePollModal({ visible, onClose, userId, onPostCreated }: Cre
               </View>
             )}
 
-            {/* Images Attachment Section */}
-            <View style={styles.imageSection}>
-              <View style={styles.imageHeaderRow}>
-                <Text style={[styles.label, { color: colors.textPrimary, marginBottom: 0 }]}>Attach Images</Text>
-                <TouchableOpacity onPress={handlePickImage} disabled={uploadingImage}>
-                  <Text style={[styles.pickBtnText, { color: colors.primary }]}>+ Add Images</Text>
-                </TouchableOpacity>
+            {/* Images Attachment Section (if not video) */}
+            {postType !== 'video' && (
+              <View style={styles.imageSection}>
+                <View style={styles.imageHeaderRow}>
+                  <Text style={[styles.label, { color: colors.textPrimary, marginBottom: 0 }]}>
+                    Attach Images
+                  </Text>
+                  <TouchableOpacity onPress={handlePickImage} disabled={uploadingImage}>
+                    <Text style={[styles.pickBtnText, { color: colors.primary }]}>+ Add Images</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {uploadingImage && (
+                  <ActivityIndicator
+                    size="small"
+                    color={colors.primary}
+                    style={{ marginVertical: 8 }}
+                  />
+                )}
+
+                {uploadedImages.length > 0 && (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.imagePreviewRow}
+                  >
+                    {uploadedImages.map((url, idx) => (
+                      <View key={idx} style={styles.previewThumbWrap}>
+                        <ExpoImage source={{ uri: url }} style={styles.previewThumb} />
+                        <TouchableOpacity
+                          style={styles.removeImgBadge}
+                          onPress={() => handleRemoveImage(idx)}
+                        >
+                          <Feather name="x" size={12} color="#FFF" />
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </ScrollView>
+                )}
               </View>
-
-              {uploadingImage && <ActivityIndicator size="small" color={colors.primary} style={{ marginVertical: 8 }} />}
-
-              {uploadedImages.length > 0 && (
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imagePreviewRow}>
-                  {uploadedImages.map((url, idx) => (
-                    <View key={idx} style={styles.previewThumbWrap}>
-                      <ExpoImage source={{ uri: url }} style={styles.previewThumb} />
-                      <TouchableOpacity style={styles.removeImgBadge} onPress={() => handleRemoveImage(idx)}>
-                        <Feather name="x" size={12} color="#FFF" />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </ScrollView>
-              )}
-            </View>
+            )}
           </ScrollView>
 
           {/* Footer Submit Button */}
           <TouchableOpacity
-            style={[styles.submitBtn, { backgroundColor: colors.primary }, submitting && { opacity: 0.6 }]}
+            style={[
+              styles.submitBtn,
+              { backgroundColor: colors.primary },
+              submitting && { opacity: 0.6 },
+            ]}
             onPress={handleSubmit}
             disabled={submitting}
           >
             {submitting ? (
               <ActivityIndicator size="small" color="#FFF" />
             ) : (
-              <Text style={styles.submitBtnText}>Publish {postType === 'poll' ? 'Poll' : 'Post'}</Text>
+              <Text style={styles.submitBtnText}>
+                Publish {postType === 'poll' ? 'Poll' : postType === 'video' ? 'Video Post' : 'Post'}
+              </Text>
             )}
           </TouchableOpacity>
         </View>
@@ -379,118 +495,130 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
     maxHeight: '90%',
     borderWidth: 1,
-    gap: 12,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: SPACING.md,
   },
-  headerTitleGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  headerTitle: {
-    fontSize: FONT.size.md,
+  modalTitle: {
+    fontSize: 18,
     fontWeight: '800',
   },
-  body: {
-    maxHeight: 480,
+  closeBtn: {
+    padding: 4,
+  },
+  scrollArea: {
+    marginBottom: SPACING.md,
   },
   typeSelectorRow: {
     flexDirection: 'row',
     gap: 6,
-    marginBottom: 14,
+    marginBottom: SPACING.md,
+    flexWrap: 'wrap',
   },
   typePill: {
-    flex: 1,
-    paddingVertical: 7,
-    borderRadius: RADIUS.md,
-    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: RADIUS.full,
   },
   typePillText: {
-    fontSize: 10,
-    fontWeight: '900',
+    fontSize: 11,
+    fontWeight: '700',
   },
   formSection: {
-    gap: 10,
+    marginBottom: SPACING.md,
   },
   label: {
     fontSize: 12,
-    fontWeight: '800',
-    marginBottom: 2,
+    fontWeight: '700',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
   },
   input: {
-    borderRadius: RADIUS.md,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    fontSize: 13,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.sm,
+    fontSize: 14,
+    marginBottom: SPACING.sm,
   },
-  optionInputRow: {
+  uploadVideoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(59, 130, 246, 0.3)',
+    borderRadius: RADIUS.md,
+    paddingVertical: 10,
+    marginBottom: SPACING.sm,
+  },
+  uploadVideoBtnText: {
+    color: '#3B82F6',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 6,
+  },
+  optionIndex: {
+    fontSize: 13,
+    fontWeight: '700',
+    width: 18,
+  },
+  optionInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 8,
+    fontSize: 13,
   },
   removeOptionBtn: {
     padding: 6,
   },
-  addOptBtn: {
+  addOptionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 6,
-    paddingVertical: 8,
-    borderRadius: RADIUS.md,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    marginTop: 4,
+    marginTop: 6,
+    paddingVertical: 4,
   },
-  addOptBtnText: {
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  togglesGroup: {
-    gap: 8,
-    marginTop: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.08)',
-  },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  toggleLabel: {
-    fontSize: 12,
-    fontWeight: '600',
+  addOptionText: {
+    fontSize: 13,
+    fontWeight: '700',
   },
   imageSection: {
-    marginTop: 14,
-    gap: 8,
+    marginBottom: SPACING.md,
   },
   imageHeaderRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   pickBtnText: {
     fontSize: 12,
-    fontWeight: '800',
+    fontWeight: '700',
   },
   imagePreviewRow: {
     flexDirection: 'row',
-    gap: 8,
+    marginTop: 6,
   },
   previewThumbWrap: {
     width: 60,
     height: 60,
-    borderRadius: RADIUS.sm,
-    overflow: 'hidden',
-    position: 'relative',
+    borderRadius: RADIUS.md,
     marginRight: 8,
+    position: 'relative',
+    overflow: 'hidden',
   },
   previewThumb: {
     width: '100%',
@@ -498,22 +626,24 @@ const styles = StyleSheet.create({
   },
   removeImgBadge: {
     position: 'absolute',
-    top: 2,
-    right: 2,
+    top: 3,
+    right: 3,
     backgroundColor: 'rgba(0,0,0,0.7)',
-    borderRadius: 8,
-    padding: 2,
-  },
-  submitBtn: {
-    paddingVertical: 12,
-    borderRadius: RADIUS.md,
+    borderRadius: 10,
+    width: 18,
+    height: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 6,
+  },
+  submitBtn: {
+    borderRadius: RADIUS.lg,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   submitBtnText: {
     color: '#FFF',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '800',
   },
 });

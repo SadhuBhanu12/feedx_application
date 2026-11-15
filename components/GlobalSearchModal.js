@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Feather } from '@expo/vector-icons';
+import Animated, { FadeInDown, FadeOutUp } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { COLORS, SPACING } from '@/constants/theme';
 import { globalSearch } from '@/services/supabaseService';
+import PressableCard from '@/components/ui/PressableCard';
 
 export default function GlobalSearchModal({ visible, onClose, userId }) {
   const router = useRouter();
@@ -62,17 +64,21 @@ export default function GlobalSearchModal({ visible, onClose, userId }) {
     return (
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{title}</Text>
-        {items.map((item) => (
-          <TouchableOpacity key={item.id} style={styles.resultRow} onPress={() => navigate(type, item)}>
-            <Feather name={icon} size={16} color={COLORS.primary} />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.resultTitle} numberOfLines={1}>{item.title || item.name || item.caption}</Text>
-              <Text style={styles.resultMeta} numberOfLines={1}>
-                {item.company || item.venue || item.location || item.subject || item.type || item.category || ''}
-              </Text>
-            </View>
-            <Feather name="chevron-right" size={16} color={COLORS.textMuted} />
-          </TouchableOpacity>
+        {items.map((item, idx) => (
+          <Animated.View key={item.id} entering={FadeInDown.delay(idx * 30).duration(200)}>
+            <PressableCard scaleTo={0.98} onPress={() => navigate(type, item)}>
+              <View style={styles.resultRow}>
+                <Feather name={icon} size={16} color={COLORS.primary} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.resultTitle} numberOfLines={1}>{item.title || item.name || item.caption}</Text>
+                  <Text style={styles.resultMeta} numberOfLines={1}>
+                    {item.company || item.venue || item.location || item.subject || item.type || item.category || ''}
+                  </Text>
+                </View>
+                <Feather name="chevron-right" size={16} color={COLORS.textMuted} />
+              </View>
+            </PressableCard>
+          </Animated.View>
         ))}
       </View>
     );
@@ -90,7 +96,11 @@ export default function GlobalSearchModal({ visible, onClose, userId }) {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <BlurView intensity={40} tint="dark" style={styles.overlay}>
-        <View style={styles.sheet}>
+        <Animated.View
+          entering={FadeInDown.duration(240)}
+          exiting={FadeOutUp.duration(160)}
+          style={styles.sheet}
+        >
           <View style={styles.searchBar}>
             <Feather name="search" size={20} color={COLORS.textMuted} />
             <TextInput
@@ -101,7 +111,7 @@ export default function GlobalSearchModal({ visible, onClose, userId }) {
               onChangeText={setQuery}
               autoFocus
             />
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity onPress={onClose} activeOpacity={0.7}>
               <Feather name="x" size={22} color={COLORS.textSecondary} />
             </TouchableOpacity>
           </View>
@@ -126,7 +136,7 @@ export default function GlobalSearchModal({ visible, onClose, userId }) {
               )}
             </ScrollView>
           )}
-        </View>
+        </Animated.View>
       </BlurView>
     </Modal>
   );

@@ -1,6 +1,7 @@
 import { Tabs, Redirect, useRouter , usePathname } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Platform, BackHandler, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 import { Feather, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { COLORS, FONT, RADIUS, SHADOWS } from '@/constants/theme';
@@ -9,45 +10,52 @@ import { useUser } from '@/context/UserContext';
 import { useTheme } from '@/context/ThemeContext';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+
+import { MOTION_DURATIONS, MOTION_EASINGS, MOTION_SCALE } from '@/constants/motion';
+import { useAuthStore } from '@/store/useAuthStore';
 
 interface TabIconProps {
   icon: any;
-  color: string;
+  color?: any;
   focused: boolean;
-  label: string;
   family?: 'Feather' | 'Ionicons' | 'MaterialCommunityIcons';
 }
 
-const TabIcon = React.memo(function TabIcon({ icon, color, focused, label, family = 'Feather' }: TabIconProps) {
+const TabIcon = React.memo(function TabIcon({ icon, color, focused, family = 'Feather' }: TabIconProps) {
   const { colors, isDark } = useTheme();
   const IconComponent = family === 'Feather' ? Feather : family === 'Ionicons' ? Ionicons : MaterialCommunityIcons;
   
+  const scaleProgress = useSharedValue(focused ? 1.06 : 1);
+
+  useEffect(() => {
+    scaleProgress.value = withSpring(focused ? 1.06 : 1, {
+      damping: 18,
+      stiffness: 380,
+    });
+  }, [focused]);
+
+  const animatedBoxStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleProgress.value }],
+    backgroundColor: focused 
+      ? (isDark ? 'rgba(37, 99, 235, 0.22)' : 'rgba(37, 99, 235, 0.12)')
+      : 'transparent',
+    borderColor: focused
+      ? (isDark ? 'rgba(96, 165, 250, 0.35)' : 'rgba(37, 99, 235, 0.25)')
+      : 'transparent',
+  }));
+
+  const activeIconColor = isDark ? '#60A5FA' : '#2563EB';
+  const inactiveIconColor = isDark ? '#64748B' : '#94A3B8';
+
   return (
-    <View style={styles.iconContainer}>
-      <View style={[
-        styles.iconBox,
-        { backgroundColor: focused ? colors.primary : 'transparent' }
-      ]}>
-        <IconComponent 
-          name={icon} 
-          size={20} 
-          color={focused ? '#FFFFFF' : colors.tabInactive} 
-        />
-      </View>
-      <Text 
-        numberOfLines={1} 
-        style={[
-          styles.tabLabel, 
-          { 
-            color: focused ? (isDark ? '#60A5FA' : '#2563EB') : colors.tabInactive,
-            fontWeight: focused ? '800' : '700'
-          }
-        ]}
-      >
-        {label}
-      </Text>
-    </View>
+    <Animated.View style={[styles.iconBox, animatedBoxStyle]}>
+      <IconComponent 
+        name={icon} 
+        size={22} 
+        color={focused ? activeIconColor : inactiveIconColor} 
+      />
+    </Animated.View>
   );
 });
 
@@ -120,15 +128,31 @@ export default function TabLayout() {
         return true;
       }
 
-      const isHomeTab = pathname === '/' || 
+      const isRootTab = pathname === '/' || 
                         pathname === '/(tabs)' || 
                         pathname === '/index' || 
                         pathname === '/(tabs)/index' ||
-                        (isAdmin && (pathname === '/admin' || pathname === '/(tabs)/admin'));
+                        pathname === '/user_profile' ||
+                        pathname === '/(tabs)/user_profile' ||
+                        pathname === '/college' ||
+                        pathname === '/(tabs)/college' ||
+                        pathname === '/explore' ||
+                        pathname === '/(tabs)/explore' ||
+                        pathname === '/community' ||
+                        pathname === '/(tabs)/community' ||
+                        pathname === '/admin' ||
+                        pathname === '/(tabs)/admin';
 
-      if (!isHomeTab) {
+      if (!isRootTab) {
         router.replace(isAdmin ? '/(tabs)/admin' : '/(tabs)' as any);
         return true;
+      }
+
+      if (isAdmin && (pathname === '/admin' || pathname === '/(tabs)/admin')) {
+        if (router.canGoBack()) {
+          router.back();
+          return true;
+        }
       }
 
       Alert.alert(
@@ -148,12 +172,13 @@ export default function TabLayout() {
   }, [pathname, router, isAdmin]);
 
   const { colors, isDark } = useTheme();
+  const insets = useSafeAreaInsets();
 
   if (booting) {
     return null;
   }
 
-  if (!user) {
+  if (!user || !user.id) {
     return <Redirect href="/login" />;
   }
 
@@ -161,26 +186,61 @@ export default function TabLayout() {
     return <Redirect href="/change-password" />;
   }
 
+  // Calculate safe bottom padding & height dynamically across all phone models
+  const safeBottom = Math.max(insets.bottom, Platform.OS === 'ios' ? 12 : 8);
+  const tabHeight = (Platform.OS === 'ios' ? 62 : 64) + safeBottom;
+
   return (
     <Tabs
+      initialRouteName={isAdmin ? 'admin' : 'index'}
       backBehavior="history"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: isDark ? '#60A5FA' : '#2563EB',
-        tabBarInactiveTintColor: colors.tabInactive,
-        tabBarButton: HapticTab as any,
-        tabBarShowLabel: false,
-        tabBarStyle: [styles.tabBar, { backgroundColor: colors.navBg, borderTopColor: colors.border }],
-        tabBarItemStyle: { justifyContent: 'center', alignItems: 'center' },
+        tabBarInactiveTintColor: isDark ? '#64748B' : '#94A3B8',
+        tabBarButton: (props: any) => <HapticTab {...props} />,
+        tabBarShowLabel: true,
+        tabBarLabelStyle: {
+          fontSize: 10.5,
+          fontWeight: '700',
+          letterSpacing: 0.15,
+          marginBottom: Platform.OS === 'ios' ? 0 : 3,
+          includeFontPadding: false,
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+          marginBottom: 1,
+        },
+        tabBarStyle: [
+          styles.tabBar, 
+          { 
+            backgroundColor: colors.navBg, 
+            borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+            height: tabHeight,
+            paddingBottom: safeBottom,
+          }
+        ],
+        tabBarItemStyle: styles.tabBarItem,
       }}>
       
       <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          href: isAdmin ? null : '/(tabs)',
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon icon="home" color={color} focused={focused} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="admin"
         options={{
+          title: isAdmin ? 'Command' : 'Admin',
           tabBarIcon: ({ color, focused }) => (
             <TabIcon 
               icon={isAdmin ? "shield-check" : "grid"} 
-              label={isAdmin ? "Command" : "Admin"} 
               color={color} 
               focused={focused} 
               family={isAdmin ? "MaterialCommunityIcons" : "Feather"}
@@ -191,21 +251,12 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="index"
-        options={{
-          href: isAdmin ? null : '/(tabs)',
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon="home" label="Home" color={color} focused={focused} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="college"
         options={{
+          title: 'College',
           href: isAdmin ? null : ('/(tabs)/college' as any),
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon="school" label="College" color={color} focused={focused} family="MaterialCommunityIcons" />
+            <TabIcon icon="school" color={color} focused={focused} family="MaterialCommunityIcons" />
           ),
         }}
       />
@@ -213,9 +264,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="community"
         options={{
+          title: 'Community',
           href: (isAdmin || globalSettings?.community_enabled === false) ? null : ('/(tabs)/community' as any),
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon="users" label="Community" color={color} focused={focused} />
+            <TabIcon icon="users" color={color} focused={focused} />
           ),
         }}
       />
@@ -223,9 +275,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
+          title: 'Explore',
           href: isAdmin ? null : ('/(tabs)/explore' as any),
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon="compass" label="Explore" color={color} focused={focused} />
+            <TabIcon icon="compass" color={color} focused={focused} />
           ),
         }}
       />
@@ -233,9 +286,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="user_profile"
         options={{
+          title: 'Profile',
           href: '/(tabs)/user_profile',
           tabBarIcon: ({ color, focused }) => (
-            <TabIcon icon="user" label="Profile" color={color} focused={focused} />
+            <TabIcon icon="user" color={color} focused={focused} />
           ),
         }}
       />
@@ -249,6 +303,7 @@ export default function TabLayout() {
       <Tabs.Screen name="updates" options={{ href: null }} />
       <Tabs.Screen name="tasks" options={{ href: null }} />
       <Tabs.Screen name="support" options={{ href: null }} />
+      <Tabs.Screen name="attendance" options={{ href: null }} />
     </Tabs>
   );
 }
@@ -259,33 +314,27 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: Platform.OS === 'ios' ? 98 : 82,
-    backgroundColor: '#0F172A',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    elevation: 8,
+    borderTopLeftRadius: 26,
+    borderTopRightRadius: 26,
+    elevation: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
   },
-  iconContainer: {
-    alignItems: 'center',
+  tabBarItem: {
     justifyContent: 'center',
-    paddingTop: Platform.OS === 'ios' ? 24 : 16,
-    paddingHorizontal: 2,
-    flex: 1,
+    alignItems: 'center',
+    paddingTop: 4,
+    paddingBottom: 2,
   },
   iconBox: {
-    width: 52,
-    height: 30,
-    borderRadius: 15,
+    width: 48,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 3,
   },
-  tabLabel: {
-    fontSize: 11.5,
-    letterSpacing: 0.2,
-    textAlign: 'center',
-    width: '100%',
-  }
 });

@@ -42,6 +42,18 @@ export default function OrganizerDashboardScreen() {
     setLoading(true);
     try {
       const eventData = await getEventById(id);
+      const userRole = String(user?.role || '').trim().toLowerCase();
+      const isOrganizer = ['admin', 'super_admin', 'college_admin', 'campus_admin', 'inst_admin', 'faculty'].includes(userRole);
+      if (!isOrganizer) {
+        Alert.alert('Permission Denied', 'Administrative or organizer privileges are required.');
+        router.back();
+        return;
+      }
+      if (userRole !== 'super_admin' && eventData?.college_id && user?.college_id && eventData?.college_id !== user?.college_id) {
+        Alert.alert('Permission Denied', 'You can only manage organizer desks for events hosted by your own college.');
+        router.back();
+        return;
+      }
       setEvent(eventData);
       const regs = await getEventRegistrations(id);
       setRegistrations(regs);
@@ -168,7 +180,7 @@ export default function OrganizerDashboardScreen() {
   if (!event) {
     return (
       <View style={styles.centerContainer}>
-        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+        <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
         <Text style={styles.loadingText}>Loading event details...</Text>
       </View>
     );
@@ -176,7 +188,7 @@ export default function OrganizerDashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       {/* Header */}
       <View style={styles.topNav}>

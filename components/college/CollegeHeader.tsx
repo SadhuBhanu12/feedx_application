@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
@@ -13,63 +14,75 @@ interface CollegeHeaderProps {
   onNotificationPress?: () => void;
 }
 
-export function CollegeHeader({ collegeName = 'Government Institute of Electronics', location = 'Secunderabad, Telangana', onNotificationPress }: CollegeHeaderProps) {
-  const { colors, isDark } = useTheme();
-  const { dashboard } = useUser();
+export function CollegeHeader({ collegeName, location, onNotificationPress }: CollegeHeaderProps) {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { colors, isDark } = useTheme();
+  const { user, dashboard, notifications: ctxNotifications, unreadNotificationsCount: rawUnreadCount } = useUser();
   const [showDetails, setShowDetails] = useState(false);
 
-  const unreadCount = (dashboard?.notifications || []).filter((n: any) => !n.is_read).length;
+  const activeNotifs = ctxNotifications && ctxNotifications.length > 0 ? ctxNotifications : (dashboard?.notifications || []);
+  const unreadCount = rawUnreadCount !== undefined ? rawUnreadCount : activeNotifs.filter((n: any) => !n.is_read).length;
+  
+  const studentCollege = user?.college_name || dashboard?.profile?.college_name || collegeName || 'Polytechnic Institution';
+  const collegeLocation = location || dashboard?.profile?.college_location || user?.college_location || user?.city || 'Campus Location';
+  const feedxCollegeId = user?.college_id ? `CLG-${String(user.college_id).slice(0, 8).toUpperCase()}` : 'FEEDX-CAMPUS';
 
   return (
-    <Animated.View entering={FadeInDown.duration(400).springify()} style={styles.container}>
+    <Animated.View entering={FadeInDown.duration(400).springify()} style={[styles.container, { paddingTop: Math.max(insets.top, Platform.OS === 'ios' ? 44 : 14) }]}>
       {/* Top Banner Header */}
       <View style={styles.topRow}>
-        <TouchableOpacity
-          style={styles.leftGroup}
-          onPress={() => setShowDetails(true)}
-          activeOpacity={0.85}
-        >
+        <View style={styles.leftGroup}>
           <View style={[styles.iconCircle, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(37, 99, 235, 0.1)' }]}>
-            <MaterialCommunityIcons name="school" size={24} color={colors.primary} />
+            <MaterialCommunityIcons name="school-outline" size={24} color={colors.primary} />
           </View>
 
           <View style={styles.textWrap}>
             <View style={styles.verifiedRow}>
-              <Text style={[styles.campusLabel, { color: colors.textMuted }]}>OFFICIAL CAMPUS SPACE</Text>
+              <Text style={[styles.campusLabel, { color: colors.textMuted }]}>STUDENT&apos;S COLLEGE</Text>
               <View style={styles.verifiedTag}>
                 <Feather name="check-circle" size={10} color="#10B981" />
-                <Text style={styles.verifiedTagText}>VERIFIED</Text>
+                <Text style={styles.verifiedTagText}>VERIFIED CAMPUS</Text>
               </View>
             </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
-              <Text style={[styles.collegeName, { color: colors.textPrimary, flex: 1 }]}>
-                {collegeName}
+            <View style={{ flexDirection: 'row', alignItems: 'center', width: '100%', marginTop: 2 }}>
+              <Text 
+                style={[styles.collegeName, { color: colors.textPrimary }]}
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+              >
+                {studentCollege}
               </Text>
-              <Feather name="info" size={14} color={colors.primary} />
             </View>
 
-            <Text style={[styles.locationText, { color: colors.textMuted }]}>
-              {location} • Tap for details
-            </Text>
-          </View>
-        </TouchableOpacity>
-
-        {onNotificationPress && (
-          <TouchableOpacity
-            style={[styles.actionBtn, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
-            onPress={onNotificationPress}
-            activeOpacity={0.7}
-          >
-            <Feather name="bell" size={18} color={colors.textSecondary} />
-            {unreadCount > 0 && (
-              <View style={styles.unreadBadge}>
-                <Text style={styles.unreadCountText}>{unreadCount}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
+              <View style={{ backgroundColor: isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(37, 99, 235, 0.1)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 }}>
+                <Text style={{ fontSize: 10, fontWeight: '800', color: colors.primary }}>ID: {feedxCollegeId}</Text>
               </View>
-            )}
-          </TouchableOpacity>
-        )}
+              <Text style={[styles.locationText, { color: colors.textMuted, flexShrink: 1 }]} numberOfLines={1}>
+                {collegeLocation}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Notifications */}
+        <TouchableOpacity
+          style={[styles.actionBtn, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}
+          onPress={onNotificationPress || (() => router.push('/(tabs)/updates'))}
+          activeOpacity={0.7}
+          accessibilityLabel="Notifications"
+        >
+          <Feather name="bell" size={17} color={colors.textSecondary} />
+          {unreadCount > 0 && (
+            <View style={styles.unreadBadge}>
+              <Text style={styles.unreadCountText}>{unreadCount > 99 ? '99+' : unreadCount}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
 
       {/* College Details Modal */}
@@ -81,7 +94,7 @@ export function CollegeHeader({ collegeName = 'Government Institute of Electroni
                 <MaterialCommunityIcons name="school" size={24} color={colors.primary} />
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.modalCampusTag, { color: colors.primary }]}>GOVERNMENT AUTONOMOUS INSTITUTION</Text>
-                  <Text style={[styles.modalCollegeTitle, { color: colors.textPrimary }]}>{collegeName}</Text>
+                  <Text style={[styles.modalCollegeTitle, { color: colors.textPrimary }]}>{studentCollege}</Text>
                 </View>
               </View>
               <TouchableOpacity onPress={() => setShowDetails(false)}>
@@ -92,7 +105,7 @@ export function CollegeHeader({ collegeName = 'Government Institute of Electroni
             <ScrollView style={styles.modalScroll} showsVerticalScrollIndicator={false}>
               <View style={styles.detailSection}>
                 <Text style={[styles.detailLabel, { color: colors.textMuted }]}>CAMPUS LOCATION & AFFILIATION</Text>
-                <Text style={[styles.detailValue, { color: colors.textPrimary }]}>📍 {location}</Text>
+                <Text style={[styles.detailValue, { color: colors.textPrimary }]}>{collegeLocation}</Text>
                 <Text style={[styles.detailSub, { color: colors.textSecondary }]}>
                   Approved by AICTE New Delhi & Affiliated to State Board of Technical Education & Training (SBTET).
                 </Text>
@@ -149,7 +162,6 @@ export function CollegeHeader({ collegeName = 'Government Institute of Electroni
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: SPACING.md,
-    paddingTop: 50,
     paddingBottom: SPACING.sm,
     marginBottom: SPACING.xs,
   },
@@ -163,7 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    marginRight: 8,
     gap: 12,
   },
   iconCircle: {
@@ -175,6 +186,7 @@ const styles = StyleSheet.create({
   },
   textWrap: {
     flex: 1,
+    flexShrink: 1,
   },
   verifiedRow: {
     flexDirection: 'row',

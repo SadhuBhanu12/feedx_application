@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { safeBack } from '@/utils/navigation';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/theme';
@@ -22,7 +23,7 @@ import { BookmarkButton } from '@/components/ui/BookmarkButton';
 import { useScrollRestoration } from '@/hooks/useScrollRestoration';
 import { useTheme } from '@/context/ThemeContext';
 
-type BookmarkCategory = 'all' | 'opportunities' | 'resources' | 'events' | 'posts' | 'innovations';
+type BookmarkCategory = 'all' | 'opportunities' | 'resources' | 'events' | 'posts' | 'rewards';
 
 export default function BookmarksScreen() {
   const router = useRouter();
@@ -59,15 +60,15 @@ export default function BookmarksScreen() {
     const res = (data.resources || []).map((i: any) => ({ ...i, _entityType: 'resources' }));
     const evts = (data.events || []).map((i: any) => ({ ...i, _entityType: 'events' }));
     const psts = (data.posts || []).map((i: any) => ({ ...i, _entityType: 'posts' }));
-    const inns = (data.innovations || []).map((i: any) => ({ ...i, _entityType: 'innovations' }));
+    const rews = (data.rewards || []).map((i: any) => ({ ...i, _entityType: 'rewards' }));
 
     switch (activeTab) {
-      case 'all': return [...opps, ...res, ...evts, ...psts, ...inns];
+      case 'all': return [...opps, ...res, ...evts, ...psts, ...rews];
       case 'opportunities': return opps;
       case 'resources': return res;
       case 'events': return evts;
       case 'posts': return psts;
-      case 'innovations': return inns;
+      case 'rewards': return rews;
       default: return [];
     }
   };
@@ -123,20 +124,20 @@ export default function BookmarksScreen() {
       subtitle = item.author_name || 'Student Post';
       meta = `${item.likes_count || 0} Likes • ${item.comments_count || 0} Comments`;
       iconName = 'comment-quote-outline';
-      route = '/community';
-    } else if (itemType === 'innovations') {
-      title = item.title || 'Project';
-      subtitle = item.category || 'Innovation';
-      meta = `Upvotes: ${item.upvotes || 0}`;
-      iconName = 'lightbulb-outline';
-      route = '/innovation';
+      route = `/community/post/${item.id}`;
+    } else if (itemType === 'rewards') {
+      title = item.title || item.name || 'Reward';
+      subtitle = item.category || 'FEEDX Store';
+      meta = `${item.token_cost || item.coins_cost || 0} Tokens`;
+      iconName = 'gift-outline';
+      route = '/rewards';
     }
 
     const getDbEntityType = () => {
       if (itemType === 'posts') return 'community_post';
-      if (itemType === 'innovations') return 'innovation';
       if (itemType === 'opportunities') return 'opportunity';
       if (itemType === 'resources') return 'resource';
+      if (itemType === 'rewards') return 'reward';
       return 'event';
     };
 
@@ -177,9 +178,9 @@ export default function BookmarksScreen() {
     { key: 'all', label: 'All', icon: 'grid' },
     { key: 'opportunities', label: 'Jobs', icon: 'briefcase' },
     { key: 'resources', label: 'Notes', icon: 'book' },
+    { key: 'rewards', label: 'Rewards', icon: 'gift' },
     { key: 'events', label: 'Events', icon: 'calendar' },
     { key: 'posts', label: 'Community', icon: 'message-square' },
-    { key: 'innovations', label: 'Ideas', icon: 'lightbulb' },
   ];
 
 
@@ -187,10 +188,10 @@ export default function BookmarksScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]} onPress={() => router.back()}>
+        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]} onPress={() => safeBack('/(tabs)')}>
           <Feather name="arrow-left" size={22} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>My Bookmarks</Text>
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(30, 41, 59, 0.4)',
   },
   cardGradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   cardInner: {
     flexDirection: 'row',

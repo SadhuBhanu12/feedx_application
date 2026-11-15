@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { safeBack } from '@/utils/navigation';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
@@ -59,7 +60,7 @@ export default function CollegeDetailScreen() {
   if (loading) {
     return (
       <View style={[styles.centerContainer, { backgroundColor: colors.background }]}>
-        {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />}
+        {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />}
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
@@ -68,10 +69,10 @@ export default function CollegeDetailScreen() {
   if (!college) {
     return (
       <View style={[styles.centerContainer, { backgroundColor: colors.background }]}>
-        {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />}
+        {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />}
         <Feather name="alert-circle" size={48} color={COLORS.textDisabled} />
         <Text style={[styles.errorText, { color: colors.textSecondary }]}>College not found.</Text>
-        <TouchableOpacity style={styles.backBtnError} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtnError} onPress={() => safeBack('/colleges')}>
           <Text style={{ color: '#fff', fontWeight: 'bold' }}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -80,11 +81,11 @@ export default function CollegeDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={COLORS.gradientHome} style={StyleSheet.absoluteFill} />}
 
       {/* Header Back Button */}
       <View style={[styles.topNav, { borderBottomColor: colors.border }]}>
-        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg }]} onPress={() => router.back()}>
+        <TouchableOpacity style={[styles.backBtn, { backgroundColor: colors.inputBg }]} onPress={() => safeBack('/colleges')}>
           <Feather name="arrow-left" size={22} color={colors.textPrimary} />
         </TouchableOpacity>
       </View>

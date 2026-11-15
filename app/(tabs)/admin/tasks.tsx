@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'expo-router';
-import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Modal } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View, ActivityIndicator, Modal, Platform } from 'react-native';
 import { COLORS, SHADOWS } from '@/constants/theme';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { supabase } from '@/lib/supabase';
@@ -31,6 +31,7 @@ const AdminTasksScreen: React.FC = () => {
   // Form State
   const [form, setForm] = useState({ id: '', user_id: '', title: '', deadline: '', description: '' });
   const [activeStudent, setActiveStudent] = useState<StudentItem | null>(null);
+  const [taskTabFilter, setTaskTabFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
   // Selector Modal State
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -54,6 +55,12 @@ const AdminTasksScreen: React.FC = () => {
   };
 
   useEffect(() => {
+    if (user && user.role !== 'super_admin') {
+      Alert.alert('Permission Denied', 'Task Registry is reserved for Super Administrators.');
+      router.replace('/(tabs)/admin');
+      return;
+    }
+
     loadTasksAndStudents();
 
     // Subscribe to task updates in real time
@@ -64,7 +71,7 @@ const AdminTasksScreen: React.FC = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [user]);
 
   const handleSave = async () => {
     if (!form.user_id || !form.title.trim()) {
@@ -148,9 +155,17 @@ const AdminTasksScreen: React.FC = () => {
     return match ? `${match.full_name} (${match.roll_number})` : 'Assigned Student';
   };
 
+  const displayedTasks = useMemo(() => {
+    return tasks.filter(t => {
+      if (taskTabFilter === 'completed') return Boolean(t.completed);
+      if (taskTabFilter === 'pending') return !t.completed;
+      return true;
+    });
+  }, [tasks, taskTabFilter]);
+
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />
+      <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />
 
       {/* Header */}
       <View style={styles.header}>
@@ -170,7 +185,7 @@ const AdminTasksScreen: React.FC = () => {
       </View>
 
       <FlatList
-        data={tasks}
+        data={displayedTasks}
         keyExtractor={(item) => item.id}
         refreshing={loading}
         onRefresh={loadTasksAndStudents}
@@ -238,7 +253,37 @@ const AdminTasksScreen: React.FC = () => {
               </TouchableOpacity>
             </BlurView>
 
-            <Text style={styles.listSectionTitle}>Currently Active Tasks</Text>
+            {/* Task Category Tabs */}
+            <View style={{ flexDirection: 'row', gap: 8, marginTop: 24, marginBottom: 12 }}>
+              <TouchableOpacity
+                style={[styles.taskTabBtn, taskTabFilter === 'all' && styles.taskTabBtnActive]}
+                onPress={() => setTaskTabFilter('all')}
+              >
+                <Text style={[styles.taskTabText, taskTabFilter === 'all' && styles.taskTabTextActive]}>
+                  All ({tasks.length})
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.taskTabBtn, taskTabFilter === 'pending' && styles.taskTabBtnActive, { borderColor: '#F59E0B60' }]}
+                onPress={() => setTaskTabFilter('pending')}
+              >
+                <Text style={[styles.taskTabText, taskTabFilter === 'pending' && styles.taskTabTextActive, { color: '#F59E0B' }]}>
+                  Pending ({tasks.filter(t => !t.completed).length})
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.taskTabBtn, taskTabFilter === 'completed' && styles.taskTabBtnActive, { borderColor: '#10B98160' }]}
+                onPress={() => setTaskTabFilter('completed')}
+              >
+                <Text style={[styles.taskTabText, taskTabFilter === 'completed' && styles.taskTabTextActive, { color: '#10B981' }]}>
+                  Completed ({tasks.filter(t => Boolean(t.completed)).length})
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.listSectionTitle}>
+              {taskTabFilter === 'completed' ? 'Completed Student Tasks' : taskTabFilter === 'pending' ? 'Pending Tasks' : 'All Allocated Tasks'}
+            </Text>
           </Animated.View>
         }
         renderItem={({ item, index }) => (
@@ -342,8 +387,8 @@ const AdminTasksScreen: React.FC = () => {
 export default AdminTasksScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0F172A' },
-  header: { paddingTop: 60, paddingHorizontal: 24, paddingBottom: 20, flexDirection: 'row', alignItems: 'center', gap: 16 },
+  container: { flex: 1, backgroundColor: '#020617' },
+  header: { paddingTop: Platform.OS === 'ios' ? 56 : 42, paddingHorizontal: 20, paddingBottom: 16, flexDirection: 'row', alignItems: 'center', gap: 14 },
   backBtn: { width: 44, height: 44, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.05)', alignItems: 'center', justifyContent: 'center' },
   headerTextContainer: { flex: 1 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#FFF' },
@@ -395,5 +440,26 @@ const styles = StyleSheet.create({
   studentOptionRoll: { fontSize: 11, fontWeight: '900', color: '#A855F7' },
   studentOptionName: { fontSize: 14, color: '#FFF', fontWeight: '700', marginTop: 1 },
   modalEmpty: { paddingVertical: 32, alignItems: 'center' },
-  modalEmptyText: { color: 'rgba(255,255,255,0.3)', fontSize: 13, fontWeight: '700' }
+  modalEmptyText: { color: 'rgba(255,255,255,0.3)', fontSize: 13, fontWeight: '700' },
+  taskTabBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  taskTabBtnActive: {
+    backgroundColor: 'rgba(168, 85, 247, 0.15)',
+    borderColor: '#A855F7',
+  },
+  taskTabText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#94A3B8',
+  },
+  taskTabTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '900',
+  },
 });

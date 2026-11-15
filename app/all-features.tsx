@@ -97,7 +97,7 @@ export default function AIRoadmapComingSoonScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header */}
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   heroGlow: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: 70,
     opacity: 0.2,
   },

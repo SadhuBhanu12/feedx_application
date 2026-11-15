@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -38,10 +38,11 @@ const getTodayKey = () => {
 
 export function DailyTasks({ tasks = [], userId, onTaskToggle }: DailyTasksProps) {
   const { colors, isDark } = useTheme();
-  const { triggerActivity, refreshGamification } = useGamification();
+  const { triggerActivity, triggerReward, refreshGamification } = useGamification();
   const router = useRouter();
 
   const [completedMap, setCompletedMap] = useState<Record<string, boolean>>({});
+  const processingTasksRef = useRef<Set<string>>(new Set());
 
   // Load persisted daily task completion state from database & AsyncStorage
   useEffect(() => {
@@ -105,59 +106,55 @@ export function DailyTasks({ tasks = [], userId, onTaskToggle }: DailyTasksProps
     };
   }, [tasks, userId]);
 
-  const handleToggleTask = async (taskId: string) => {
-    if (completedMap[taskId]) {
-      return; // Already completed, do not re-award
+  const handleToggleTask = (taskId: string) => {
+    if (completedMap[taskId] || processingTasksRef.current.has(taskId)) {
+      return; // Already completed or currently processing, do not re-award
     }
+    processingTasksRef.current.add(taskId);
 
     const updatedMap = { ...completedMap, [taskId]: true };
     setCompletedMap(updatedMap);
 
-    // Save state to AsyncStorage
-    try {
-      const key = getTodayKey();
-      await AsyncStorage.setItem(key, JSON.stringify(updatedMap));
-    } catch (e) {
-      console.warn('AsyncStorage task save error:', e);
+    const todayDate = getLocalTodayStr();
+    const refId = `daily_task_${taskId}_${todayDate}`;
+
+    // 1. Immediately trigger reward popup with 0ms delay!
+    const taskItem = tasks.find((t) => t.id === taskId);
+    if (userId && triggerReward) {
+      triggerReward({
+        userId,
+        activityType: 'daily_task',
+        points: 20,
+        referenceId: refId,
+        activityName: taskItem?.title ? `Task: ${taskItem.title}` : 'Daily Task Completed',
+      })
+        .then(() => refreshGamification && refreshGamification())
+        .catch((err) => console.warn('Task reward trigger warning:', err));
+    } else if (triggerActivity) {
+      triggerActivity('task_completed', 20, 20, refId).catch(() => {});
     }
 
-    // 1. Sync state to Supabase first to prevent race condition on reload
-    if (userId && taskId && !taskId.startsWith('task_')) {
+    // 2. Background asynchronous synchronization of storage and database
+    (async () => {
       try {
-        await supabase
-          .from('tasks')
-          .update({ completed: true, status: 'Completed' })
-          .eq('id', taskId)
-          .eq('user_id', userId);
+        const key = getTodayKey();
+        await AsyncStorage.setItem(key, JSON.stringify(updatedMap));
+
+        if (userId && taskId && !taskId.startsWith('task_')) {
+          await supabase
+            .from('tasks')
+            .update({ completed: true, status: 'Completed' })
+            .eq('id', taskId)
+            .eq('user_id', userId);
+        }
+
+        if (onTaskToggle) {
+          onTaskToggle();
+        }
       } catch (e) {
-        console.warn('Task toggle DB warning:', e);
+        console.warn('Background task persistence warning:', e);
       }
-    }
-
-    // 2. Award +10 Gold Coins strictly on task completion via atomic RPC
-    try {
-      const todayDate = getLocalTodayStr();
-      const refId = `daily_task_${taskId}_${todayDate}`;
-      let res: any = null;
-
-      if (triggerActivity) {
-        res = await triggerActivity('task_completed', 10, 15, refId);
-      }
-      if (refreshGamification) {
-        await refreshGamification();
-      }
-      if (onTaskToggle) {
-        onTaskToggle();
-      }
-
-      if (res && res.already_earned) {
-        Alert.alert('Task Completed! 🎉', 'Task state updated.');
-      } else {
-        Alert.alert('Task Completed! 🎉', 'You earned +10 FEEDX Gold Coins 🪙!');
-      }
-    } catch (err) {
-      console.warn('Task completion coin award error:', err);
-    }
+    })();
   };
 
   const pendingTasks = tasks.filter((t) => !completedMap[t.id]);
@@ -182,48 +179,57 @@ export function DailyTasks({ tasks = [], userId, onTaskToggle }: DailyTasksProps
         )}
       </View>
 
-        {pendingTasks.length === 0 ? (
+        {tasks.length === 0 ? (
           <View style={styles.emptyWrap}>
             <MaterialCommunityIcons name="check-all" size={28} color="#10B981" />
-            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No pending tasks for today</Text>
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No tasks assigned for today</Text>
             <Text style={[styles.emptySub, { color: colors.textMuted }]}>
               You&apos;re all caught up! Explore new career opportunities or continue your learning roadmap.
             </Text>
           </View>
         ) : (
           <View style={styles.taskList}>
-            {pendingTasks.map((task) => {
+            {tasks.map((task) => {
               const isCompleted = !!completedMap[task.id];
               return (
                 <TouchableOpacity
                   key={task.id}
                   style={[
                     styles.taskItemRow,
-                    { borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }
+                    { 
+                      borderColor: isCompleted 
+                        ? (isDark ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.2)')
+                        : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
+                      backgroundColor: isCompleted
+                        ? (isDark ? 'rgba(16, 185, 129, 0.05)' : 'rgba(16, 185, 129, 0.03)')
+                        : 'transparent'
+                    }
                   ]}
                   onPress={() => handleToggleTask(task.id)}
-                  activeOpacity={0.8}
+                  activeOpacity={0.7}
+                  delayPressIn={0}
                 >
-                  <TouchableOpacity onPress={() => handleToggleTask(task.id)} style={styles.checkBtn}>
+                  <View style={styles.checkBtn}>
                     <MaterialCommunityIcons
                       name={isCompleted ? "checkbox-marked-circle" : "checkbox-blank-circle-outline"}
                       size={20}
                       color={isCompleted ? "#10B981" : colors.textMuted}
                     />
-                  </TouchableOpacity>
+                  </View>
 
                   <View style={styles.taskTextWrap}>
                     <Text style={[
                       styles.taskTitle, 
                       { 
                         color: isCompleted ? colors.textMuted : colors.textPrimary,
-                        opacity: isCompleted ? 0.8 : 1
+                        opacity: isCompleted ? 0.8 : 1,
+                        textDecorationLine: isCompleted ? 'line-through' : 'none',
                       }
                     ]}>
                       {task.title}
                     </Text>
-                    <Text style={[styles.taskCategory, { color: colors.textMuted }]}>
-                      {task.category || 'Personal Task'}{isCompleted ? ' • Completed' : ''}
+                    <Text style={[styles.taskCategory, { color: isCompleted ? '#10B981' : colors.textMuted }]}>
+                      {task.category || 'Personal Task'}{isCompleted ? ' • ✓ Completed' : ''}
                     </Text>
                   </View>
 

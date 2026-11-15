@@ -475,4 +475,11 @@ export const INNOVATION_VALIDATION = {
   prototypeLink: (url: string) => validatePrototypeUrl(url, 'Prototype Link'),
 };
 
-
+/**
+ * Strips PostgREST query filter characters (commas, parentheses, colons, quotes)
+ * to prevent filter clause injection in string-interpolated .or() queries.
+ */
+export function sanitizeFilterString(value: string | any): string {
+  if (typeof value !== 'string') return '';
+  return value.replace(/[,():"'\\]/g, ' ').replace(/\s+/g, ' ').trim();
+}

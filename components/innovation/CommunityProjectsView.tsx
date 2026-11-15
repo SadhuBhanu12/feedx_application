@@ -211,7 +211,7 @@ export default function CommunityProjectsView({
                   <View style={styles.cardImageWrap}>
                     <ExpoImage
                       source={{ uri: imgUri }}
-                      style={StyleSheet.absoluteFillObject}
+                      style={StyleSheet.absoluteFill}
                       contentFit="cover"
                     />
                     <View style={styles.stageTagFloating}>
@@ -285,9 +285,12 @@ export default function CommunityProjectsView({
 
                 {/* Card Footer: Tech Stack & Interested CTA */}
                 <View style={styles.cardFooter}>
-                  <Text style={styles.techText} numberOfLines={1}>
-                    {item.tech_stack ? `🛠️ ${item.tech_stack}` : '🚀 Innovation Proposal'}
-                  </Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flex: 1, marginRight: 8 }}>
+                    <Feather name="code" size={12} color="#3B82F6" />
+                    <Text style={styles.techText} numberOfLines={1}>
+                      {item.tech_stack || 'Innovation Proposal'}
+                    </Text>
+                  </View>
 
                   {currentUser?.id && (item.user_id === currentUser.id || item.author_email === currentUser.email) ? (
                     <View style={styles.ownProjectBadge}>
@@ -302,7 +305,10 @@ export default function CommunityProjectsView({
                         openProjectDetail(item);
                       }}
                     >
-                      <Text style={styles.interestedBtnText}>🤝 Interested to Collaborate</Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                        <Feather name="users" size={12} color="#FFFFFF" />
+                        <Text style={styles.interestedBtnText}>Collaborate</Text>
+                      </View>
                     </TouchableOpacity>
                   )}
                 </View>

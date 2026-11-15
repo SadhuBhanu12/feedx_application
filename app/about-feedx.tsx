@@ -17,6 +17,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import GlassCard from '@/components/ui/GlassCard';
+import FeedxAppLogo from '@/components/ui/FeedxAppLogo';
 import { useTheme } from '@/context/ThemeContext';
 
 const METRICS = [
@@ -124,7 +125,7 @@ export default function AboutFeedXScreen() {
       {isDark && <LinearGradient colors={['#070A12', '#0F172A', '#131C31']} style={StyleSheet.absoluteFill} />}
 
       {/* Header Navigation */}
-      <View style={[styles.topNav, { paddingTop: Math.max(insets.top + 12, 44), borderBottomColor: colors.border, backgroundColor: colors.background }]}>
+      <View style={[styles.topNav, { paddingTop: Math.max(insets.top, Platform.OS === 'ios' ? 44 : 12), borderBottomColor: colors.border, backgroundColor: colors.background }]}>
         <TouchableOpacity 
           style={[styles.backBtn, { backgroundColor: colors.inputBg, borderColor: colors.border }]} 
           onPress={() => router.back()} 
@@ -145,23 +146,25 @@ export default function AboutFeedXScreen() {
         {/* Executive Hero */}
         <Animated.View entering={FadeInDown.duration(500).springify()} style={styles.heroSection}>
           <View style={styles.logoBadgeWrap}>
-            <View style={[styles.logoGlowRing, { borderColor: isDark ? 'rgba(59, 130, 246, 0.3)' : 'rgba(37, 99, 235, 0.2)' }]} />
-            <RNImage 
-              source={require('../assets/images/icon.png')} 
-              style={styles.logoImage} 
-              resizeMode="cover"
+            <View style={styles.logoGlowRing} />
+            <Image
+              source={require('../assets/images/icon.png')}
+              style={styles.logoImage}
+              contentFit="contain"
             />
-            <View style={[styles.verifiedTag, { backgroundColor: colors.background }]}>
-              <MaterialCommunityIcons name="check-decagram" size={16} color="#3B82F6" />
+            <View style={styles.verifiedTag}>
+              <MaterialCommunityIcons name="check-decagram" size={20} color="#3B82F6" />
             </View>
           </View>
 
           <Text style={[styles.appName, { color: colors.textPrimary }]} allowFontScaling={true}>FEEDX POLYTECHNIC COMMUNITY</Text>
           <Text style={[styles.appSubtitle, { color: colors.textSecondary }]} allowFontScaling={true}>Empowering Polytechnic Students Across Telangana</Text>
 
-          <View style={[styles.mottoBar, { backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)', borderColor: colors.border }]}>
-            <View style={styles.mottoDot} />
-            <Text style={[styles.mottoText, { color: colors.textSecondary }]} allowFontScaling={true}>Built by 🩵 Students, for Students</Text>
+          <View style={[styles.mottoBar, { backgroundColor: isDark ? 'rgba(59, 130, 246, 0.14)' : 'rgba(59, 130, 246, 0.08)', borderColor: isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(59, 130, 246, 0.25)' }]}>
+            <MaterialCommunityIcons name="heart-flash" size={14} color="#3B82F6" />
+            <Text style={[styles.mottoText, { color: isDark ? '#60A5FA' : '#2563EB' }]} allowFontScaling={true}>
+              Built for Students, by Students 💙
+            </Text>
           </View>
         </Animated.View>
 
@@ -348,7 +351,7 @@ export default function AboutFeedXScreen() {
             <Text style={[styles.footerText, { color: colors.textSecondary }]} allowFontScaling={true}>Empowering Every Polytechnic Student to Learn, Grow & Succeed.</Text>
 
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
-            <Text style={[styles.copyright, { color: colors.textMuted }]}>FEEDX Polytechnic Community • Built by 🩵 Students, for Students</Text>
+            <Text style={[styles.copyright, { color: colors.textMuted }]}>FEEDX Polytechnic Community • Built for Students, by Students 💙</Text>
           </LinearGradient>
         </Animated.View>
       </ScrollView>
@@ -382,7 +385,7 @@ const styles = StyleSheet.create({
   heroSection: { alignItems: 'center', marginTop: 12, marginBottom: 20 },
   logoBadgeWrap: { width: 92, height: 92, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 16, position: 'relative' },
   logoGlowRing: { position: 'absolute', width: 104, height: 104, borderRadius: 34, backgroundColor: 'rgba(59, 130, 246, 0.2)', borderWidth: 1, borderColor: 'rgba(59, 130, 246, 0.3)' },
-  logoImage: { width: 84, height: 84, borderRadius: 24, borderWidth: 2, borderColor: 'rgba(255,255,255,0.2)', overflow: 'hidden' },
+  logoImage: { width: 84, height: 84, borderRadius: 22, backgroundColor: '#FFFFFF', borderWidth: 2, borderColor: 'rgba(59, 130, 246, 0.3)', overflow: 'hidden' },
   verifiedTag: { position: 'absolute', bottom: -4, right: -4, backgroundColor: '#070A12', borderRadius: 12, padding: 2 },
   appName: { fontSize: 20, fontWeight: '900', color: '#FFF', letterSpacing: 0.5, textAlign: 'center' },
   appSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: '600', marginTop: 4, textAlign: 'center', lineHeight: 18, paddingHorizontal: 12 },

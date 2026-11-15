@@ -1,14 +1,16 @@
 import { Redirect, Stack } from 'expo-router';
 import { useUser } from '@/context/UserContext';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function AdminLayout() {
   const { user, booting, mustChangePassword } = useUser();
   const role = String(user?.role || '').trim().toLowerCase();
-  const isAdmin = role === 'admin' || role === 'super_admin' || role === 'inst_admin';
+  const isAdmin = role === 'admin' || role === 'super_admin' || role === 'inst_admin' || role === 'college_admin' || role === 'campus_admin';
 
   if (booting) return null;
-  if (!user) return <Redirect href="/login" />;
-  if (mustChangePassword) return <Redirect href="/change-password" />;
+  if (!user || !user.id) return <Redirect href="/login" />;
+  if (mustChangePassword) return <Redirect href="/login" />;
+  if (user.is_active === false) return <Redirect href="/login" />;
   if (!isAdmin) return <Redirect href="/(tabs)" />;
 
   return (
@@ -25,6 +27,7 @@ export default function AdminLayout() {
       <Stack.Screen name="security" />
       <Stack.Screen name="events" />
       <Stack.Screen name="colleges" />
+      <Stack.Screen name="admins" />
     </Stack>
   );
 }

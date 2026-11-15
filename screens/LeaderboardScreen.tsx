@@ -23,7 +23,7 @@ export default function LeaderboardScreen() {
     let isMounted = true;
     const load = async () => {
       setLoading(true);
-      const data = await fetchLeaderboard();
+      const data = await fetchLeaderboard(filter);
       if (isMounted) {
         setUsers(data);
         setLoading(false);
@@ -43,7 +43,7 @@ export default function LeaderboardScreen() {
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>FEEDX Leaderboard</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Top Student Achievers</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -77,6 +77,12 @@ export default function LeaderboardScreen() {
       {loading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color="#F59E0B" />
+        </View>
+      ) : users.length === 0 ? (
+        <View style={[styles.center, { padding: 32 }]}>
+          <Ionicons name="trophy-outline" size={48} color="#94A3B8" />
+          <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700', marginTop: 12 }}>No rankings yet</Text>
+          <Text style={{ color: colors.textMuted, fontSize: 13, textAlign: 'center', marginTop: 6 }}>Complete daily tasks and quizzes to earn points and appear on the leaderboard!</Text>
         </View>
       ) : (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>

@@ -8,9 +8,10 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import GlassCard from '@/components/ui/GlassCard';
 import { useUser } from '@/context/UserContext';
 import { useTheme } from '@/context/ThemeContext';
@@ -113,7 +114,7 @@ export default function ChallengeDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFillObject} />}
+      {isDark && <LinearGradient colors={['#0F172A', '#020617']} style={StyleSheet.absoluteFill} />}
 
       {/* Header Bar */}
       <View style={[styles.header, { borderBottomColor: colors.cardBorder }]}>
@@ -162,7 +163,12 @@ export default function ChallengeDetailScreen() {
                       { backgroundColor: isDark ? 'rgba(255,255,255,0.04)' : '#F8FAFC', borderColor: isDark ? 'rgba(255,255,255,0.1)' : '#E2E8F0' },
                       isSelected && { backgroundColor: 'rgba(59, 130, 246, 0.15)', borderColor: '#3B82F6' },
                     ]}
-                    onPress={() => setSelectedOption(opt)}
+                    onPress={() => {
+                      try {
+                        Haptics.selectionAsync().catch(() => {});
+                      } catch {}
+                      setSelectedOption(opt);
+                    }}
                   >
                     <Ionicons
                       name={isSelected ? 'radio-button-on' : 'radio-button-off'}
